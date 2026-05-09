@@ -241,6 +241,12 @@ body {
 .dot-m { background: var(--usap-navy); }
 .dot-w { background: var(--usap-orange); }
 .dot-alumni { background: #9aa3b8; }
+.div-tag {
+  display: inline-block; margin: 2px 0 4px;
+  padding: 1px 7px; background: var(--usap-orange); color: #fff;
+  border-radius: 3px; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
 .legal-footer {
   margin-top: 32px; padding: 22px 24px;
   border-top: 1px solid var(--usap-line);
@@ -943,7 +949,8 @@ function openPlayerModal(p, opts={}) {
       body += `<div class="modal-stat"><div class="v">${p.score}</div><div class="k">${lang==='en'?'Scoring avg':'Scoring avg'} ${escapeHtml(p.score_label||'')}</div></div>`;
     }
     if (p.sb_rank != null) {
-      body += `<div class="modal-stat"><div class="v">#${p.sb_rank}</div><div class="k">${t('sb_ranking_short')}</div></div>`;
+      const divLabel = p.div_full && p.div_full !== '—' ? `<div class="div-tag">${escapeHtml(p.div_full)}</div>` : '';
+      body += `<div class="modal-stat"><div class="v">#${p.sb_rank}</div>${divLabel}<div class="k">${t('sb_ranking_short')}</div></div>`;
     }
     if (p.fr_rank != null) {
       body += `<div class="modal-stat"><div class="v">#${p.fr_rank}</div><div class="k">${t('fr_ranking')} (${p.sex==='Men'?'M':'F'})</div></div>`;
@@ -2412,7 +2419,10 @@ function buildTooltip(p) {
   out += `<div class="meta">${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
   out += `<div class="meta">${escapeHtml(p.cclass)} · ${t('starting')} ${escapeHtml(p.signing)}*</div>`;
   if (p.score != null) out += `<div class="row"><span>Scoring avg ${escapeHtml(p.score_label)}</span><span>${p.score}</span></div>`;
-  if (p.sb_rank != null) out += `<div class="row"><span>${t('sb_ranking_short')}</span><span>#${p.sb_rank}</span></div>`;
+  if (p.sb_rank != null) {
+    const divSuffix = p.div_full && p.div_full !== '—' ? ` <span style="opacity:0.7;font-size:10px">${escapeHtml(p.div_full)}</span>` : '';
+    out += `<div class="row"><span>${t('sb_ranking_short')}</span><span>#${p.sb_rank}${divSuffix}</span></div>`;
+  }
   if (p.fr_rank != null) out += `<div class="row"><span>${t('fr_ranking')} ${p.sex === 'Men' ? '(M)' : '(F)'}</span><span>${p.fr_rank}</span></div>`;
   return out;
 }
