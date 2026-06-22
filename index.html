@@ -635,11 +635,11 @@ body {
     <div class="snap-bar">
       <span class="snap-label" data-i18n="period">📅 Période</span>
       <select id="snapshot-select">
-        <option value="current" data-i18n="snap_current">Current (Mai 2026)</option>
+        <option value="current" data-i18n="snap_current">Current (Juin 2026)</option>
         <option value="may2025" data-i18n="snap_2425">Season 2024/2025</option>
         <option value="may2024" data-i18n="snap_2324">Season 2023/2024</option>
       </select>
-      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de mai 2026 (fin d'année académique 2025-26).</span>
+      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de juin 2026 (fin d'année académique 2025-26).</span>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -841,7 +841,7 @@ const T = {
     tab_us: 'Joueurs aux US',
     tab_incoming: 'Engagés 2026 - 2027 - 2028',
     period: '📅 Période',
-    snap_current: 'Current (Mai 2026)',
+    snap_current: 'Current (Juin 2026)',
     snap_2425: 'Season 2024/2025',
     snap_2324: 'Season 2023/2024',
     class: 'Année :',
@@ -1186,7 +1186,7 @@ function openPlayerModal(p, opts={}) {
       body += `<div class="modal-history-row"><span class="yr">${(lang==='en'?'At commit':'Au commit')}${dateLbl}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
     }
     if (p.fr_rank_recent != null) body += `<div class="modal-history-row"><span class="yr">Aug ${sd.y}</span><span class="val">#${p.fr_rank_recent}</span></div>`;
-    if (CURRENT_FFGOLF[p.name] != null) body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Mai 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+    if (CURRENT_FFGOLF[p.name] != null) body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Juin 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
     body += '</div>';
   }
   // Engagés data
@@ -1880,41 +1880,42 @@ const HISTORICAL_SCOREBOARD = {
   "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}}
 };
 
-// ================== CURRENT FFGOLF RANKINGS (Mai 2026) ==================
+// ================== CURRENT FFGOLF RANKINGS (Juin 2026) ==================
 // Source: https://pages.ffgolf.org/merite/amateurs/messieurs + .../dames (scrape via Chrome MCP)
 // "-" / null = en DB mais sans ranking actif. Players non-français (Kostylev, Luczak, Romani Italie, Hermansson, Wouters, Olesen Suisse) n'apparaissent pas.
 const CURRENT_FFGOLF = {
-  "Ylan Guerin-Pozzalo": 92, "Rodolphe Cicala": 18, "Arthur Karouby": 936, "Thomas Peluchon": 616,
-  "Samuel Guigui-Baruchel": 289, "Gabriel Dulon-Villoslada": 39, "Bogdan Sandrini": 60, "Antoine Lianos": 783,
-  "Léo Molino": 203, "Hugo Almeida": 641, "Alois Casalonga": 168, "Enzo Rousse": 310,
-  "Joseph Linel": 455, "Simon Germain": 476, "Edouard Cereto": 203, "Maxime Lam": 234,
-  "Matis Sayah": 724, "Lucas Raoul": 348, "Rafael Bobo-Lloret": 49, "Octavio Laurent": 38,
-  "Ali Elsayed": 183, "Gaspard Maréchal Dubourg": 809, "Corentin Guilloux": 423, "Léo Testas": 176,
-  "Sacha Corlouer": 79, "Louis Delattre": 956, "Maxence Bonnet": 140, "Martin Chaney": 749,
-  "Oihan Silva": 902, "Gabriel Delaval": 324, "Lucas Nicola": 215, "Tom Clarens": 247,
-  "Florian Simon": 499, "Faust Amat": 618, "Fadi Burnet": 992, "Andrea Matlega": 779,
-  "Alexian Rouault": 290, "Kilian Juget": 522, "Alexis Barnetche": 32, "Oscar Couilleau": 2,
-  "Raphaël Turcaud": 101, "Justin Charoy": 107, "Théophile Lebrun": 64, "Callixte Alzas": 11,
-  "Melvil Jacquelin": 96, "Sacha Molino": 175, "Adam Carreyn": 178, "Théophile Archer": 45,
-  "Matthieu Riffet": 192, "Alexandre Guiserix": 777, "Jules Lauer": 93, "Edouard Petit": 212,
-  "Maxime Olivo": 108, "Tibo Van De Neste": 349, "Victor Siguier": 573, "Paul Couston": 221,
-  "Léo-Paul Cesari": 273, "Loïc Goethals": 879, "Timothée Restout": 151, "Axel Houdaille": 439,
-  "Vadim Dejour": 419, "Nicolas Robin": 121, "Jules De Brauwere": 45, "Corentin Jorat": 833,
-  "Paolo Fazzone": 154, "Maylis Lamoure": 15, "Taline Kyoumjian": 240, "Faustine Errecade": 245,
-  "Camille Rosier": 124, "Anna Pillard": 34, "Cloé Poizac": 182, "Emma Leroy-Fabry": 62,
-  "Juliette Daviau": 292, "Ambre Matlega": 137, "Lauren Thompstone": 89, "Anaëlle Picot": 72,
-  "Lehane Louis-Dumond": 275, "Amély Bochaton": 16, "Aubane Statiotis": 83, "Inès Marty": 148,
-  "Clara Willem": 130, "Zoé Rubichon": 59, "Lou Fourdan": 98, "Camille Padieu": 229,
-  "Clara Ledun": 258, "Tina Genoulaz": 36, "Fantine Cabry": 90, "Manon Verret": 170,
-  "Jeanne Pagnier": 41, "Mahé Happiette": 257, "Agathe Lacoste": 294, "Romane Lacoste": 125,
-  "Carla Bourdeaux": 45, "Giselle Zhao": 4, "Mila Tamisier": 49, "Melliyal Schmitt": 28,
-  "Charlotte Bouquet": 66, "Léa Giron": 71, "Gabrielle Duhalde": 224, "Sarah Cuney": 60,
-  "Manon Petitcolas": 11, "Louise Krawiec": 40, "Margot Lamothe": 187, "Anne Charlotte Otto": 192,
-  "Marie Bachelet": 85, "Bertille Lorin": 229, "Clémence Chouvin": 140, "Juliette Gastoud": 320,
-  "Salomé Paumelle": 279, "Eline Chau-Hu": 83, "Sarah Sayah": 433, "Sarah Binaghi": 262,
-  "Justine Bayle": 62, "Ambre Boullot": 191, "Juliette Saillour": 237, "Axelle Guillemard": 24,
-  "Céleste Darloy": 47, "Salomé Lumbaca": 18, "Celeste Bobo-Lloret": 36, "Romane Tresnard": 64,
-  "Iris Pollet": 112, "Romane Poissonnier": 18, "Céleste Mangeat": 177
+  "Ylan Guerin-Pozzalo": 109, "Rodolphe Cicala": 24, "Arthur Karouby": 1142, "Thomas Peluchon": 674,
+  "Samuel Guigui-Baruchel": 344, "Gabriel Dulon-Villoslada": 47, "Bogdan Sandrini": 60, "Antoine Lianos": 790,
+  "Léo Molino": 176, "Hugo Almeida": 590, "Alois Casalonga": 138, "Enzo Rousse": 310,
+  "Joseph Linel": 454, "Simon Germain": 503, "Edouard Cereto": 180, "Maxime Lam": 182,
+  "Matis Sayah": 724, "Lucas Raoul": 184, "Rafael Bobo-Lloret": 54, "Octavio Laurent": 30,
+  "Ali Elsayed": 571, "Gaspard Maréchal Dubourg": 809, "Corentin Guilloux": 423, "Léo Testas": 158,
+  "Sacha Corlouer": 66, "Louis Delattre": 983, "Maxence Bonnet": 188, "Martin Chaney": 710,
+  "Oihan Silva": 902, "Gabriel Delaval": 359, "Lucas Nicola": 235, "Tom Clarens": 351,
+  "Florian Simon": 588, "Faust Amat": 627, "Fadi Burnet": 992, "Andrea Matlega": 779,
+  "Alexian Rouault": 440, "Kilian Juget": 564, "Alexis Barnetche": 32, "Oscar Couilleau": 2,
+  "Raphaël Turcaud": 95, "Justin Charoy": 105, "Théophile Lebrun": 21, "Callixte Alzas": 11,
+  "Melvil Jacquelin": 124, "Sacha Molino": 263, "Adam Carreyn": 173, "Théophile Archer": 27,
+  "Matthieu Riffet": 187, "Alexandre Guiserix": 448, "Jules Lauer": 23, "Edouard Petit": 328,
+  "Maxime Olivo": 746, "Tibo Van De Neste": 354, "Victor Siguier": 425, "Paul Couston": 541,
+  "Léo-Paul Cesari": 206, "Loïc Goethals": 960, "Timothée Restout": 190, "Axel Houdaille": 275,
+  "Vadim Dejour": 566, "Nicolas Robin": 133, "Jules De Brauwere": 58, "Corentin Jorat": 726,
+  "Paolo Fazzone": 320, "Jan Porchet": 872, "Maylis Lamoure": 18, "Taline Kyoumjian": 235,
+  "Faustine Errecade": 258, "Camille Rosier": 117, "Anna Pillard": 31, "Cloé Poizac": 124,
+  "Emma Leroy-Fabry": 70, "Juliette Daviau": 275, "Ambre Matlega": 139, "Lauren Thompstone": 106,
+  "Anaëlle Picot": 64, "Lehane Louis-Dumond": 323, "Amély Bochaton": 15, "Aubane Statiotis": 77,
+  "Inès Marty": 134, "Clara Willem": 130, "Zoé Rubichon": 68, "Lou Fourdan": 108,
+  "Camille Padieu": 273, "Clara Ledun": 279, "Tina Genoulaz": 38, "Fantine Cabry": 72,
+  "Manon Verret": 188, "Jeanne Pagnier": 69, "Mahé Happiette": 256, "Agathe Lacoste": 253,
+  "Romane Lacoste": 113, "Carla Bourdeaux": 39, "Giselle Zhao": 6, "Mila Tamisier": 52,
+  "Melliyal Schmitt": 24, "Charlotte Bouquet": 57, "Léa Giron": 65, "Gabrielle Duhalde": 204,
+  "Sarah Cuney": 59, "Manon Petitcolas": 10, "Louise Krawiec": 34, "Margot Lamothe": 192,
+  "Anne Charlotte Otto": 260, "Marie Bachelet": 86, "Bertille Lorin": 223, "Clémence Chouvin": 141,
+  "Juliette Gastoud": 320, "Salomé Paumelle": 362, "Eline Chau-Hu": 73, "Sarah Sayah": 446,
+  "Sarah Binaghi": 144, "Justine Bayle": 51, "Ambre Boullot": 189, "Juliette Saillour": 209,
+  "Axelle Guillemard": 23, "Céleste Darloy": 49, "Salomé Lumbaca": 28, "Celeste Bobo-Lloret": 43,
+  "Romane Tresnard": 58, "Iris Pollet": 112, "Romane Poissonnier": 22, "Céleste Mangeat": 176,
+  "Sara Brentcheneff": 3
 };
 
 // ================== CURRENT WAGR RANKINGS (Scout EU) ==================
@@ -2354,7 +2355,7 @@ const PLAYERS = [
 
 // ================== SNAPSHOTS ==================
 const SNAPSHOTS = {
-  current: { label: "Current (Mai 2026)", date: {y:2026, m:5}, help_fr: "Vue actuelle : situation au mois de mai 2026 (fin d'année académique 2025-26).", help_en: "Current view: situation as of May 2026 (end of 2025-26 academic year)." },
+  current: { label: "Current (Juin 2026)", date: {y:2026, m:6}, help_fr: "Vue actuelle : situation au mois de juin 2026 (fin d'année académique 2025-26).", help_en: "Current view: situation as of June 2026 (end of 2025-26 academic year)." },
   may2025: { label: "Season 2024/2025", date: {y:2025, m:5}, help_fr: "Vue rétroactive : fin de la saison 2024/2025. Class 2024 = Freshman, Class 2025 = Incoming.", help_en: "Retrospective view: end of 2024/2025 season. Class 2024 = Freshman, Class 2025 = Incoming." },
   may2024: { label: "Season 2023/2024", date: {y:2024, m:5}, help_fr: "Vue rétroactive : fin de la saison 2023/2024. Class 2023 = Freshman, Class 2024+ = Incoming.", help_en: "Retrospective view: end of 2023/2024 season. Class 2023 = Freshman, Class 2024+ = Incoming." }
 };
@@ -3212,6 +3213,9 @@ const INCOMING_PLAYERS = [
   {name:"Sarah Sayah", sex:"Women", country:"France", iclass:"Fall 2026", university:"Weatherford College", fr_rank:433, star:2, photo:`${SP}/ca94a14b-9721-4baa-b34e-b14074cb7d54/profile-1763940667268.jpg`},
   {name:"Sarah Binaghi", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:262, star:3, photo:`${SP}/6c28ef11-1e74-4747-8c63-832eb9a92042/profile-1763940798099.jpg`},
   {name:"Diane Becassis", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:237, transfer:true},
+
+  // ===== Fall 2026 — Men transfers (déjà en US, transfèrent pour Fall 2026) =====
+  {name:"Simon Germain", sex:"Men", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:476, transfer:true},
   {name:"Justine Bayle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Rice University", fr_rank:62, wagr:1624, star:5, photo:`${SP}/6243c305-f853-4ccc-bf34-dcc26b6043a8/profile-1772634276581.jpg`},
   {name:"Ambre Boullot", sex:"Women", country:"France", iclass:"Fall 2026", university:"Manhattan College", star:3},
   {name:"Juliette Saillour", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas Wesleyan University", fr_rank:237, star:3, photo:`${SP}/2e5d26ff-ff11-4cd4-9e5c-774b3bc75c2b/profile-1764028769091.jpg`},
