@@ -1,11 +1,4 @@
 <!DOCTYPE html>
-<script type="application/json" id="cowork-artifact-meta">
-{
-  "name": "Usap Players Ncaa",
-  "schemaVersion": 1,
-  "description": "Live board des joueurs USAP placés en universités américaines (NCAA D1/D2, NAIA, JUCO). Carte USA avec pins par école, filtres par classe/genre/division, tableau triable. Source : Google Sheet \"USAP Players in the US\" + table schools (Supabase usap-family-dashboard) pour division/état. 89 joueurs (53 hommes, 36 femmes) répartis sur Fall 2023 → Fall 2026."
-}
-</script>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -244,6 +237,57 @@ body {
   border-radius: 3px; font-size: 9px; font-weight: 700;
   letter-spacing: 0.04em; text-transform: uppercase;
 }
+.stats-banner {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  margin: 12px 0 16px; padding: 16px 18px;
+  background: linear-gradient(135deg, var(--usap-cream) 0%, var(--usap-cream-2) 100%);
+  border: 1px solid var(--usap-line); border-radius: 10px;
+  border-left: 4px solid var(--usap-orange);
+}
+.stats-banner-head {
+  grid-column: 1 / -1; display: flex; align-items: baseline;
+  gap: 10px; margin-bottom: 4px;
+}
+.stats-banner-title {
+  font-size: 11px; font-weight: 700; color: var(--usap-navy);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.stats-banner-sub {
+  font-size: 11px; color: var(--usap-muted); font-style: italic;
+}
+.sb-stat {
+  text-align: center;
+}
+.sb-v {
+  font-size: 28px; font-weight: 800; color: var(--usap-orange);
+  line-height: 1; letter-spacing: -0.02em;
+}
+.sb-k {
+  font-size: 10px; color: var(--usap-navy); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-top: 6px; line-height: 1.3;
+}
+@media (max-width: 700px) {
+  .stats-banner { grid-template-columns: repeat(2, 1fr); }
+  .sb-v { font-size: 22px; }
+}
+.div-mini-badge {
+  display: inline-block; padding: 1px 5px;
+  background: var(--usap-line); color: var(--usap-navy);
+  border-radius: 3px; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.03em; text-transform: uppercase;
+  vertical-align: middle;
+}
+.transfer-badge {
+  display: inline-block; padding: 1px 6px;
+  background: var(--usap-orange); color: #fff;
+  border-radius: 3px; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.hist-school {
+  display: block; font-size: 10px; color: var(--usap-muted);
+  font-weight: 500; margin-top: 2px;
+}
 .legal-footer {
   margin-top: 32px; padding: 22px 24px;
   border-top: 1px solid var(--usap-line);
@@ -256,10 +300,16 @@ body {
 .legal-footer strong { color: var(--usap-navy); font-weight: 700; }
 .legal-footer a { color: var(--usap-orange); text-decoration: none; }
 .legal-footer a:hover { text-decoration: underline; }
-.map-svg { width: 100%; height: auto; display: block; background: var(--usap-cream); border-radius: 6px; }
+.map-svg { width: 100%; height: auto; display: block; background: var(--usap-cream); border-radius: 6px; touch-action: pan-x pan-y; }
+.map-svg, .map-svg * { transition: none; }
+.map-svg.zooming { transition: opacity .15s; }
 .us-land { fill: var(--usap-cream-2); stroke: var(--usap-navy-soft); stroke-width: 1.2; opacity: 0.9; }
 .state-label { font-size: 9px; fill: var(--usap-navy-soft); pointer-events: none; user-select: none; font-weight: 600; opacity: 0.45; }
 .pin { stroke: #fff; stroke-width: 1.4; cursor: pointer; transition: all .15s; }
+.pin-hit { fill: transparent; stroke: transparent; cursor: pointer; pointer-events: all; }
+.pin.active-pin { stroke: var(--usap-orange); stroke-width: 3; filter: drop-shadow(0 0 4px rgba(246,119,42,0.6)); }
+.state-label.clickable { cursor: pointer; transition: opacity .15s, fill .15s; }
+.state-label.clickable:hover { opacity: 0.9 !important; fill: var(--usap-orange) !important; }
 .pin-alumni { fill: #9aa3b8; opacity: 0.7; }
 .pin-alumni:hover { opacity: 1; fill: #6c7693; }
 .pin:hover { stroke-width: 2.2; }
@@ -443,6 +493,10 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   border: 2px solid var(--usap-orange);
 }
+.trend-note {
+  font-size: 10px; color: var(--usap-muted); font-style: italic;
+  margin-top: 6px; padding-left: 4px; line-height: 1.4;
+}
 .combobox {
   position: relative; display: inline-block;
 }
@@ -466,6 +520,23 @@ body {
   box-shadow: 0 4px 12px rgba(11, 29, 88, 0.12);
   z-index: 100; display: none;
 }
+.cb-tags {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 4px;
+}
+.cb-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 4px 2px 8px; font-size: 11px; font-weight: 600;
+  background: var(--usap-orange); color: #fff;
+  border-radius: 4px;
+}
+.cb-tag-x {
+  background: transparent; border: none; color: #fff; cursor: pointer;
+  font-size: 14px; line-height: 1; padding: 0 4px;
+  border-radius: 50%;
+}
+.cb-tag-x:hover { background: rgba(255,255,255,0.25); }
+.cb-option.selected { background: rgba(246,119,42,0.18); font-weight: 600; }
 .combobox.open .cb-options { display: block; }
 .cb-option {
   padding: 7px 12px; cursor: pointer; font-size: 13px; color: var(--usap-navy);
@@ -500,6 +571,24 @@ body {
 .modal-header.no-photo .modal-meta { padding-right: 70px; }
 
 @media (max-width: 700px) {
+  .tooltip { max-width: calc(100vw - 24px); font-size: 13px; padding: 12px 14px; }
+  .tooltip.pinned { max-height: 70vh; overflow-y: auto; }
+  .tooltip strong { font-size: 14px; }
+  .tooltip .meta { font-size: 12px; }
+  .tooltip .row { font-size: 12px; }
+  .tt-player-name { font-size: 14px !important; }
+  .pin { stroke-width: 2; r: 7; }
+  .state-label { font-size: 11px !important; }
+  /* I. Close modal button plus gros sur mobile */
+  .modal-close { width: 40px; height: 40px; font-size: 22px; top: 10px; right: 10px; }
+  /* J. Légende sticky en haut quand on scroll la map section */
+  .map-title { position: sticky; top: 0; background: #fff; z-index: 50; padding: 10px 8px; margin: -10px -8px 6px; border-bottom: 1px solid var(--usap-line); }
+  /* Photo + logo plus compact sur mobile + décalage à droite */
+  .player-photo-modal { width: 48px; height: 48px; top: 16px; right: 86px; }
+  .school-logo-modal { width: 36px; height: 36px; top: 22px; right: 50px; }
+  .modal-header.has-photo h2,
+  .modal-header.has-photo .modal-school,
+  .modal-header.has-photo .modal-meta { padding-right: 100px; }
   .h1 { font-size: 20px; }
   .stat .v { font-size: 20px; }
   .filters { padding: 10px; }
@@ -515,7 +604,7 @@ body {
   <div class="brand">
     <svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="130 628 550 184" preserveAspectRatio="xMidYMid meet" aria-label="USAP — US Athletic Performance"><defs><g/><clipPath id="f8fd70d833"><path d="M 132.652344 630.574219 L 677.152344 630.574219 L 677.152344 809.074219 L 132.652344 809.074219 Z M 132.652344 630.574219 " clip-rule="nonzero"/></clipPath><clipPath id="1d9695f43a"><path d="M 152.902344 630.574219 L 657.089844 630.574219 C 662.460938 630.574219 667.613281 632.707031 671.410156 636.503906 C 675.207031 640.300781 677.339844 645.453125 677.339844 650.824219 L 677.339844 789.175781 C 677.339844 794.546875 675.207031 799.695312 671.410156 803.492188 C 667.613281 807.292969 662.460938 809.425781 657.089844 809.425781 L 152.902344 809.425781 C 147.53125 809.425781 142.382812 807.292969 138.582031 803.492188 C 134.785156 799.695312 132.652344 794.546875 132.652344 789.175781 L 132.652344 650.824219 C 132.652344 645.453125 134.785156 640.300781 138.582031 636.503906 C 142.382812 632.707031 147.53125 630.574219 152.902344 630.574219 Z M 152.902344 630.574219 " clip-rule="nonzero"/></clipPath></defs><g clip-path="url(#f8fd70d833)"><g clip-path="url(#1d9695f43a)"><path stroke-linecap="butt" transform="matrix(0.75, 0, 0, 0.75, 132.652857, 630.572973)" fill="none" stroke-linejoin="miter" d="M 26.99932 0.00166065 L 699.249421 0.00166065 C 706.41088 0.00166065 713.280673 2.845411 718.343174 7.907912 C 723.405675 12.970413 726.249425 19.840205 726.249425 27.001665 L 726.249425 211.470443 C 726.249425 218.631902 723.405675 225.496486 718.343174 230.558987 C 713.280673 235.626696 706.41088 238.470447 699.249421 238.470447 L 26.99932 238.470447 C 19.83786 238.470447 12.973276 235.626696 7.905567 230.558987 C 2.843066 225.496486 -0.000684555 218.631902 -0.000684555 211.470443 L -0.000684555 27.001665 C -0.000684555 19.840205 2.843066 12.970413 7.905567 7.907912 C 12.973276 2.845411 19.83786 0.00166065 26.99932 0.00166065 Z M 26.99932 0.00166065 " stroke="#ffffff" stroke-width="24" stroke-opacity="1" stroke-miterlimit="4"/></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(157.92144, 777.704447)"><g><path d="M 42.09375 0.84375 L 38.75 0.84375 C 29.125 0.84375 22.078125 -1.390625 17.609375 -5.859375 C 13.140625 -10.335938 10.90625 -17.382812 10.90625 -27 L 10.90625 -112.203125 C 10.90625 -113.660156 11.070312 -114.554688 11.40625 -114.890625 C 11.738281 -115.222656 12.632812 -115.390625 14.09375 -115.390625 L 32.203125 -115.390625 C 33.648438 -115.390625 34.539062 -115.222656 34.875 -114.890625 C 35.21875 -114.554688 35.390625 -113.660156 35.390625 -112.203125 L 35.390625 -28.015625 C 35.390625 -24.765625 35.835938 -22.46875 36.734375 -21.125 C 37.628906 -19.789062 39.414062 -19.125 42.09375 -19.125 L 42.59375 -19.125 C 43.832031 -19.125 44.585938 -18.925781 44.859375 -18.53125 C 45.140625 -18.144531 45.28125 -17.222656 45.28125 -15.765625 L 45.28125 -2.34375 C 45.28125 -0.894531 45.113281 -0.00390625 44.78125 0.328125 C 44.445312 0.671875 43.550781 0.84375 42.09375 0.84375 Z M 50.8125 -2.34375 L 50.8125 -15.765625 C 50.8125 -17.222656 50.976562 -18.144531 51.3125 -18.53125 C 51.65625 -18.925781 52.441406 -19.125 53.671875 -19.125 L 54 -19.125 C 56.6875 -19.125 58.476562 -19.789062 59.375 -21.125 C 60.269531 -22.46875 60.71875 -24.765625 60.71875 -28.015625 L 60.71875 -112.203125 C 60.71875 -113.660156 60.882812 -114.554688 61.21875 -114.890625 C 61.550781 -115.222656 62.445312 -115.390625 63.90625 -115.390625 L 82.015625 -115.390625 C 83.460938 -115.390625 84.351562 -115.222656 84.6875 -114.890625 C 85.03125 -114.554688 85.203125 -113.660156 85.203125 -112.203125 L 85.203125 -27 C 85.203125 -17.382812 82.960938 -10.335938 78.484375 -5.859375 C 74.015625 -1.390625 66.972656 0.84375 57.359375 0.84375 L 54 0.84375 C 52.550781 0.84375 51.65625 0.671875 51.3125 0.328125 C 50.976562 -0.00390625 50.8125 -0.894531 50.8125 -2.34375 Z M 50.8125 -2.34375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(253.857473, 777.704447)"><g><path d="M 38.40625 -15.765625 L 38.40625 -2.34375 C 38.40625 -0.894531 38.238281 -0.00390625 37.90625 0.328125 C 37.570312 0.671875 36.675781 0.84375 35.21875 0.84375 C 24.820312 0.84375 17.359375 -1.390625 12.828125 -5.859375 C 8.296875 -10.335938 6.03125 -17.382812 6.03125 -27 L 6.03125 -36.390625 C 6.03125 -37.847656 6.195312 -38.742188 6.53125 -39.078125 C 6.875 -39.410156 7.769531 -39.578125 9.21875 -39.578125 L 26.5 -39.578125 C 27.957031 -39.578125 28.851562 -39.410156 29.1875 -39.078125 C 29.519531 -38.742188 29.6875 -37.847656 29.6875 -36.390625 L 29.6875 -28.171875 C 29.6875 -24.710938 30.078125 -22.394531 30.859375 -21.21875 C 31.640625 -20.039062 33.09375 -19.453125 35.21875 -19.453125 C 36.445312 -19.453125 37.285156 -19.226562 37.734375 -18.78125 C 38.179688 -18.332031 38.40625 -17.328125 38.40625 -15.765625 Z M 43.9375 -2.34375 L 43.9375 -15.765625 C 43.9375 -17.328125 44.1875 -18.332031 44.6875 -18.78125 C 45.195312 -19.226562 46.007812 -19.453125 47.125 -19.453125 C 49.25 -19.453125 50.675781 -20.039062 51.40625 -21.21875 C 52.132812 -22.394531 52.5 -24.710938 52.5 -28.171875 L 52.5 -32.875 C 52.5 -35.894531 51.4375 -38.519531 49.3125 -40.75 C 47.1875 -42.988281 44.472656 -45.085938 41.171875 -47.046875 C 37.878906 -49.003906 34.359375 -51.046875 30.609375 -53.171875 C 26.859375 -55.296875 23.332031 -57.753906 20.03125 -60.546875 C 16.738281 -63.335938 14.03125 -66.601562 11.90625 -70.34375 C 9.78125 -74.09375 8.71875 -78.597656 8.71875 -83.859375 L 8.71875 -88.390625 C 8.71875 -98.003906 10.925781 -105.019531 15.34375 -109.4375 C 19.757812 -113.851562 26.722656 -116.117188 36.234375 -116.234375 C 37.796875 -116.234375 38.742188 -116.0625 39.078125 -115.71875 C 39.410156 -115.382812 39.578125 -114.492188 39.578125 -113.046875 L 39.578125 -99.625 C 39.578125 -97.832031 39.351562 -96.6875 38.90625 -96.1875 C 38.457031 -95.6875 37.617188 -95.4375 36.390625 -95.4375 C 35.046875 -95.4375 34.148438 -94.929688 33.703125 -93.921875 C 33.265625 -92.910156 33.046875 -91.566406 33.046875 -89.890625 L 33.046875 -83.859375 C 33.046875 -80.835938 34.101562 -78.238281 36.21875 -76.0625 C 38.34375 -73.882812 41.054688 -71.84375 44.359375 -69.9375 C 47.660156 -68.039062 51.179688 -66.054688 54.921875 -63.984375 C 58.671875 -61.910156 62.191406 -59.53125 65.484375 -56.84375 C 68.785156 -54.164062 71.5 -50.898438 73.625 -47.046875 C 75.75 -43.191406 76.8125 -38.46875 76.8125 -32.875 L 76.8125 -27 C 76.8125 -17.382812 74.460938 -10.335938 69.765625 -5.859375 C 65.078125 -1.390625 57.53125 0.84375 47.125 0.84375 C 45.675781 0.84375 44.78125 0.671875 44.4375 0.328125 C 44.101562 -0.00390625 43.9375 -0.894531 43.9375 -2.34375 Z M 71.953125 -75.8125 L 54.671875 -75.8125 C 53.222656 -75.8125 52.300781 -75.976562 51.90625 -76.3125 C 51.519531 -76.644531 51.328125 -77.539062 51.328125 -79 L 51.328125 -89.890625 C 51.328125 -91.566406 51.101562 -92.910156 50.65625 -93.921875 C 50.207031 -94.929688 49.3125 -95.4375 47.96875 -95.4375 C 46.851562 -95.4375 46.070312 -95.6875 45.625 -96.1875 C 45.175781 -96.6875 44.953125 -97.832031 44.953125 -99.625 L 44.953125 -113.046875 C 44.953125 -114.492188 45.117188 -115.382812 45.453125 -115.71875 C 45.785156 -116.0625 46.679688 -116.234375 48.140625 -116.234375 C 57.523438 -116.117188 64.367188 -113.851562 68.671875 -109.4375 C 72.984375 -105.019531 75.140625 -98.003906 75.140625 -88.390625 L 75.140625 -79 C 75.140625 -77.539062 74.96875 -76.644531 74.625 -76.3125 C 74.289062 -75.976562 73.398438 -75.8125 71.953125 -75.8125 Z M 71.953125 -75.8125 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(346.603817, 709.630934)"><g><path d="M 15.875 -13.90625 L 12.765625 -37.125 L 12.671875 -37.125 L 9.828125 -13.90625 Z M 1.359375 0 L 7.96875 -46.25 L 17.265625 -46.25 L 24.28125 0 L 17.703125 0 L 16.609375 -8.25 L 9.140625 -8.25 L 8.140625 0 Z M 1.359375 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(372.243249, 709.630934)"><g><path d="M 5.828125 0 L 5.828125 -40.15625 L 0.421875 -40.15625 L 0.421875 -46.25 L 18.046875 -46.25 L 18.046875 -40.15625 L 12.84375 -40.15625 L 12.84375 0 Z M 5.828125 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(390.711001, 709.630934)"><g><path d="M 3.46875 0 L 3.46875 -46.25 L 10.515625 -46.25 L 10.515625 -27.53125 L 16.8125 -27.53125 L 16.8125 -46.25 L 23.859375 -46.25 L 23.859375 0 L 16.8125 0 L 16.8125 -21.5 L 10.515625 -21.5 L 10.515625 0 Z M 3.46875 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(418.031708, 709.630934)"><g><path d="M 3.46875 0 L 3.46875 -46.25 L 10.515625 -46.25 L 10.515625 -5.984375 L 19.421875 -5.984375 L 19.421875 0 Z M 3.46875 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(438.023115, 709.630934)"><g><path d="M 3.46875 0 L 3.46875 -46.25 L 18.96875 -46.25 L 18.96875 -40.171875 L 10.515625 -40.171875 L 10.515625 -26.71875 L 18.546875 -26.71875 L 18.546875 -20.78125 L 10.515625 -20.78125 L 10.515625 -6.0625 L 19.28125 -6.0625 L 19.28125 0 Z M 3.46875 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(459.459362, 709.630934)"><g><path d="M 5.828125 0 L 5.828125 -40.15625 L 0.421875 -40.15625 L 0.421875 -46.25 L 18.046875 -46.25 L 18.046875 -40.15625 L 12.84375 -40.15625 L 12.84375 0 Z M 5.828125 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(477.927115, 709.630934)"><g><path d="M 3.734375 0 L 3.734375 -46.25 L 10.765625 -46.25 L 10.765625 0 Z M 3.734375 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(492.428105, 709.630934)"><g><path d="M 22.984375 -12.609375 C 22.984375 -8.140625 22.1875 -4.832031 20.59375 -2.6875 C 19 -0.539062 16.492188 0.53125 13.078125 0.53125 C 9.671875 0.53125 7.117188 -0.609375 5.421875 -2.890625 C 3.734375 -5.179688 2.890625 -8.472656 2.890625 -12.765625 L 2.890625 -32.921875 C 2.890625 -39.804688 4.691406 -44.109375 8.296875 -45.828125 C 9.628906 -46.453125 11.242188 -46.765625 13.140625 -46.765625 C 19.640625 -46.765625 22.890625 -42.664062 22.890625 -34.46875 L 22.890625 -28.109375 L 16.078125 -28.109375 L 16.078125 -34.03125 C 16.078125 -36.40625 15.875 -38.101562 15.46875 -39.125 C 15.070312 -40.15625 14.285156 -40.671875 13.109375 -40.671875 C 11.929688 -40.671875 11.113281 -40.128906 10.65625 -39.046875 C 10.207031 -37.960938 9.984375 -36.296875 9.984375 -34.046875 L 9.984375 -12.453125 C 9.984375 -9.960938 10.203125 -8.179688 10.640625 -7.109375 C 11.078125 -6.046875 11.875 -5.515625 13.03125 -5.515625 C 14.1875 -5.515625 14.984375 -6.054688 15.421875 -7.140625 C 15.859375 -8.234375 16.078125 -10.03125 16.078125 -12.53125 L 16.078125 -19.15625 L 22.984375 -19.15625 Z M 22.984375 -12.609375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(517.674118, 709.630934)"><g/></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(346.616468, 776.011533)"><g><path d="M 3.609375 0 L 3.609375 -48.078125 L 14.640625 -48.078125 C 18.367188 -48.078125 20.921875 -46.941406 22.296875 -44.671875 C 23.671875 -42.398438 24.394531 -39.019531 24.46875 -34.53125 L 24.46875 -33.515625 C 24.46875 -28.742188 23.789062 -25.125 22.4375 -22.65625 C 21.082031 -20.1875 18.566406 -18.953125 14.890625 -18.953125 L 10.921875 -18.953125 L 10.921875 0 Z M 10.921875 -24.984375 L 13.4375 -24.984375 C 14.988281 -24.984375 15.992188 -25.578125 16.453125 -26.765625 C 16.921875 -27.960938 17.15625 -30.238281 17.15625 -33.59375 L 17.15625 -34.53125 C 17.132812 -37.363281 16.878906 -39.390625 16.390625 -40.609375 C 15.910156 -41.828125 14.945312 -42.4375 13.5 -42.4375 L 10.921875 -42.4375 Z M 10.921875 -24.984375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(372.401614, 776.011533)"><g><path d="M 3.609375 0 L 3.609375 -48.078125 L 19.71875 -48.078125 L 19.71875 -41.765625 L 10.921875 -41.765625 L 10.921875 -27.78125 L 19.28125 -27.78125 L 19.28125 -21.609375 L 10.921875 -21.609375 L 10.921875 -6.3125 L 20.046875 -6.3125 L 20.046875 0 Z M 3.609375 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(394.69047, 776.011533)"><g><path d="M 13.28125 -22.59375 L 10.921875 -22.703125 L 10.921875 0 L 3.609375 0 L 3.609375 -48.078125 L 15.703125 -48.078125 C 18.210938 -48.078125 20.085938 -47.570312 21.328125 -46.5625 C 22.566406 -45.550781 23.378906 -44.140625 23.765625 -42.328125 C 24.160156 -40.515625 24.359375 -38.144531 24.359375 -35.21875 C 24.359375 -32.300781 24.046875 -30.078125 23.421875 -28.546875 C 22.804688 -27.015625 21.664062 -25.984375 20 -25.453125 C 21.65625 -25.160156 22.8125 -24.039062 23.46875 -22.09375 C 24.125 -20.144531 24.453125 -16.085938 24.453125 -9.921875 C 24.453125 -3.765625 24.539062 -0.457031 24.71875 0 L 17.40625 0 C 17.21875 -0.363281 17.125 -6.109375 17.125 -17.234375 C 17.125 -19.367188 16.867188 -20.785156 16.359375 -21.484375 C 15.847656 -22.179688 14.820312 -22.550781 13.28125 -22.59375 Z M 10.953125 -28.375 L 13.875 -28.375 C 14.800781 -28.375 15.488281 -28.582031 15.9375 -29 C 16.382812 -29.425781 16.691406 -30.144531 16.859375 -31.15625 C 17.035156 -32.175781 17.125 -33.734375 17.125 -35.828125 L 17.125 -36.140625 C 17.125 -38.742188 16.90625 -40.441406 16.46875 -41.234375 C 16.03125 -42.035156 15.019531 -42.4375 13.4375 -42.4375 L 10.953125 -42.4375 Z M 10.953125 -28.375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(422.278393, 776.011533)"><g><path d="M 3.578125 0 L 3.578125 -48.078125 L 20.078125 -48.078125 L 20.078125 -41.703125 L 10.890625 -41.703125 L 10.890625 -28.921875 L 19.421875 -28.921875 L 19.421875 -22.53125 L 10.890625 -22.53125 L 10.890625 0 Z M 3.578125 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(444.020953, 776.011533)"><g><path d="M 10.375 -13.359375 C 10.375 -10.535156 10.585938 -8.566406 11.015625 -7.453125 C 11.441406 -6.347656 12.320312 -5.796875 13.65625 -5.796875 C 14.988281 -5.796875 15.863281 -6.363281 16.28125 -7.5 C 16.695312 -8.632812 16.90625 -10.585938 16.90625 -13.359375 L 16.90625 -35.75 C 16.90625 -38.03125 16.691406 -39.691406 16.265625 -40.734375 C 15.835938 -41.785156 15 -42.3125 13.75 -42.3125 C 12.5 -42.3125 11.625 -41.785156 11.125 -40.734375 C 10.625 -39.691406 10.375 -38.039062 10.375 -35.78125 Z M 24.25 -13.4375 C 24.25 -8.738281 23.410156 -5.234375 21.734375 -2.921875 C 20.066406 -0.609375 17.390625 0.546875 13.703125 0.546875 C 10.015625 0.546875 7.304688 -0.613281 5.578125 -2.9375 C 3.859375 -5.257812 3 -8.757812 3 -13.4375 L 3 -35.421875 C 3 -44.234375 6.597656 -48.640625 13.796875 -48.640625 C 17.503906 -48.640625 20.171875 -47.519531 21.796875 -45.28125 C 23.429688 -43.039062 24.25 -39.753906 24.25 -35.421875 Z M 24.25 -13.4375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(471.308418, 776.011533)"><g><path d="M 13.28125 -22.59375 L 10.921875 -22.703125 L 10.921875 0 L 3.609375 0 L 3.609375 -48.078125 L 15.703125 -48.078125 C 18.210938 -48.078125 20.085938 -47.570312 21.328125 -46.5625 C 22.566406 -45.550781 23.378906 -44.140625 23.765625 -42.328125 C 24.160156 -40.515625 24.359375 -38.144531 24.359375 -35.21875 C 24.359375 -32.300781 24.046875 -30.078125 23.421875 -28.546875 C 22.804688 -27.015625 21.664062 -25.984375 20 -25.453125 C 21.65625 -25.160156 22.8125 -24.039062 23.46875 -22.09375 C 24.125 -20.144531 24.453125 -16.085938 24.453125 -9.921875 C 24.453125 -3.765625 24.539062 -0.457031 24.71875 0 L 17.40625 0 C 17.21875 -0.363281 17.125 -6.109375 17.125 -17.234375 C 17.125 -19.367188 16.867188 -20.785156 16.359375 -21.484375 C 15.847656 -22.179688 14.820312 -22.550781 13.28125 -22.59375 Z M 10.953125 -28.375 L 13.875 -28.375 C 14.800781 -28.375 15.488281 -28.582031 15.9375 -29 C 16.382812 -29.425781 16.691406 -30.144531 16.859375 -31.15625 C 17.035156 -32.175781 17.125 -33.734375 17.125 -35.828125 L 17.125 -36.140625 C 17.125 -38.742188 16.90625 -40.441406 16.46875 -41.234375 C 16.03125 -42.035156 15.019531 -42.4375 13.4375 -42.4375 L 10.953125 -42.4375 Z M 10.953125 -28.375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(498.896341, 776.011533)"><g><path d="M 3.609375 0 L 3.609375 -48.078125 L 12.703125 -48.078125 L 19.53125 -12.953125 L 25.953125 -48.078125 L 35.09375 -48.078125 L 35.09375 0 L 28.5625 0 L 28.5625 -17.921875 L 28.84375 -34.359375 L 22.375 -0.21875 L 16.546875 -0.21875 L 9.8125 -34.359375 L 10.078125 -17.921875 L 10.078125 0 Z M 3.609375 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(537.628691, 776.011533)"><g><path d="M 16.5 -14.453125 L 13.28125 -38.59375 L 13.171875 -38.59375 L 10.21875 -14.453125 Z M 1.421875 0 L 8.28125 -48.078125 L 17.9375 -48.078125 L 25.234375 0 L 18.40625 0 L 17.265625 -8.578125 L 9.5 -8.578125 L 8.46875 0 Z M 1.421875 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(564.287911, 776.011533)"><g><path d="M 3.609375 0 L 3.609375 -48.078125 L 9.34375 -48.078125 L 19.53125 -19.234375 L 19.015625 -32.34375 L 19.015625 -48.078125 L 25.59375 -48.078125 L 25.59375 0 L 20.40625 0 L 9.9375 -29.859375 L 10.359375 -17.234375 L 10.359375 0 Z M 3.609375 0 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(593.487411, 776.011533)"><g><path d="M 23.90625 -13.109375 C 23.90625 -8.460938 23.070312 -5.023438 21.40625 -2.796875 C 19.75 -0.566406 17.144531 0.546875 13.59375 0.546875 C 10.050781 0.546875 7.398438 -0.640625 5.640625 -3.015625 C 3.878906 -5.390625 3 -8.8125 3 -13.28125 L 3 -34.21875 C 3 -41.375 4.875 -45.847656 8.625 -47.640625 C 10.007812 -48.296875 11.6875 -48.625 13.65625 -48.625 C 20.414062 -48.625 23.796875 -44.359375 23.796875 -35.828125 L 23.796875 -29.21875 L 16.71875 -29.21875 L 16.71875 -35.375 C 16.71875 -37.84375 16.503906 -39.609375 16.078125 -40.671875 C 15.660156 -41.742188 14.84375 -42.28125 13.625 -42.28125 C 12.40625 -42.28125 11.554688 -41.710938 11.078125 -40.578125 C 10.609375 -39.453125 10.375 -37.722656 10.375 -35.390625 L 10.375 -12.953125 C 10.375 -10.359375 10.601562 -8.503906 11.0625 -7.390625 C 11.519531 -6.285156 12.347656 -5.734375 13.546875 -5.734375 C 14.742188 -5.734375 15.570312 -6.296875 16.03125 -7.421875 C 16.488281 -8.554688 16.71875 -10.425781 16.71875 -13.03125 L 16.71875 -19.90625 L 23.90625 -19.90625 Z M 23.90625 -13.109375 "/></g></g></g><g fill="#ffffff" fill-opacity="1"><g transform="translate(619.736914, 776.011533)"><g><path d="M 3.609375 0 L 3.609375 -48.078125 L 19.71875 -48.078125 L 19.71875 -41.765625 L 10.921875 -41.765625 L 10.921875 -27.78125 L 19.28125 -27.78125 L 19.28125 -21.609375 L 10.921875 -21.609375 L 10.921875 -6.3125 L 20.046875 -6.3125 L 20.046875 0 Z M 3.609375 0 "/></g></g></g></svg>
     <div>
-      <div class="brand-title">Players in the US</div>
+      <div class="brand-title" data-i18n="brand_title">Nos joueurs aux US</div>
       <div class="brand-sub">US Athletic Performance — College Golf Placement</div>
     </div>
   </div>
@@ -572,10 +661,11 @@ body {
       <div class="divider"></div>
       <label data-i18n="division">Division :</label>
       <span class="chip active" data-filter="division" data-value="all" data-i18n="all_f">Toutes</span>
-      <span class="chip" data-filter="division" data-value="D1">NCAA D1</span>
-      <span class="chip" data-filter="division" data-value="D2">NCAA D2</span>
+      <span class="chip" data-filter="division" data-value="NCAA D1">NCAA D1</span>
+      <span class="chip" data-filter="division" data-value="NCAA D2">NCAA D2</span>
       <span class="chip" data-filter="division" data-value="NAIA">NAIA</span>
-      <span class="chip" data-filter="division" data-value="JUCO">NJCAA</span>
+      <span class="chip" data-filter="division" data-value="NJCAA D1">NJCAA D1</span>
+      <span class="chip" data-filter="division" data-value="NJCAA D2">NJCAA D2</span>
       <div class="divider"></div>
       <input type="text" class="search-input" id="search" data-i18n-placeholder="search_placeholder" placeholder="Rechercher un joueur ou une école…">
       <div class="combobox" data-cb="club">
@@ -638,6 +728,9 @@ body {
     </div><!-- /tab-us -->
 
     <div id="tab-incoming" style="display:none">
+
+      <div class="stats-banner" id="stats-banner"></div>
+
       <div class="note-box" id="incoming-note" data-i18n-html="incoming_note">
         <strong>📋 Engagés Fall 2026 + Fall 2027 :</strong> joueurs qui ont signé avec une fac américaine et qui démarreront leur saison NCAA / NAIA / NJCAA en Fall 2026 ou Fall 2027. Source : Google Sheet "USAP Players - Committed".
       </div>
@@ -658,10 +751,11 @@ body {
         <div class="divider"></div>
         <label data-i18n="division">Division :</label>
         <span class="chip active" data-filter-in="idivision" data-value="all" data-i18n="all_f">Toutes</span>
-        <span class="chip" data-filter-in="idivision" data-value="D1">NCAA D1</span>
-        <span class="chip" data-filter-in="idivision" data-value="D2">NCAA D2</span>
+        <span class="chip" data-filter-in="idivision" data-value="NCAA D1">NCAA D1</span>
+        <span class="chip" data-filter-in="idivision" data-value="NCAA D2">NCAA D2</span>
         <span class="chip" data-filter-in="idivision" data-value="NAIA">NAIA</span>
-        <span class="chip" data-filter-in="idivision" data-value="JUCO">NJCAA</span>
+        <span class="chip" data-filter-in="idivision" data-value="NJCAA D1">NJCAA D1</span>
+        <span class="chip" data-filter-in="idivision" data-value="NJCAA D2">NJCAA D2</span>
         <div class="divider"></div>
         <input type="text" class="search-input" id="search-incoming" data-i18n-placeholder="search_placeholder" placeholder="Rechercher un joueur ou une école…">
         <div class="combobox" data-cb="club-incoming">
@@ -713,6 +807,9 @@ body {
       <div class="legal-row" data-i18n="legal_rgpd">
         RGPD : les joueurs et/ou leurs représentants légaux ont consenti à l'affichage de ces informations. Conformément au RGPD, tu peux à tout moment demander la modification ou la suppression de tes données par email.
       </div>
+      <div class="legal-row" data-i18n="legal_hosting">
+        Hébergé sur GitHub Pages (Microsoft Inc., USA — certifié EU-US Data Privacy Framework). Site statique, sans cookies ni analytics.
+      </div>
     </footer>
 
   </div>
@@ -737,6 +834,7 @@ body {
 let lang = 'fr';
 const T = {
   fr: {
+    brand_title: 'Nos joueurs aux US',
     title: 'Tous les joueurs <span class="accent">USAP</span> en université',
     subtitle: "Visualise nos joueurs en NCAA / NAIA / NJCAA — utilise le dropdown ci-dessous pour remonter dans le temps et voir leur école, classe, scoring et ranking français à différentes périodes.",
     updated_label: 'Données mises à jour : ',
@@ -761,6 +859,7 @@ const T = {
     legal_sources: 'Sources des données : FFGOLF, Scoreboard.clippd.com (CLIPPD Inc.), European Golf Rankings, données internes USAP. Mise à jour mensuelle pendant la saison NCAA (sept-mai).',
     legal_disclaimer: 'Données présentées à titre informatif. Best effort — des erreurs sont possibles. Pour signaler une erreur ou demander la correction/retrait de tes informations : <a href="mailto:nicolas@usathleticperformance.com">nicolas@usathleticperformance.com</a>.',
     legal_rgpd: 'RGPD : les joueurs et/ou leurs représentants légaux ont consenti à l\'affichage de ces informations. Conformément au RGPD, tu peux à tout moment demander la modification ou la suppression de tes données par email.',
+    legal_hosting: 'Hébergé sur GitHub Pages (Microsoft Inc., USA — certifié EU-US Data Privacy Framework). Site statique, sans cookies ni analytics.',
     map_us: 'Carte des USA',
     map_us_committed: 'Carte des USA — Engagés',
     player_details: 'Détails des joueurs',
@@ -802,6 +901,7 @@ const T = {
     wagr: 'WAGR'
   },
   en: {
+    brand_title: 'Our players in the US',
     title: 'All <span class="accent">USAP</span> players in college',
     subtitle: 'Visualize our players in NCAA / NAIA / NJCAA — use the dropdown below to go back in time and see their school, class, scoring and French ranking at different periods.',
     updated_label: 'Data updated: ',
@@ -826,6 +926,7 @@ const T = {
     legal_sources: 'Data sources: FFGOLF, Scoreboard.clippd.com (CLIPPD Inc.), European Golf Rankings, USAP internal data. Updated monthly during NCAA season (Sep–May).',
     legal_disclaimer: 'Information provided for reference only. Best effort — errors may occur. To report an error or request correction/removal of your information: <a href="mailto:nicolas@usathleticperformance.com">nicolas@usathleticperformance.com</a>.',
     legal_rgpd: 'GDPR: players and/or their legal representatives have consented to the display of this information. Under GDPR, you can at any time request modification or deletion of your data by email.',
+    legal_hosting: 'Hosted on GitHub Pages (Microsoft Inc., USA — EU-US Data Privacy Framework certified). Static site, no cookies or analytics.',
     map_us: 'USA Map',
     map_us_committed: 'USA Map — Committed',
     player_details: 'Player details',
@@ -908,13 +1009,23 @@ function computeClusters(pinsData, radius=14) {
 }
 
 // ================== Player Modal ==================
+function highlightActivePin(playerName) {
+  // H. Mark le pin du joueur ouvert dans le modal avec un ring orange
+  document.querySelectorAll('.pin.active-pin').forEach(el => el.classList.remove('active-pin'));
+  document.querySelectorAll('.pin').forEach(pin => {
+    const key = pin.dataset.key || '';
+    if (key.startsWith(playerName + '|')) pin.classList.add('active-pin');
+  });
+}
 function openPlayerModal(p, opts={}) {
+  highlightActivePin(p.name);
   const isIncoming = opts.incoming || false;
   const header = document.querySelector('.modal-header');
   // Cleanup existing photo + logo
   header.querySelectorAll('.school-logo-modal, .player-photo-modal').forEach(el => el.remove());
-  // Player photo (joueurs aux US uniquement, depuis Scoreboard)
-  const photoUrl = !isIncoming ? getPlayerPhoto(p.name) : null;
+  // Player photo : priorité LOCAL_PHOTOS, sinon Scoreboard pour US, sinon p.photo (engagés depuis SCOUT)
+  let photoUrl = getPlayerPhoto(p.name);
+  if (!photoUrl && isIncoming && p.photo) photoUrl = p.photo;
   if (photoUrl) {
     const photo = document.createElement('img');
     photo.className = 'player-photo-modal';
@@ -938,22 +1049,33 @@ function openPlayerModal(p, opts={}) {
   header.classList.toggle('no-photo', !photoUrl);
   document.getElementById('modal-name').textContent = p.name;
   document.getElementById('modal-school').textContent = `${p.university} · ${p.state || '?'} · ${p.div_full || '—'}`;
-  const seasonStr = isIncoming ? `${t('committed_for')} ${p.iclass}` : `${p.cclass} · ${t('starting')} ${p.signing}*`;
+  // Accord féminin si player.sex === 'Women'
+  const committedFor = (lang==='fr')
+    ? (p.sex === 'Women' ? 'Engagée pour' : 'Engagé pour')
+    : t('committed_for');
+  const seasonStr = isIncoming ? `${committedFor} ${p.iclass}` : `${p.cclass} · ${t('starting')} ${p.signing}*`;
   document.getElementById('modal-meta').textContent = seasonStr;
 
   let body = '';
   // Performance section (joueurs aux US uniquement)
   if (!isIncoming && (p.score != null || p.sb_rank != null || p.fr_rank != null)) {
     body += '<div class="modal-section"><h3>' + (lang==='en'?'Performance':'Performance') + '</h3><div class="modal-stats-grid">';
-    if (p.score != null) {
-      body += `<div class="modal-stat"><div class="v">${p.score}</div><div class="k">${lang==='en'?'Scoring avg':'Scoring avg'} ${escapeHtml(p.score_label||'')}</div></div>`;
-    }
     if (p.sb_rank != null) {
-      const divLabel = p.div_full && p.div_full !== '—' ? `<div class="div-tag">${escapeHtml(p.div_full)}</div>` : '';
-      body += `<div class="modal-stat"><div class="v">#${p.sb_rank}</div>${divLabel}<div class="k">${t('sb_ranking_short')}</div></div>`;
+      const divPart = p.div_full && p.div_full !== '—' ? ` ${escapeHtml(p.div_full)}` : '';
+      const lbl = lang==='en' ? `Scoreboard Ranking${divPart}` : `Ranking Scoreboard${divPart}`;
+      body += `<div class="modal-stat"><div class="v">#${p.sb_rank}</div><div class="k">${lbl}</div></div>`;
     }
     if (p.fr_rank != null) {
-      body += `<div class="modal-stat"><div class="v">#${p.fr_rank}</div><div class="k">${t('fr_ranking')} (${p.sex==='Men'?'M':'F'})</div></div>`;
+      const sexFr = p.sex==='Men' ? (lang==='en'?'Men':'Messieurs') : (lang==='en'?'Women':'Dames');
+      const lbl = lang==='en' ? `French Adult Ranking ${sexFr}` : `Ranking Adultes France ${sexFr}`;
+      body += `<div class="modal-stat"><div class="v">#${p.fr_rank}</div><div class="k">${lbl}</div></div>`;
+    }
+    if (p.wagr != null && p.wagr > 0) {
+      body += `<div class="modal-stat"><div class="v">#${p.wagr}</div><div class="k">WAGR</div></div>`;
+    }
+    if (p.score != null) {
+      const lbl = lang==='en' ? `Adjusted Scoring Avg (current year)` : `Moyenne de Score Ajustée (année actuelle)`;
+      body += `<div class="modal-stat"><div class="v">${p.score}</div><div class="k">${lbl}</div></div>`;
     }
     body += '</div></div>';
   }
@@ -961,16 +1083,14 @@ function openPlayerModal(p, opts={}) {
   if (!isIncoming) {
     const points = [];
     const histScores = HISTORICAL_SCOREBOARD[p.name] || {};
-    if (histScores['2023/2024'] && histScores['2023/2024'].s != null) points.push({label:'Fr.', season:'23/24', score:histScores['2023/2024'].s, rank:histScores['2023/2024'].r});
+    const yearLbl = (n) => (lang==='en'?`Year ${n}`:`Année ${n}`);
+    if (histScores['2023/2024'] && histScores['2023/2024'].s != null) points.push({label:yearLbl(points.length+1), season:'2023-2024', score:histScores['2023/2024'].s, rank:histScores['2023/2024'].r});
     if (histScores['2024/2025'] && histScores['2024/2025'].s != null) {
-      const cls = (points.length === 0 ? 'Fr.' : 'So.');
-      points.push({label:cls, season:'24/25', score:histScores['2024/2025'].s, rank:histScores['2024/2025'].r});
+      points.push({label:yearLbl(points.length+1), season:'2024-2025', score:histScores['2024/2025'].s, rank:histScores['2024/2025'].r});
     }
     const cur = CURRENT_SCOREBOARD[p.name];
     if (cur && cur.s != null) {
-      const cclass = p.cclass;
-      const lbl = CLASS_LABEL[cclass] || '';
-      points.push({label:lbl, season:'25/26', score:cur.s, rank:cur.r});
+      points.push({label:yearLbl(points.length+1), season:'2025-2026', score:cur.s, rank:cur.r});
     }
     if (points.length >= 2) {
       // Build SVG line chart
@@ -996,18 +1116,75 @@ function openPlayerModal(p, opts={}) {
         // Rank below point
         if (pt.rank != null) svg += `<text class="rank-label" x="${xs[i].toFixed(1)}" y="${(ys[i]+15).toFixed(1)}" text-anchor="middle">#${pt.rank}</text>`;
         // X-axis label
-        svg += `<text class="axis-label" x="${xs[i].toFixed(1)}" y="${H-6}" text-anchor="middle">${pt.label} ${pt.season}</text>`;
+        // Multi-ligne : label année + saison sur 2 lignes pour ne pas chevaucher
+        svg += `<text class="axis-label" x="${xs[i].toFixed(1)}" y="${H-14}" text-anchor="middle">${pt.label}</text>`;
+        svg += `<text class="axis-label" x="${xs[i].toFixed(1)}" y="${H-4}" text-anchor="middle">${pt.season}</text>`;
       });
       svg += '</svg>';
-      body += `<div class="modal-section"><h3>${lang==='en'?'Scoring trend':'Évolution scoring'}</h3><div class="trend-chart-wrap">${svg}</div></div>`;
+      const noteOrange = lang==='en'
+        ? "* Orange ranking = player's individual ranking within their division (Scoreboard)."
+        : "* Le ranking en orange correspond au ranking individuel du joueur dans sa division (Scoreboard).";
+      body += `<div class="modal-section"><h3>${lang==='en'?'Scoring trend US':'Évolution scoring US'}</h3><div class="trend-chart-wrap">${svg}<div class="trend-note">${noteOrange}</div></div></div>`;
     }
   }
-  // FR Ranking history (joueurs aux US)
+  // SB Ranking history (joueurs aux US — multi-saisons, mention transferts)
+  if (!isIncoming) {
+    const histScores = HISTORICAL_SCOREBOARD[p.name] || {};
+    const cur = CURRENT_SCOREBOARD[p.name];
+    const hasAny = (histScores['2023/2024']?.r != null) || (histScores['2024/2025']?.r != null) || (cur?.r != null);
+    if (hasAny) {
+      // Get all PLAYERS entries with same name to determine school per season (handles transfers)
+      const allEntries = (typeof PLAYERS !== 'undefined' ? PLAYERS : []).filter(x => x.name === p.name);
+      function schoolForSeason(seasonStartY) {
+        // Best guess : entry whose signing year <= season start, sorted desc by signing year
+        const matches = allEntries.filter(e => {
+          const sy = signingToDate(e.signing).y;
+          return sy <= seasonStartY && (!e.stopped || (e.stopped.y > seasonStartY || (e.stopped.y === seasonStartY && e.stopped.m > 5)));
+        }).sort((a,b) => signingToDate(b.signing).y - signingToDate(a.signing).y);
+        return matches[0] || allEntries[0] || p;
+      }
+      const seasons = [];
+      const yearLbl = (n) => (lang==='en'?`Year ${n}`:`Année ${n}`);
+      if (histScores['2023/2024']?.r != null) seasons.push({key:'2023/2024', startY:2023, rank:histScores['2023/2024'].r, label:yearLbl(seasons.length+1)});
+      if (histScores['2024/2025']?.r != null) {
+        seasons.push({key:'2024/2025', startY:2024, rank:histScores['2024/2025'].r, label:yearLbl(seasons.length+1)});
+      }
+      if (cur?.r != null) seasons.push({key:'2025/2026', startY:2025, rank:cur.r, label:yearLbl(seasons.length+1), current:true});
+
+      body += '<div class="modal-section"><h3>' + (lang==='en'?'US ranking history (Scoreboard)':'Historique ranking US (Scoreboard)') + '</h3>';
+      let prevSchool = null;
+      seasons.forEach(s => {
+        const e = schoolForSeason(s.startY);
+        const sch = SCHOOLS[e.university] || {};
+        const dvFull = divFull(sch);
+        const isTransfer = prevSchool && prevSchool !== e.university;
+        const transferBadge = isTransfer ? ` <span class="transfer-badge">↪ ${lang==='en'?'TRANSFER':'TRANSFERT'}</span>` : '';
+        const dvBadge = dvFull && dvFull !== '—' ? ` <span class="div-mini-badge">${escapeHtml(dvFull)}</span>` : '';
+        const seasonShort = `${s.key.split('/')[0].slice(2)}/${s.key.split('/')[1].slice(2)}`;
+        const labelTxt = `${s.label} ${seasonShort}`;
+        const schSafe = escapeHtml(e.university);
+        const valColor = s.current ? 'color:var(--usap-orange)' : '';
+        body += `<div class="modal-history-row"><span class="yr">${labelTxt}<br><span class="hist-school">${schSafe}${dvBadge}${transferBadge}</span></span><span class="val" style="${valColor}">#${s.rank}</span></div>`;
+        prevSchool = e.university;
+      });
+      body += '</div>';
+    }
+  }
+  // FR Ranking history (joueurs aux US) — pour les transferts on récupère commit_date de l'entrée originale
   if (!isIncoming && (p.fr_rank_prior != null || p.fr_rank_commit != null || p.fr_rank_recent != null)) {
     const sd = signingToDate(p.signing);
+    // Fallback : pour les transferts, l'entrée current peut ne pas avoir commit_date — lookup depuis l'entrée originale
+    let commitDate = p.commit_date;
+    if (!commitDate && typeof PLAYERS !== 'undefined') {
+      const orig = PLAYERS.find(x => x.name === p.name && x.commit_date);
+      if (orig) commitDate = orig.commit_date;
+    }
     body += '<div class="modal-section"><h3>' + (lang==='en'?'French ranking history':'Historique ranking FR') + '</h3>';
     if (p.fr_rank_prior != null) body += `<div class="modal-history-row"><span class="yr">Aug ${sd.y - 1}</span><span class="val">#${p.fr_rank_prior}</span></div>`;
-    if (p.fr_rank_commit != null && p.commit_date) body += `<div class="modal-history-row"><span class="yr">${(lang==='en'?'At commit':'Au commit')} (${escapeHtml(p.commit_date)})</span><span class="val">#${p.fr_rank_commit}</span></div>`;
+    if (p.fr_rank_commit != null) {
+      const dateLbl = commitDate ? ` (${escapeHtml(commitDate)})` : '';
+      body += `<div class="modal-history-row"><span class="yr">${(lang==='en'?'At commit':'Au commit')}${dateLbl}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
+    }
     if (p.fr_rank_recent != null) body += `<div class="modal-history-row"><span class="yr">Aug ${sd.y}</span><span class="val">#${p.fr_rank_recent}</span></div>`;
     if (CURRENT_FFGOLF[p.name] != null) body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Mai 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
     body += '</div>';
@@ -1016,6 +1193,7 @@ function openPlayerModal(p, opts={}) {
   if (isIncoming) {
     body += '<div class="modal-section"><h3>' + (lang==='en'?'Profile':'Profil') + '</h3><div class="modal-stats-grid">';
     if (p.fr_rank != null) body += `<div class="modal-stat"><div class="v">#${p.fr_rank}</div><div class="k">${t('fr_ranking')}</div></div>`;
+    if (p.wagr != null && p.wagr > 0) body += `<div class="modal-stat"><div class="v">#${p.wagr}</div><div class="k">WAGR</div></div>`;
     if (p.country) body += `<div class="modal-stat"><div class="v" style="font-size:14px">${escapeHtml(p.country)}</div><div class="k">${lang==='en'?'Country':'Pays'}</div></div>`;
     body += '</div></div>';
   }
@@ -1037,6 +1215,8 @@ function openPlayerModal(p, opts={}) {
   document.getElementById('player-modal').classList.add('open');
 }
 function closePlayerModal() {
+  // H. Clear active pin highlight
+  document.querySelectorAll('.pin.active-pin').forEach(el => el.classList.remove('active-pin'));
   document.getElementById('player-modal').classList.remove('open');
 }
 document.getElementById('modal-close-btn').addEventListener('click', closePlayerModal);
@@ -1047,6 +1227,37 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { closePlaye
 
 // ================== Pinned tooltip helpers ==================
 let tooltipPinned = false;
+
+// Place tooltip with viewport-clamp + mobile centering
+function placeTooltipAt(tt, e) {
+  const isMobile = window.innerWidth < 700;
+  const margin = 12;
+  // Force layout to get current dimensions
+  tt.style.left = '0px'; tt.style.top = '0px';
+  const ttW = tt.offsetWidth || 280;
+  const ttH = tt.offsetHeight || 100;
+  const scrollX = window.pageXOffset || 0;
+  const scrollY = window.pageYOffset || 0;
+  const vpW = window.innerWidth, vpH = window.innerHeight;
+  let x, y;
+  if (isMobile && tooltipPinned) {
+    // On mobile + pinned: center horizontally, place near top of viewport
+    x = scrollX + Math.max(margin, (vpW - ttW) / 2);
+    y = scrollY + 70;
+  } else {
+    // Desktop or unpinned: near cursor, clamped to viewport
+    x = (e.pageX || 0) + 14;
+    y = (e.pageY || 0) + 14;
+    // Clamp right
+    if (x + ttW + margin > scrollX + vpW) x = (e.pageX || 0) - ttW - 14;
+    if (x < scrollX + margin) x = scrollX + margin;
+    // Clamp bottom
+    if (y + ttH + margin > scrollY + vpH) y = (e.pageY || 0) - ttH - 14;
+    if (y < scrollY + margin) y = scrollY + margin;
+  }
+  tt.style.left = x + 'px';
+  tt.style.top = y + 'px';
+}
 function unpinTooltip() {
   const tt = document.getElementById('tooltip');
   tt.classList.remove('pinned');
@@ -1069,20 +1280,35 @@ function applyMapView(svgId) {
   const s = mapStates[svgId];
   document.getElementById(svgId).setAttribute('viewBox', `${s.x} ${s.y} ${s.w} ${s.h}`);
 }
+// Smooth animated viewBox transition (avec easing) — durée ~250ms
+const _zoomAnims = {};
+function animateMapView(svgId, target, duration=240) {
+  const s = mapStates[svgId];
+  if (_zoomAnims[svgId]) cancelAnimationFrame(_zoomAnims[svgId]);
+  const start = {x:s.x, y:s.y, w:s.w, h:s.h};
+  const t0 = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - t0) / duration);
+    const e = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    s.x = start.x + (target.x - start.x) * e;
+    s.y = start.y + (target.y - start.y) * e;
+    s.w = start.w + (target.w - start.w) * e;
+    s.h = start.h + (target.h - start.h) * e;
+    applyMapView(svgId);
+    if (t < 1) _zoomAnims[svgId] = requestAnimationFrame(step);
+  }
+  _zoomAnims[svgId] = requestAnimationFrame(step);
+}
 function zoomMap(svgId, factor) {
   const s = mapStates[svgId];
   const cx = s.x + s.w/2, cy = s.y + s.h/2;
   const newW = Math.max(s.baseW*0.2, Math.min(s.baseW*1, s.w * factor));
   const newH = Math.max(s.baseH*0.2, Math.min(s.baseH*1, s.h * factor));
-  s.x = cx - newW/2;
-  s.y = cy - newH/2;
-  s.w = newW; s.h = newH;
-  applyMapView(svgId);
+  animateMapView(svgId, {x: cx - newW/2, y: cy - newH/2, w: newW, h: newH});
 }
 function resetMap(svgId) {
   const s = mapStates[svgId];
-  s.x = 0; s.y = 0; s.w = s.baseW; s.h = s.baseH;
-  applyMapView(svgId);
+  animateMapView(svgId, {x:0, y:0, w:s.baseW, h:s.baseH});
 }
 function setupPan(svgId) {
   const svg = document.getElementById(svgId);
@@ -1106,6 +1332,61 @@ function setupPan(svgId) {
     panning = false;
     svg.classList.remove('dragging');
   });
+
+  // B. Pinch-to-zoom multi-touch mobile + single-finger pan
+  let touchStart = null;
+  svg.addEventListener('touchstart', e => {
+    if (e.target.tagName === 'circle' || e.target.tagName === 'text') return;
+    const s = mapStates[svgId];
+    if (e.touches.length === 2) {
+      // Pinch start
+      const t1 = e.touches[0], t2 = e.touches[1];
+      touchStart = {
+        mode: 'pinch',
+        dist: Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY),
+        midX: (t1.clientX + t2.clientX) / 2,
+        midY: (t1.clientY + t2.clientY) / 2,
+        s0: {x:s.x, y:s.y, w:s.w, h:s.h}
+      };
+    } else if (e.touches.length === 1) {
+      touchStart = {
+        mode: 'pan',
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+        s0: {x:s.x, y:s.y, w:s.w, h:s.h}
+      };
+    }
+  }, { passive: true });
+  svg.addEventListener('touchmove', e => {
+    if (!touchStart) return;
+    const s = mapStates[svgId];
+    const rect = svg.getBoundingClientRect();
+    if (touchStart.mode === 'pinch' && e.touches.length === 2) {
+      e.preventDefault();
+      const t1 = e.touches[0], t2 = e.touches[1];
+      const newDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const ratio = touchStart.dist / newDist;
+      const newW = Math.max(s.baseW*0.2, Math.min(s.baseW, touchStart.s0.w * ratio));
+      const newH = Math.max(s.baseH*0.2, Math.min(s.baseH, touchStart.s0.h * ratio));
+      // Centre du pinch en coordonnées SVG
+      const scale0 = touchStart.s0.w / rect.width;
+      const midSvgX = touchStart.s0.x + (touchStart.midX - rect.left) * scale0;
+      const midSvgY = touchStart.s0.y + (touchStart.midY - rect.top) * scale0;
+      const newScale = newW / rect.width;
+      s.x = midSvgX - (touchStart.midX - rect.left) * newScale;
+      s.y = midSvgY - (touchStart.midY - rect.top) * newScale;
+      s.w = newW; s.h = newH;
+      applyMapView(svgId);
+    } else if (touchStart.mode === 'pan' && e.touches.length === 1) {
+      const scale = s.w / rect.width;
+      s.x = touchStart.s0.x - (e.touches[0].clientX - touchStart.x) * scale;
+      s.y = touchStart.s0.y - (e.touches[0].clientY - touchStart.y) * scale;
+      applyMapView(svgId);
+    }
+  }, { passive: false });
+  svg.addEventListener('touchend', e => {
+    if (e.touches.length === 0) touchStart = null;
+  }, { passive: true });
 }
 
 // ================== SCHOOL LOGOS ==================
@@ -1167,7 +1448,8 @@ const SCHOOL_DOMAINS = {
   "Blue Mountain Christian University":"bmcu.edu","College of the Canyons":"canyons.edu",
   "Kansas State University":"k-state.edu","Southwestern Iowa CC":"swcciowa.edu",
   "Defiance College":"defiance.edu","University of Colorado":"colorado.edu",
-  "UT Southern":"ut-southern.edu","Arkansas State University":"astate.edu"
+  "UT Southern":"ut-southern.edu","Arkansas State University":"astate.edu",
+  "Park University":"park.edu","Stetson University":"stetson.edu"
 };
 function getSchoolLogo(school) {
   const dom = SCHOOL_DOMAINS[school];
@@ -1178,95 +1460,110 @@ function getSchoolLogo(school) {
 // Source: scoreboard.clippd.com (scrape via Chrome MCP, Mai 2026)
 // Stats actuelles de la saison NCAA en cours, override les fr_score/so_score/jr_score historiques pour le current snap
 const CURRENT_SCOREBOARD = {
-  // Class 2023 (Junior 2025/26) - sb_id pour réaccès
-  "Michael Najburg":{r:null,s:77.6,tr:8,id:25133},
-  "Rodolphe Cicala":{r:630,s:72.2,tr:33,id:8254},
-  "Maylis Lamoure":{r:161,s:72.0,tr:29,id:19385},
-  "Taline Kyoumjian":{r:1022,s:78.2,tr:17,id:15009},
+  // Source : PDF "Clients - Pipe - Feuille 22" — fin saison 2025/26 (synced mai 2026)
+  // tr (total rounds) conservé de la précédente sync — peut être un peu en retard mais r/s à jour
+  // Class 2023 (Junior 2025/26)
+  "Michael Najburg":{r:null,s:77.7,tr:8,id:25133},
+  "Rodolphe Cicala":{r:669,s:72.6,tr:33,id:8254},
+  "Maylis Lamoure":{r:168,s:72.0,tr:29,id:19385},
+  "Taline Kyoumjian":{r:1030,s:78.2,tr:17,id:15009},
   // Class 2024 (Sophomore)
-  "Samuel Guigui-Baruchel":{r:475,s:74.3,tr:12,id:32747},
-  "Bogdan Sandrini":{r:709,s:72.7,tr:33,id:37511},
-  "Antoine Lianos":{r:1166,s:82.0,tr:17,id:33109},
-  "Léo Molino":{r:365,s:75.5,tr:18,id:36398},
-  "Hugo Almeida":{r:null,s:77.7,tr:9,id:33191},
-  "Alois Casalonga":{r:200,s:73.0,tr:25,id:31266},
-  "Joseph Linel":{r:52,s:72.8,tr:11,id:34000},
-  "Thomas Romani":{r:1402,s:74.9,tr:31,id:33544},
-  "Simon Germain":{r:241,s:73.3,tr:21,id:33468},
+  "Samuel Guigui-Baruchel":{r:476,s:74.4,tr:12,id:32747},
+  "Bogdan Sandrini":{r:722,s:72.8,tr:33,id:37511},
+  "Antoine Lianos":{r:1163,s:81.9,tr:17,id:33109},
+  "Léo Molino":{r:362,s:75.5,tr:18,id:36398},
+  "Hugo Almeida":{r:null,s:77.8,tr:9,id:33191},
+  "Alois Casalonga":{r:177,s:72.8,tr:25,id:31266},
+  "Joseph Linel":{r:53,s:73.0,tr:11,id:34000},
+  "Thomas Romani":{r:1411,s:75.0,tr:31,id:33544},
+  "Simon Germain":{r:228,s:73.2,tr:21,id:33468},
   "Faustine Errecade":{r:null,s:79.0,tr:10,id:6687},
-  "Camille Rosier":{r:1070,s:77.7,tr:26,id:35182},
-  "Anna Pillard":{r:316,s:73.1,tr:32,id:34538},
+  "Camille Rosier":{r:1066,s:77.7,tr:26,id:35182},
+  "Anna Pillard":{r:317,s:73.2,tr:32,id:34538},
   "Emma Leroy-Fabry":{r:null,s:77.0,tr:14,id:31736},
   "Amélie Kumar":{r:null,s:null,tr:null}, // stopped
   "Ambre Matlega":{r:null,s:77.3,tr:11,id:32863},
-  "Lauren Thompstone":{r:520,s:74.5,tr:18,id:32733},
-  "Anaëlle Picot":{r:54,s:74.2,tr:26,id:36189},
-  "Lehane Louis-Dumond":{r:242,s:77.3,tr:25,id:34578},
-  "Melissa Gilloz":{r:1055,s:78.3,tr:23,id:33867},
-  "Amély Bochaton":{r:1,s:69.3,tr:33,id:32039},
+  "Lauren Thompstone":{r:525,s:74.5,tr:18,id:32733},
+  "Anaëlle Picot":{r:45,s:74.2,tr:26,id:36189},
+  "Lehane Louis-Dumond":{r:260,s:77.7,tr:25,id:34578},
+  "Melissa Gilloz":{r:1062,s:78.3,tr:23,id:33867},
+  "Amély Bochaton":{r:1,s:69.1,tr:33,id:32039},
   // Transfers Fall 2025 (Sophomore at new school)
-  "Gabriel Dulon-Villoslada":{r:727,s:72.7,tr:27,id:8234},
-  "Maxime Lam":{r:897,s:73.3,tr:32,id:36033},
-  "Cloé Poizac":{r:927,s:76.8,tr:33,id:36029},
-  "Juliette Daviau":{r:389,s:78.3,tr:18,id:34543},
+  "Gabriel Dulon-Villoslada":{r:752,s:72.8,tr:27,id:8234},
+  "Maxime Lam":{r:890,s:73.3,tr:32,id:36033},
+  "Cloé Poizac":{r:928,s:76.8,tr:33,id:36029},
+  "Juliette Daviau":{r:391,s:78.5,tr:18,id:34543},
   // Spring 2025 (Sophomore)
-  "Loris Bonnetton Alban":{r:746,s:77.7,tr:18,id:38447},
+  "Loris Bonnetton Alban":{r:747,s:77.8,tr:18,id:38447},
   // Class 2025 (Freshman 2025/26)
-  "Hugo Soubran":{r:953,s:80.2,tr:23,id:5216},
-  "Matis Sayah":{r:null,s:85.2,tr:8,id:8733},
+  "Hugo Soubran":{r:950,s:80.2,tr:23,id:5216},
+  "Matis Sayah":{r:null,s:85.3,tr:8,id:8733},
   "Charles Cirier":{r:null,s:75.9,tr:3,id:5196},
-  "Lucas Raoul":{r:1822,s:77.4,tr:20,id:8323},
-  "Rafael Bobo-Lloret":{r:611,s:72.2,tr:33,id:6035},
-  "Octavio Laurent":{r:19,s:70.5,tr:29,id:7978},
-  "Ali Elsayed":{r:786,s:77.6,tr:15,id:39261},
-  "Gaspard Maréchal Dubourg":{r:202,s:74.0,tr:12,id:7372},
-  "Corentin Guilloux":{r:1297,s:74.4,tr:20,id:38979},
-  "Léo Testas":{r:54,s:72.4,tr:24,id:3708},
-  "Sacha Corlouer":{r:23,s:70.9,tr:17,id:3349},
-  "Louis Delattre":{r:1211,s:82.3,tr:15,id:3413},
-  "Elie Bennatan":{r:1258,s:82.5,tr:14,id:6109},
-  "Alphonse Hermansson":{r:416,s:74.1,tr:30,id:4966},
-  "Hugo Duquaine":{r:27,s:72.1,tr:26,id:8808},
-  "Maxence Bonnet":{r:247,s:73.2,tr:23,id:7084},
-  "Martin Chaney":{r:553,s:76.4,tr:24,id:3353},
-  "Amaury Wouters":{r:250,s:74.6,tr:20,id:4024},
-  "Gabriel Delaval":{r:583,s:75.6,tr:24,id:6802},
-  "Lucas Nicola":{r:457,s:77.2,tr:24,id:3710},
-  "Tom Clarens":{r:413,s:75.9,tr:15,id:5956}, // Senior starter
-  "Florian Simon":{r:248,s:74.2,tr:27,id:9398},
+  "Lucas Raoul":{r:1826,s:77.5,tr:20,id:8323},
+  "Rafael Bobo-Lloret":{r:620,s:72.2,tr:33,id:6035},
+  "Octavio Laurent":{r:4,s:69.8,tr:29,id:7978},
+  "Ali Elsayed":{r:782,s:77.6,tr:15,id:39261},
+  "Gaspard Maréchal Dubourg":{r:196,s:74.0,tr:12,id:7372},
+  "Corentin Guilloux":{r:1302,s:74.5,tr:20,id:38979},
+  "Léo Testas":{r:58,s:72.5,tr:24,id:3708},
+  "Sacha Corlouer":{r:22,s:70.8,tr:17,id:3349},
+  "Louis Delattre":{r:1207,s:82.3,tr:15,id:3413},
+  "Elie Bennatan":{r:1268,s:82.5,tr:14,id:6109},
+  "Alphonse Hermansson":{r:408,s:74.1,tr:30,id:4966},
+  "Hugo Duquaine":{r:19,s:71.9,tr:26,id:8808},
+  "Maxence Bonnet":{r:261,s:73.3,tr:23,id:7084},
+  "Martin Chaney":{r:575,s:76.6,tr:24,id:3353},
+  "Amaury Wouters":{r:252,s:74.7,tr:20,id:4024},
+  "Gabriel Delaval":{r:581,s:75.7,tr:24,id:6802},
+  "Lucas Nicola":{r:464,s:77.3,tr:24,id:3710},
+  "Tom Clarens":{r:410,s:75.9,tr:15,id:5956}, // Senior starter
+  "Florian Simon":{r:253,s:74.3,tr:27,id:9398},
   "Faust Amat":{r:null,s:77.6,tr:9,id:6801},
-  "Andrea Matlega":{r:862,s:78.0,tr:24,id:7370}, // Senior starter
-  "Alexian Rouault":{r:292,s:75.7,tr:29,id:30045}, // Senior starter
-  "Gabriele Romani":{r:58,s:72.2,tr:30,id:15321}, // 5th year
-  "Alexandre Genet":{r:798,s:78.8,tr:21,id:3855}, // Senior starter
-  "Edouard Cereto":{r:773,s:73.4,tr:20,id:25545}, // Senior (Junior start)
+  "Andrea Matlega":{r:852,s:78.0,tr:24,id:7370}, // Senior starter
+  "Alexian Rouault":{r:270,s:75.4,tr:29,id:30045}, // Senior starter
+  "Gabriele Romani":{r:51,s:71.9,tr:30,id:15321}, // 5th year
+  "Alexandre Genet":{r:798,s:78.8,tr:21,id:3855}, // Senior starter (pas dans PDF — gardé valeur précédente)
+  "Edouard Cereto":{r:777,s:73.4,tr:20,id:25545}, // Senior (Junior start)
   // Class 2025 transfers (Junior)
-  "Kilian Juget":{r:720,s:77.8,tr:28,id:5364}, // Junior à Ottawa
+  "Kilian Juget":{r:711,s:77.8,tr:28,id:5364}, // Junior à Ottawa
   // Class 2025 (women Freshman)
-  "Anna Olesen":{r:1121,s:78.4,tr:21,id:38460},
-  "Aubane Statiotis":{r:36,s:73.8,tr:29,id:6258},
-  "Inès Marty":{r:null,s:75.9,tr:8,id:79869},
-  "Clara Willem":{r:796,s:76.0,tr:31,id:3282},
-  "Zoé Rubichon":{r:662,s:75.4,tr:30,id:6326},
-  "Lou Fourdan":{r:117,s:75.1,tr:26,id:8320},
-  "Camille Padieu":{r:314,s:77.7,tr:23,id:6259},
-  "Clara Ledun":{r:234,s:77.0,tr:16,id:8319},
-  "Tina Genoulaz":{r:570,s:74.8,tr:27,id:9445},
-  "Enora Castillon":{r:41,s:84.9,tr:15,id:5810}, // NJCAA D2
-  "Fantine Cabry":{r:89,s:74.7,tr:25,id:3626},
-  "Manon Verret":{r:155,s:75.6,tr:30,id:6047},
-  "Jeanne Pagnier":{r:692,s:75.4,tr:17,id:39245},
-  "Mahé Happiette":{r:662,s:82.2,tr:22,id:5576},
-  "Maeva Constantinoff":{r:525,s:89.5,tr:20,id:3602},
-  "Agathe Lacoste":{r:470,s:79.4,tr:19,id:6834}, // Junior starter
-  "Romane Lacoste":{r:130,s:75.2,tr:28,id:3544}, // Junior starter
-  "Carla Bourdeaux":{r:349,s:73.8,tr:31,id:26202}, // Junior starter
-  // Spring 2026 starters
+  "Anna Olesen":{r:1131,s:78.4,tr:21,id:38460},
+  "Aubane Statiotis":{r:30,s:73.8,tr:29,id:6258},
+  "Inès Marty":{r:null,s:76.1,tr:8,id:79869},
+  "Clara Willem":{r:801,s:76.0,tr:31,id:3282},
+  "Zoé Rubichon":{r:672,s:75.4,tr:30,id:6326},
+  "Lou Fourdan":{r:130,s:75.5,tr:26,id:8320},
+  "Camille Padieu":{r:294,s:77.6,tr:23,id:6259},
+  "Clara Ledun":{r:238,s:77.1,tr:16,id:8319},
+  "Tina Genoulaz":{r:573,s:74.8,tr:27,id:9445},
+  "Enora Castillon":{r:37,s:84.6,tr:15,id:5810}, // NJCAA D2
+  "Fantine Cabry":{r:92,s:74.8,tr:25,id:3626},
+  "Manon Verret":{r:139,s:75.5,tr:30,id:6047},
+  "Jeanne Pagnier":{r:622,s:75.2,tr:17,id:39245},
+  "Mahé Happiette":{r:667,s:82.3,tr:22,id:5576},
+  "Maeva Constantinoff":{r:528,s:89.7,tr:20,id:3602},
+  "Agathe Lacoste":{r:461,s:79.4,tr:19,id:6834}, // Junior starter
+  "Romane Lacoste":{r:127,s:75.4,tr:28,id:3544}, // Junior starter
+  "Carla Bourdeaux":{r:352,s:73.8,tr:31,id:26202}, // Junior starter
+  // NOUVELLE Mai 2026 : Sara Brentcheneff à Arkansas NCAA D1
+  "Sara Brentcheneff":{r:69,s:71.0,tr:null,id:null},
+  // Spring 2026 starters (pas dans PDF — gardés tels quels)
   "Oihan Silva":{r:235,s:81.6,tr:12,id:79787},
   "Jules Lauer":{r:371,s:71.4,tr:18,id:79908},
   "Fadi Burnet":{r:293,s:78.3,tr:11,id:79905}
 };
 const CLASS_LABEL = {Freshman:'Fr.', Sophomore:'So.', Junior:'Jr.', Senior:'Sr.', '5th year':'5y.'};
+
+// ================== USAP STATS BANNER (Saison 2026 — Engagés en France) ==================
+// Source SCOUT (bfxhruvkzidvznsyyryp.supabase.co) — query mensuelle agrégée
+// Périmètre : SEULEMENT les 59 engagés (pas encore aux US) qui jouent encore en France
+// Victoires + Sous-par : auto-calculé depuis tournament_results (SCOUT)
+// Sélections FRA + Nationaux : maintenance manuelle (Nico met à jour)
+const USAP_STATS = {
+  gp_wins: 8,            // Victoires Grand Prix 2026 par engagés (position=1, tournois "Grand Prix*") — SCOUT auto
+  sub_par_rounds: 47,    // Cartes sous le par 2026 par engagés (rounds individuels < course_par) — SCOUT auto
+  national_selections: 15 // Sélections équipes nationales 2026 (FR + Suisse + autres — maintenu manuellement par Nico, à re-vérifier)
+};
 
 // ================== PLAYER PHOTOS (scoreboard.clippd.com avatars) ==================
 // Source: scoreboard.clippd.com profile pages (scrape Mai 2026)
@@ -1345,10 +1642,28 @@ const PLAYER_PHOTOS = {
   "Jules Lauer":"239036-f7c4d05d-d6e6-4278-9d9e-f4eb45af0493"
 };
 function getPlayerPhoto(name) {
+  if (LOCAL_PHOTOS[name]) return `photos/${LOCAL_PHOTOS[name]}`;
   const path = PLAYER_PHOTOS[name];
   if (!path) return null;
   return `https://clippd-prod.mo.cloudinary.net/scoreboard/upload/${path}?tx=w_128,ar_1,q_85,g_face:center,c_thumb,z_0.85`;
 }
+// Photos hébergées localement dans le repo (/photos/) — pour joueurs sans photo Scoreboard publique ou engagés
+const LOCAL_PHOTOS = {
+  "Léo Molino": "leo-molino.jpg",
+  "Thomas Peluchon": "thomas-peluchon.jpg",
+  "Liza Bogard": "liza-bogard.jpg",
+  "Julia Paviet": "julia-paviet.jpg",
+  "Antoine Lianos": "antoine-lianos.jpg",
+  "Maxime Lam": "maxime-lam.jpg",
+  "Camille Rosier": "camille-rosier.jpg",
+  "Cloé Poizac": "cloe-poizac.jpg",
+  "Anaëlle Picot": "anaelle-picot.jpg",
+  "Ali Elsayed": "ali-elsayed.jpg",
+  "Louis Delattre": "louis-delattre.jpg",
+  "Celeste Bobo-Lloret": "celeste-bobo-lloret.jpg",
+  "Eline Chau-Hu": "eline-chau-hu.jpg",
+  "Ambre Boullot": "ambre-boullot.jpg"
+};
 
 // ================== CLUB FRANÇAIS + ACADEMY DATA ==================
 // Source: Google Sheet "USAP-PLAYERS-ARTIFACTS" (sync Mai 2026)
@@ -1418,7 +1733,7 @@ const CLUB_DATA = {
   "Hugo Soubran": {club:"Hossegor"},
   "Inès Marty": {club:"Bordelais"},
   "Iris Pollet": {club:"Chantilly"},
-  "Jeanne Pagnier": {club:"Mionnay", academy:"Renaud Gris Golf Institut"},
+  "Jeanne Pagnier": {club:"Saint-Cloud", academy:"Renaud Gris Golf Institut"},
   "Joseph Linel": {club:"Seignosse"},
   "Jules De Brauwere": {club:"Golf de Paris"},
   "Jules Lauer": {club:"Saint-Germain", academy:"Golfskills"},
@@ -1558,52 +1873,63 @@ const HISTORICAL_SCOREBOARD = {
   "Amély Bochaton":{"2024/2025":{r:1,s:70.3,tr:38}}, // #1 NCAA D2 women DEUX ANNÉES DE SUITE
   // Spring 2025 (Sophomore 2025/26) — Freshman partial 2024/25
   "Loris Bonnetton Alban":{"2024/2025":{r:540,s:77.3,tr:21}},
-  "Anna Olesen":{"2024/2025":{r:null,s:78.3,tr:14}}
+  "Anna Olesen":{"2024/2025":{r:null,s:78.3,tr:14}},
+  // 5th year + alumni — scrapé Mai 2026
+  "Gabriele Romani":{"2023/2024":{r:null,s:73.6,tr:6},"2024/2025":{r:null,s:75.7,tr:8}},
+  "Jules Gentil":{"2023/2024":{r:1385,s:74.8,tr:17}},
+  "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}}
 };
 
 // ================== CURRENT FFGOLF RANKINGS (Mai 2026) ==================
 // Source: https://pages.ffgolf.org/merite/amateurs/messieurs + .../dames (scrape via Chrome MCP)
 // "-" / null = en DB mais sans ranking actif. Players non-français (Kostylev, Luczak, Romani Italie, Hermansson, Wouters, Olesen Suisse) n'apparaissent pas.
 const CURRENT_FFGOLF = {
-  // Men
   "Ylan Guerin-Pozzalo": 92, "Rodolphe Cicala": 18, "Arthur Karouby": 936, "Thomas Peluchon": 616,
-  "Samuel Guigui-Baruchel": 289, "Gabriel Dulon-Villoslada": 39, "Bogdan Sandrini": 59,
-  "Antoine Lianos": 783, "Léo Molino": 204, "Hugo Almeida": 641, "Alois Casalonga": 168,
-  "Enzo Rousse": 310, "Joseph Linel": 455, "Simon Germain": 476, "Edouard Cereto": 203,
-  "Maxime Lam": 234, "Matis Sayah": 724, "Lucas Raoul": 348, "Rafael Bobo-Lloret": 49,
-  "Octavio Laurent": 38, "Ali Elsayed": 183, "Gaspard Maréchal Dubourg": 809,
-  "Corentin Guilloux": 423, "Léo Testas": 176, "Sacha Corlouer": 79, "Louis Delattre": 956,
-  "Maxence Bonnet": 140, "Martin Chaney": 749, "Oihan Silva": 902, "Gabriel Delaval": 324,
-  "Lucas Nicola": 215, "Tom Clarens": 247, "Florian Simon": 499, "Faust Amat": 618,
-  "Fadi Burnet": 992, "Andrea Matlega": 779, "Alexian Rouault": 290, "Kilian Juget": 522,
-  // Engagés Men Fall 2026
-  "Alexis Barnetche": 32, "Oscar Couilleau": 2, "Raphaël Turcaud": 101, "Justin Charoy": 107,
-  "Théophile Lebrun": 26, "Callixte Alzas": 11, "Melvil Jacquelin": 106, "Sacha Molino": 185,
-  "Adam Carreyn": 180, "Théophile Archer": 24, "Matthieu Riffet": 179, "Alexandre Guiserix": 777,
-  "Jules Lauer": 22, "Edouard Petit": 357, "Maxime Olivo": 727, "Tibo Van De Neste": 322,
-  "Victor Siguier": 480, "Paul Couston": 397, "Léo-Paul Cesari": 200, "Loïc Goethals": 879,
-  "Timothée Restout": 166, "Axel Houdaille": 329, "Vadim Dejour": 382, "Nicolas Robin": 142,
-  "Jules De Brauwere": 62, "Corentin Jorat": 833,
-  // Engagés Men Fall 2027
-  "Paolo Fazzone": 154,
-  // Women
-  "Maylis Lamoure": 15, "Taline Kyoumjian": 240, "Faustine Errecade": 245, "Camille Rosier": 124,
-  "Anna Pillard": 34, "Cloé Poizac": 182, "Emma Leroy-Fabry": 62, "Juliette Daviau": 292,
-  "Ambre Matlega": 137, "Lauren Thompstone": 89, "Anaëlle Picot": 72, "Lehane Louis-Dumond": 275,
-  "Amély Bochaton": 16, "Aubane Statiotis": 83, "Inès Marty": 148, "Clara Willem": 130,
-  "Zoé Rubichon": 59, "Lou Fourdan": 98, "Camille Padieu": 229, "Clara Ledun": 258,
-  "Tina Genoulaz": 36, "Fantine Cabry": 90, "Manon Verret": 170, "Jeanne Pagnier": 41,
-  "Mahé Happiette": 257, "Agathe Lacoste": 294, "Romane Lacoste": 125, "Carla Bourdeaux": 45,
-  // Engagés Women Fall 2026
-  "Giselle Zhao": 4, "Mila Tamisier": 49, "Melliyal Schmitt": 28, "Charlotte Bouquet": 66,
-  "Léa Giron": 71, "Gabrielle Duhalde": 224, "Sarah Cuney": 60, "Manon Petitcolas": 11,
-  "Louise Krawiec": 40, "Margot Lamothe": 173, "Anne Charlotte Otto": 222, "Marie Bachelet": 76,
-  "Bertille Lorin": 203, "Clémence Chouvin": 157, "Juliette Gastoud": 390, "Salomé Paumelle": 322,
-  "Eline Chau-Hu": 85, "Sarah Sayah": 434, "Sarah Binaghi": 151, "Justine Bayle": 61,
-  "Ambre Boullot": 191, "Juliette Saillour": 232,
-  // Engagés Women Fall 2027
-  "Axelle Guillemard": 23, "Céleste Darloy": 51, "Salomé Lumbaca": 25, "Celeste Bobo-Lloret": 38,
-  "Romane Tresnard": 64, "Iris Pollet": 112
+  "Samuel Guigui-Baruchel": 289, "Gabriel Dulon-Villoslada": 39, "Bogdan Sandrini": 60, "Antoine Lianos": 783,
+  "Léo Molino": 203, "Hugo Almeida": 641, "Alois Casalonga": 168, "Enzo Rousse": 310,
+  "Joseph Linel": 455, "Simon Germain": 476, "Edouard Cereto": 203, "Maxime Lam": 234,
+  "Matis Sayah": 724, "Lucas Raoul": 348, "Rafael Bobo-Lloret": 49, "Octavio Laurent": 38,
+  "Ali Elsayed": 183, "Gaspard Maréchal Dubourg": 809, "Corentin Guilloux": 423, "Léo Testas": 176,
+  "Sacha Corlouer": 79, "Louis Delattre": 956, "Maxence Bonnet": 140, "Martin Chaney": 749,
+  "Oihan Silva": 902, "Gabriel Delaval": 324, "Lucas Nicola": 215, "Tom Clarens": 247,
+  "Florian Simon": 499, "Faust Amat": 618, "Fadi Burnet": 992, "Andrea Matlega": 779,
+  "Alexian Rouault": 290, "Kilian Juget": 522, "Alexis Barnetche": 32, "Oscar Couilleau": 2,
+  "Raphaël Turcaud": 101, "Justin Charoy": 107, "Théophile Lebrun": 64, "Callixte Alzas": 11,
+  "Melvil Jacquelin": 96, "Sacha Molino": 175, "Adam Carreyn": 178, "Théophile Archer": 45,
+  "Matthieu Riffet": 192, "Alexandre Guiserix": 777, "Jules Lauer": 93, "Edouard Petit": 212,
+  "Maxime Olivo": 108, "Tibo Van De Neste": 349, "Victor Siguier": 573, "Paul Couston": 221,
+  "Léo-Paul Cesari": 273, "Loïc Goethals": 879, "Timothée Restout": 151, "Axel Houdaille": 439,
+  "Vadim Dejour": 419, "Nicolas Robin": 121, "Jules De Brauwere": 45, "Corentin Jorat": 833,
+  "Paolo Fazzone": 154, "Maylis Lamoure": 15, "Taline Kyoumjian": 240, "Faustine Errecade": 245,
+  "Camille Rosier": 124, "Anna Pillard": 34, "Cloé Poizac": 182, "Emma Leroy-Fabry": 62,
+  "Juliette Daviau": 292, "Ambre Matlega": 137, "Lauren Thompstone": 89, "Anaëlle Picot": 72,
+  "Lehane Louis-Dumond": 275, "Amély Bochaton": 16, "Aubane Statiotis": 83, "Inès Marty": 148,
+  "Clara Willem": 130, "Zoé Rubichon": 59, "Lou Fourdan": 98, "Camille Padieu": 229,
+  "Clara Ledun": 258, "Tina Genoulaz": 36, "Fantine Cabry": 90, "Manon Verret": 170,
+  "Jeanne Pagnier": 41, "Mahé Happiette": 257, "Agathe Lacoste": 294, "Romane Lacoste": 125,
+  "Carla Bourdeaux": 45, "Giselle Zhao": 4, "Mila Tamisier": 49, "Melliyal Schmitt": 28,
+  "Charlotte Bouquet": 66, "Léa Giron": 71, "Gabrielle Duhalde": 224, "Sarah Cuney": 60,
+  "Manon Petitcolas": 11, "Louise Krawiec": 40, "Margot Lamothe": 187, "Anne Charlotte Otto": 192,
+  "Marie Bachelet": 85, "Bertille Lorin": 229, "Clémence Chouvin": 140, "Juliette Gastoud": 320,
+  "Salomé Paumelle": 279, "Eline Chau-Hu": 83, "Sarah Sayah": 433, "Sarah Binaghi": 262,
+  "Justine Bayle": 62, "Ambre Boullot": 191, "Juliette Saillour": 237, "Axelle Guillemard": 24,
+  "Céleste Darloy": 47, "Salomé Lumbaca": 18, "Celeste Bobo-Lloret": 36, "Romane Tresnard": 64,
+  "Iris Pollet": 112, "Romane Poissonnier": 18, "Céleste Mangeat": 177
+};
+
+// ================== CURRENT WAGR RANKINGS (Scout EU) ==================
+// Source: Scout EU athletes.wagr_ranking (status available/in_creation/committed/in_college). Entiers > 0 uniquement.
+const CURRENT_WAGR = {
+  "Romane Poissonnier": 863, "Bogdan Sandrini": 2312, "Callixte Alzas": 282, "Céleste Mangeat": 1511,
+  "Ambre Boullot": 2753, "Léa Giron": 1959, "Céleste Darloy": 918, "Romane Tresnard": 883,
+  "Léopold Kostylev": 1914, "Axelle Guillemard": 861, "Loïc Goethals": 3618, "Mila Tamisier": 1891,
+  "Justine Bayle": 1563, "Jules De Brauwere": 1722, "Eline Chau-Hu": 1578, "Manon Petitcolas": 359,
+  "Giselle Zhao": 117, "Charlotte Bouquet": 1399, "Gabrielle Duhalde": 3187, "Celeste Bobo-Lloret": 1167,
+  "Théophile Archer": 2038, "Konstanty Luczak": 395, "Paolo Fazzone": 1872, "Octavio Laurent": 956,
+  "Melliyal Schmitt": 624, "Sarah Cuney": 2073, "Léo Molino": 3761, "Salomé Lumbaca": 855,
+  "Justin Charoy": 3135, "Oscar Couilleau": 39, "Inès Marty": 2025, "Edouard Petit": 3763,
+  "Raphaël Turcaud": 2771, "Sacha Corlouer": 2578, "Théophile Lebrun": 915, "Alexis Barnetche": 2581,
+  "Nicolas Robin": 2839, "Jules Lauer": 1642, "Louise Krawiec": 818, "Sara Brentcheneff": 44
 };
 
 // ================== SCHOOLS DATA ==================
@@ -1721,7 +2047,9 @@ const SCHOOLS = {
   "Defiance College":                 {state:"OH", div:"NAIA", gov:"NAIA",  lat:41.28,  lng:-84.36},
   "University of Colorado":           {state:"CO", div:"D1",   gov:"NCAA",  lat:40.01,  lng:-105.27},
   "UT Southern":                      {state:"TN", div:"NAIA", gov:"NAIA",  lat:35.20,  lng:-87.04},
-  "Arkansas State University":        {state:"AR", div:"D1",   gov:"NCAA",  lat:35.84,  lng:-90.71}
+  "Arkansas State University":        {state:"AR", div:"D1",   gov:"NCAA",  lat:35.84,  lng:-90.71},
+  "Park University":                  {state:"MO", div:"NAIA", gov:"NAIA",  lat:39.20,  lng:-94.59},
+  "Stetson University":               {state:"FL", div:"D1",   gov:"NCAA",  lat:29.03,  lng:-81.30}
 };
 
 const STATE_CENTERS = {
@@ -1836,6 +2164,9 @@ const PLAYERS = [
   {name:"Octavio Laurent", country:"France/Chili", sex:"Men", signing:"Fall 2025", university:"University of South Carolina - Beaufort",
     fr_rank_prior:55, fr_rank_commit:55, fr_rank_recent:55, commit_date:"Apr 25",
     fr_score:70.3, fr_rank_sb:25},
+  // Octavio Laurent — transfer Kansas State pour Sophomore year (Freshman à USCB Fall 2025)
+  {name:"Octavio Laurent", country:"France/Chili", sex:"Men", signing:"Fall 2026", university:"Kansas State University", transfer:true,
+    start_year:"Sophomore"},
   {name:"Ali Elsayed", country:"France", sex:"Men", signing:"Fall 2025", university:"Lawrence Technological University",
     fr_rank_prior:471, fr_rank_commit:415, fr_rank_recent:415, commit_date:"Dec 23",
     fr_score:75.2, fr_rank_sb:470},
@@ -1963,6 +2294,9 @@ const PLAYERS = [
   {name:"Clara Willem", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Cincinnati",
     fr_rank_prior:65, fr_rank_commit:65, fr_rank_recent:65, commit_date:"Aug 24",
     fr_score:75.8, fr_rank_sb:864},
+  // Clara Willem — transfer Stetson pour Sophomore year (Freshman à Cincinnati Fall 2025)
+  {name:"Clara Willem", country:"France", sex:"Women", signing:"Fall 2026", university:"Stetson University", transfer:true,
+    start_year:"Sophomore"},
   {name:"Zoé Rubichon", country:"France", sex:"Women", signing:"Fall 2025", university:"Seattle University",
     fr_rank_prior:79, fr_rank_commit:89, fr_rank_recent:89, commit_date:"Jul 24",
     fr_score:75.7, fr_rank_sb:825},
@@ -2008,7 +2342,10 @@ const PLAYERS = [
   {name:"Juliette Daviau", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Montevallo", transfer:true,
     start_year:"Sophomore",
     fr_rank_prior:224, fr_rank_commit:209, fr_rank_recent:199,
-    so_score:77.5}
+    so_score:77.5},
+  // NOUVELLE — Sara Brentcheneff, University of Arkansas NCAA D1 (Freshman 25/26, scoring 71.0 #69 SB)
+  {name:"Sara Brentcheneff", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Arkansas",
+    fr_score:71.0, fr_rank_sb:69}
 ];
 
 // ================== SNAPSHOTS ==================
@@ -2169,7 +2506,8 @@ function buildSnapshot(snapKey) {
       score: scoreData?.score ?? null,
       sb_rank: scoreData?.rank ?? null,
       score_label: scoreData?.label ?? "",
-      fr_rank: frRank,
+      fr_rank: CURRENT_FFGOLF[p.name] ?? frRank,
+      wagr: CURRENT_WAGR[p.name] ?? p.wagr,
       state: school.state ?? "?",
       lat: school.lat ?? null,
       lng: school.lng ?? null,
@@ -2181,7 +2519,15 @@ function buildSnapshot(snapKey) {
 
 // ================== STATE ==================
 let currentSnap = "current";
-let filters = { cclass:"all", gender:"all", division:"all", search:"", club:"", academy:"" };
+let filters = { cclass:[], gender:[], division:[], search:"", club:[], academy:[], state:null };
+// Genre-aware label helper : "Engagés"/"Engagées", "joueurs"/"joueuses", "actuels"/"actuelles"
+function fG(masc, fem) {
+  // Féminin uniquement si Women est le SEUL élément sélectionné (sur US tab ou Engagés tab)
+  function isOnlyWomen(arr) {
+    return Array.isArray(arr) && arr.length === 1 && arr[0] === 'Women';
+  }
+  return (isOnlyWomen(filters.gender) || isOnlyWomen(incomingFilters.igender)) ? fem : masc;
+}
 let sort = { col:"cclass", dir:"asc" };
 
 // (initial date set by applyLang)
@@ -2189,21 +2535,25 @@ let sort = { col:"cclass", dir:"asc" };
 // ================== FILTER & SORT ==================
 function applyFilters(rows) {
   const q = filters.search.toLowerCase().trim();
-  const clubQ = normalizeMatch(filters.club);
-  const acadQ = normalizeMatch(filters.academy);
+  const clubSet = (filters.club || []).map(normalizeMatch);
+  const acadSet = (filters.academy || []).map(normalizeMatch);
+  const classSet = filters.cclass || [];
   return rows.filter(p => {
-    // Alumni toujours visibles (sur la map en gris). Filtre cclass strict si une valeur précise.
-    if (filters.cclass !== "all" && p.cclass !== filters.cclass) return false;
-    if (filters.gender !== "all" && p.sex !== filters.gender) return false;
-    if (filters.division !== "all" && p.division !== filters.division) return false;
+    // Multi-select classe : si rien sélectionné = tous (alumni toujours affichés en gris sur map)
+    if (classSet.length > 0 && !classSet.includes(p.cclass)) return false;
+    if ((filters.gender || []).length > 0 && !filters.gender.includes(p.sex)) return false;
+    if ((filters.division || []).length > 0 && !filters.division.includes(p.div_full)) return false;
+    if (filters.state && p.state !== filters.state) return false;
     if (q && !p.name.toLowerCase().includes(q) && !p.university.toLowerCase().includes(q) && !(p.state||"").toLowerCase().includes(q)) return false;
-    if (clubQ) {
+    if (clubSet.length > 0) {
       const cd = getClubData(p.name);
-      if (!cd.club || !normalizeMatch(cd.club).includes(clubQ)) return false;
+      const playerClub = cd.club ? normalizeMatch(cd.club) : '';
+      if (!clubSet.some(c => playerClub.includes(c))) return false;
     }
-    if (acadQ) {
+    if (acadSet.length > 0) {
       const cd = getClubData(p.name);
-      if (!cd.academy || !normalizeMatch(cd.academy).includes(acadQ)) return false;
+      const playerAcad = cd.academy ? normalizeMatch(cd.academy) : '';
+      if (!acadSet.some(c => playerAcad.includes(c))) return false;
     }
     return true;
   });
@@ -2226,6 +2576,51 @@ function applySort(rows) {
 
 // ================== STATS ==================
 const COLLEGE_CLASSES = ['Freshman','Sophomore','Junior','Senior','5th year'];
+
+// Stats banner (Saison 2026 — USAP performance highlights)
+function renderStatsBanner() {
+  const banner = document.getElementById('stats-banner');
+  if (!banner) return;
+  const labels = lang === 'en' ? {
+    title: 'USAP Committed — 2026 Season',
+    sub: 'Performance of our players still competing in France',
+    wins: 'Grand Prix wins',
+    subpar: 'Sub-par rounds',
+    nat: 'National team selections'
+  } : {
+    title: 'Engagés USAP — Saison 2026',
+    sub: 'Performance de nos joueurs encore en compétition en France',
+    wins: 'Victoires en Grand Prix',
+    subpar: 'Cartes sous le par',
+    nat: 'Sélections équipes nationales'
+  };
+  function stat(v, k) {
+    return `<div class="sb-stat"><div class="sb-v" data-target="${v}">0</div><div class="sb-k">${k}</div></div>`;
+  }
+  banner.innerHTML = `
+    <div class="stats-banner-head">
+      <span class="stats-banner-title">${labels.title}</span>
+      <span class="stats-banner-sub">${labels.sub}</span>
+    </div>
+    ${stat(USAP_STATS.gp_wins, labels.wins)}
+    ${stat(USAP_STATS.sub_par_rounds, labels.subpar)}
+    ${stat(USAP_STATS.national_selections, labels.nat)}
+  `;
+  // Count-up animation
+  banner.querySelectorAll('.sb-v').forEach(el => {
+    const target = parseInt(el.dataset.target, 10) || 0;
+    if (target === 0) { el.textContent = '0'; return; }
+    const dur = 900, start = performance.now();
+    function step(t) {
+      const p = Math.min(1, (t - start) / dur);
+      const e = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      el.textContent = Math.round(target * e).toString();
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+}
+
 function renderStats(rows) {
   // Joueurs aux US = en fac actuellement (exclut Alumni + Incoming)
   const inCollegeRows = rows.filter(p => COLLEGE_CLASSES.includes(p.cclass));
@@ -2242,16 +2637,18 @@ function renderStats(rows) {
     <div class="stat"><div class="v">${schools}</div><div class="k">${t('stat_universities')}</div></div>
     <div class="stat"><div class="v">${states}</div><div class="k">${t('stat_states')}</div></div>
   `;
-  // Counter dynamique club/academy
+  // Counter dynamique club/academy (multi-select tags)
   const cc = document.getElementById('club-counter');
   if (cc) {
-    const cf = filters.club.trim(), af = filters.academy.trim();
-    if (cf || af) {
+    const cf = (filters.club || []), af = (filters.academy || []);
+    if (cf.length > 0 || af.length > 0) {
       const parts = [];
-      if (cf) parts.push(`Club: ${cf}`);
-      if (af) parts.push(`Academy: ${af}`);
+      if (cf.length > 0) parts.push(`Club: ${cf.join(', ')}`);
+      if (af.length > 0) parts.push(`Académie: ${af.join(', ')}`);
+      const wordPlur = fG('joueurs','joueuses');
+      const wordSing = fG('joueur','joueuse');
       cc.style.display = 'inline-flex';
-      cc.textContent = `${rows.length} ${rows.length > 1 ? 'joueurs' : 'joueur'} — ${parts.join(' · ')}`;
+      cc.textContent = `${rows.length} ${rows.length > 1 ? wordPlur : wordSing} — ${parts.join(' · ')}`;
     } else {
       cc.style.display = 'none';
     }
@@ -2263,10 +2660,13 @@ function renderStats(rows) {
   const curCount = currentSnap_.filter(p => COLLEGE_CLASSES.includes(p.cclass)).length;
   const comCount = INCOMING_PLAYERS.length;
   const totalPlaced = aluCount + curCount + comCount;
+  // Accord féminin si filtre Femmes actif (US ou Engagés tab)
+  const curLabel = (lang==='fr') ? fG('actuels','actuelles') : t('current_label');
+  const comLabel = (lang==='fr') ? fG('engagés','engagées') : t('committed_label2');
   document.getElementById('placement-banner-top').innerHTML = `
     <span class="pb-big">${totalPlaced}</span>
     <span class="pb-label">${t('placed_total')}</span>
-    <span class="pb-detail"><strong>${aluCount}</strong> ${t('alumni_label')} · <strong>${curCount}</strong> ${t('current_label')} · <strong>${comCount}</strong> ${t('committed_label2')}</span>
+    <span class="pb-detail"><strong>${aluCount}</strong> ${t('alumni_label')} · <strong>${curCount}</strong> ${curLabel} · <strong>${comCount}</strong> ${comLabel}</span>
   `;
 }
 
@@ -2307,7 +2707,8 @@ function renderMap(rows) {
   });
 
   let html = '';
-  const titleText = lang === 'en' ? `United States — ${inCollege.length} USAP players` : `United States — ${inCollege.length} joueurs USAP`;
+  const wordPlayers = (lang === 'en') ? 'USAP players' : `${fG('joueurs','joueuses')} USAP`;
+  const titleText = `United States — ${inCollege.length} ${wordPlayers}`;
   html += `<text x="475" y="28" text-anchor="middle" style="font-size:13px;fill:#0B1D58;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">${titleText}</text>`;
 
   const pts = US_OUTLINE_LATLNG.map(([lat,lng]) => {
@@ -2319,7 +2720,7 @@ function renderMap(rows) {
   Object.entries(STATE_CENTERS).forEach(([code, c]) => {
     const [x,y] = project(c.lat, c.lng);
     if (x < 30 || x > 920 || y < 50 || y > 540) return;
-    html += `<text class="state-label" x="${x}" y="${y}" text-anchor="middle">${code}</text>`;
+    html += `<text class="state-label clickable" data-state="${code}" x="${x}" y="${y}" text-anchor="middle">${code}</text>`;
   });
 
   // Build pinsData — joueurs même fac stackent au même endroit (cluster détecte le chevauchement)
@@ -2342,6 +2743,8 @@ function renderMap(rows) {
     const cls = isAlumni ? `pin pin-alumni` : `pin ${sexClass}`;
     const cidx = playerToCluster.get(player);
     const dataKey = `${player.name}|${player.signing}|${player.transfer?'1':'0'}|${player.university}`;
+    // Hit-area transparent r=14 derrière chaque pin → touch target généreux (gain mobile)
+    html += `<circle class="pin-hit" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="14" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
     html += `<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
   });
 
@@ -2358,8 +2761,21 @@ function renderMap(rows) {
       out += `<div class="tt-player-row" data-key="${opKey}">`;
       out += `<div class="tt-player-name">${escapeHtml(op.name)}</div>`;
       out += `<div class="meta">${escapeHtml(op.university)} · ${escapeHtml(op.cclass)}</div>`;
-      if (op.score != null) out += `<div class="meta">Avg ${op.score} ${escapeHtml(op.score_label)}${op.sb_rank?' · #'+op.sb_rank:''}</div>`;
-      if (op.fr_rank != null) out += `<div class="meta">FR rank #${op.fr_rank}</div>`;
+      if (op.sb_rank != null) {
+        const divPart = op.div_full && op.div_full !== '—' ? ` ${escapeHtml(op.div_full)}` : '';
+        const lbl = lang==='en' ? `Scoreboard${divPart}` : `Ranking SB${divPart}`;
+        out += `<div class="meta">${lbl} : #${op.sb_rank}</div>`;
+      }
+      if (op.fr_rank != null) {
+        const sexFr = op.sex==='Men' ? 'M' : 'F';
+        const lbl = lang==='en' ? `France ${sexFr}` : `Ranking FR ${sexFr}`;
+        out += `<div class="meta">${lbl} : #${op.fr_rank}</div>`;
+      }
+      if (op.score != null) {
+        const yrLabel = op.score_label ? ` ${escapeHtml(op.score_label)}` : '';
+        const lbl = lang==='en' ? `Adj. Avg${yrLabel}` : `Score Avg Ajusté${yrLabel}`;
+        out += `<div class="meta">${lbl} : ${op.score}</div>`;
+      }
       out += `</div>`;
     });
     if (isPinned) {
@@ -2379,7 +2795,7 @@ function renderMap(rows) {
     });
   }
 
-  svg.querySelectorAll('.pin').forEach(pin => {
+  svg.querySelectorAll('.pin, .pin-hit').forEach(pin => {
     const cidx = parseInt(pin.dataset.cluster);
     const clusterPlayers = clusters[cidx].map(item => item.player);
     pin.addEventListener('mouseenter', e => {
@@ -2389,8 +2805,7 @@ function renderMap(rows) {
     });
     pin.addEventListener('mousemove', e => {
       if (tooltipPinned) return;
-      tt.style.left = (e.pageX + 14) + 'px';
-      tt.style.top = (e.pageY + 14) + 'px';
+      placeTooltipAt(tt, e);
     });
     pin.addEventListener('mouseleave', () => {
       if (!tooltipPinned) tt.style.opacity = 0;
@@ -2406,24 +2821,68 @@ function renderMap(rows) {
       tt.innerHTML = buildClusterTooltip(clusterPlayers, true);
       tt.classList.add('pinned');
       tt.style.opacity = 1;
-      tt.style.left = (e.pageX + 14) + 'px';
-      tt.style.top = (e.pageY + 14) + 'px';
+      placeTooltipAt(tt, e);
       tooltipPinned = true;
       attachRowClickHandlers();
     });
   });
+
+  // C. State labels clickable → toggle filtre state + auto-fit
+  svg.querySelectorAll('.state-label.clickable').forEach(label => {
+    label.addEventListener('click', e => {
+      e.stopPropagation();
+      const state = label.dataset.state;
+      // Toggle : si déjà sélectionné, désélectionne
+      if (filters.state === state) {
+        filters.state = null;
+      } else {
+        filters.state = state;
+      }
+      rerender();
+    });
+  });
+
+  // D. Auto-fit viewBox sur les pins visibles si filtre actif → zoom auto smooth
+  const hasFilter = (filters.cclass||[]).length || (filters.gender||[]).length || (filters.division||[]).length
+                 || (filters.club||[]).length || (filters.academy||[]).length || filters.state
+                 || (filters.search||"").trim().length > 0;
+  if (hasFilter && pinsData.length > 0) {
+    const xs = pinsData.map(p => p.x), ys = pinsData.map(p => p.y);
+    const minX = Math.min(...xs), maxX = Math.max(...xs);
+    const minY = Math.min(...ys), maxY = Math.max(...ys);
+    const pad = 60;
+    const newW = Math.max(200, maxX - minX + pad*2);
+    const newH = Math.max(150, maxY - minY + pad*2);
+    const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+    animateMapView('map', { x: cx - newW/2, y: cy - newH/2, w: newW, h: newH }, 400);
+  } else if (!hasFilter) {
+    // Pas de filtre → reset vue complète
+    animateMapView('map', { x: 0, y: 0, w: 950, h: 580 }, 400);
+  }
 }
 
 function buildTooltip(p) {
   let out = `<strong>${escapeHtml(p.name)}</strong>`;
   out += `<div class="meta">${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
   out += `<div class="meta">${escapeHtml(p.cclass)} · ${t('starting')} ${escapeHtml(p.signing)}*</div>`;
-  if (p.score != null) out += `<div class="row"><span>Scoring avg ${escapeHtml(p.score_label)}</span><span>${p.score}</span></div>`;
   if (p.sb_rank != null) {
-    const divSuffix = p.div_full && p.div_full !== '—' ? ` <span style="opacity:0.7;font-size:10px">${escapeHtml(p.div_full)}</span>` : '';
-    out += `<div class="row"><span>${t('sb_ranking_short')}</span><span>#${p.sb_rank}${divSuffix}</span></div>`;
+    const divPart = p.div_full && p.div_full !== '—' ? ` ${escapeHtml(p.div_full)}` : '';
+    const lbl = lang==='en' ? `Scoreboard${divPart}` : `Ranking SB${divPart}`;
+    out += `<div class="row"><span>${lbl}</span><span>#${p.sb_rank}</span></div>`;
   }
-  if (p.fr_rank != null) out += `<div class="row"><span>${t('fr_ranking')} ${p.sex === 'Men' ? '(M)' : '(F)'}</span><span>${p.fr_rank}</span></div>`;
+  if (p.fr_rank != null) {
+    const sexFr = p.sex==='Men' ? 'M' : 'F';
+    const lbl = lang==='en' ? `France ${sexFr}` : `Ranking FR ${sexFr}`;
+    out += `<div class="row"><span>${lbl}</span><span>#${p.fr_rank}</span></div>`;
+  }
+  if (p.wagr != null && p.wagr > 0) {
+    out += `<div class="row"><span>WAGR</span><span>#${p.wagr}</span></div>`;
+  }
+  if (p.score != null) {
+    const yrLabel = p.score_label ? ` ${escapeHtml(p.score_label)}` : '';
+    const lbl = lang==='en' ? `Adj. Scoring Avg${yrLabel}` : `Score Avg Ajusté${yrLabel}`;
+    out += `<div class="row"><span>${lbl}</span><span>${p.score}</span></div>`;
+  }
   return out;
 }
 
@@ -2501,11 +2960,23 @@ document.getElementById('snapshot-select').addEventListener('change', e => {
   rerender();
 });
 
-document.querySelectorAll('.chip').forEach(chip => {
+document.querySelectorAll('.chip[data-filter]').forEach(chip => {
   chip.addEventListener('click', () => {
     const f = chip.dataset.filter, v = chip.dataset.value;
-    filters[f] = v;
-    document.querySelectorAll(`.chip[data-filter="${f}"]`).forEach(c => c.classList.toggle('active', c.dataset.value === v));
+    // Tous les filtres chips sont multi-select : cclass, gender, division
+    if (v === 'all') {
+      filters[f] = []; // clear
+    } else {
+      if (!Array.isArray(filters[f])) filters[f] = [];
+      const idx = filters[f].indexOf(v);
+      if (idx >= 0) filters[f].splice(idx, 1);
+      else filters[f].push(v);
+    }
+    document.querySelectorAll(`.chip[data-filter="${f}"]`).forEach(c => {
+      const cv = c.dataset.value;
+      if (cv === 'all') c.classList.toggle('active', filters[f].length === 0);
+      else c.classList.toggle('active', filters[f].includes(cv));
+    });
     rerender();
   });
 });
@@ -2518,24 +2989,36 @@ document.getElementById('search').addEventListener('input', e => {
 // ================== CUSTOM COMBOBOX (Club / Académie scrollable + filtrable) ==================
 function initComboboxes() {
   const lists = buildClubAcademyLists();
-  // Compte d'occurrences pour afficher "Aix-Les-Bains (3)" dans le dropdown
-  const clubCount = {}, acadCount = {};
-  Object.values(CLUB_DATA).forEach(d => {
-    if (d.club) {
-      const k = normalizeMatch(d.club);
-      clubCount[k] = (clubCount[k]||0) + 1;
-    }
-    if (d.academy) {
-      const k = normalizeMatch(d.academy);
-      acadCount[k] = (acadCount[k]||0) + 1;
-    }
-  });
+  // Compte d'occurrences SCOPÉ par contexte :
+  //   - usCount = joueurs aux US uniquement (PLAYERS sans Alumni terminés)
+  //   - inCount = engagés (INCOMING_PLAYERS)
+  function buildCounts(playerNames) {
+    const clubC = {}, acadC = {};
+    playerNames.forEach(name => {
+      const d = CLUB_DATA[name];
+      if (!d) return;
+      if (d.club) {
+        const k = normalizeMatch(d.club);
+        clubC[k] = (clubC[k]||0) + 1;
+      }
+      if (d.academy) {
+        const k = normalizeMatch(d.academy);
+        acadC[k] = (acadC[k]||0) + 1;
+      }
+    });
+    return {clubC, acadC};
+  }
+  // Joueurs aux US = PLAYERS dédupés par name (transferts comptent 1)
+  const usNames = [...new Set((typeof PLAYERS !== 'undefined' ? PLAYERS : []).map(p => p.name))];
+  const inNames = (typeof INCOMING_PLAYERS !== 'undefined' ? INCOMING_PLAYERS : []).map(p => p.name);
+  const usCounts = buildCounts(usNames);
+  const inCounts = buildCounts(inNames);
 
   const configs = [
-    {key:'club',           inputId:'filter-club',           optsId:'cb-options-club',           values:lists.clubs,     counts:clubCount, target:filters,         rerender:'rerender'},
-    {key:'academy',        inputId:'filter-academy',        optsId:'cb-options-academy',        values:lists.academies, counts:acadCount, target:filters,         rerender:'rerender'},
-    {key:'club-incoming',  inputId:'filter-club-incoming',  optsId:'cb-options-club-incoming',  values:lists.clubs,     counts:clubCount, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'club'},
-    {key:'academy-incoming',inputId:'filter-academy-incoming',optsId:'cb-options-academy-incoming',values:lists.academies,counts:acadCount, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'academy'},
+    {key:'club',            inputId:'filter-club',           optsId:'cb-options-club',           values:lists.clubs,     counts:usCounts.clubC, target:filters,         rerender:'rerender'},
+    {key:'academy',         inputId:'filter-academy',        optsId:'cb-options-academy',        values:lists.academies, counts:usCounts.acadC, target:filters,         rerender:'rerender'},
+    {key:'club-incoming',   inputId:'filter-club-incoming',  optsId:'cb-options-club-incoming',  values:lists.clubs,     counts:inCounts.clubC, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'club'},
+    {key:'academy-incoming',inputId:'filter-academy-incoming',optsId:'cb-options-academy-incoming',values:lists.academies,counts:inCounts.acadC, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'academy'},
   ];
 
   configs.forEach(cfg => {
@@ -2545,52 +3028,113 @@ function initComboboxes() {
     const stateKey = cfg.stateKey || cfg.key;
     if (!input || !opts) return;
 
+    // Get/set selected tags (array in state)
+    function getTags() {
+      const v = cfg.target[stateKey];
+      return Array.isArray(v) ? v : (v ? [v] : []);
+    }
+    // Find or create tags container above options
+    let tagsBox = wrap.querySelector('.cb-tags');
+    if (!tagsBox) {
+      tagsBox = document.createElement('div');
+      tagsBox.className = 'cb-tags';
+      wrap.insertBefore(tagsBox, opts);
+    }
+    function renderTags() {
+      const tags = getTags();
+      tagsBox.innerHTML = tags.map(t => `<span class="cb-tag" data-tag="${escapeHtml(t)}">${escapeHtml(t)}<button type="button" class="cb-tag-x" aria-label="remove">×</button></span>`).join('');
+      wrap.classList.toggle('has-value', tags.length > 0);
+    }
     function renderOptions(filterText) {
       const q = normalizeMatch(filterText);
-      const matched = cfg.values.filter(v => !q || normalizeMatch(v).includes(q));
+      const selected = getTags().map(normalizeMatch);
+      const matched = cfg.values.filter(v => {
+        if (q && !normalizeMatch(v).includes(q)) return false;
+        const count = cfg.counts[normalizeMatch(v)] || 0;
+        return count > 0;
+      });
       if (matched.length === 0) {
         opts.innerHTML = '<div class="cb-empty">Aucun résultat</div>';
         return;
       }
       opts.innerHTML = matched.map(v => {
         const count = cfg.counts[normalizeMatch(v)] || 0;
-        return `<div class="cb-option" data-val="${escapeHtml(v)}">${escapeHtml(v)}<span class="cb-count">(${count})</span></div>`;
+        const isSelected = selected.includes(normalizeMatch(v));
+        return `<div class="cb-option ${isSelected?'selected':''}" data-val="${escapeHtml(v)}">${escapeHtml(v)}<span class="cb-count">(${count})</span>${isSelected?' ✓':''}</div>`;
       }).join('');
     }
     function open() { renderOptions(input.value); wrap.classList.add('open'); }
     function close() { wrap.classList.remove('open'); }
-    function setValue(v) {
-      input.value = v;
-      cfg.target[stateKey] = v;
-      wrap.classList.toggle('has-value', !!v);
+    function addTag(v) {
+      const tags = getTags();
+      const norm = normalizeMatch(v);
+      // Toggle : si déjà là, retire ; sinon ajoute
+      const idx = tags.findIndex(t => normalizeMatch(t) === norm);
+      if (idx >= 0) tags.splice(idx, 1);
+      else tags.push(v);
+      cfg.target[stateKey] = tags;
+      input.value = '';
+      renderTags();
+      renderOptions('');
+      if (cfg.rerender === 'rerender') rerender(); else rerenderIncoming();
+    }
+    function removeTag(v) {
+      const tags = getTags();
+      const norm = normalizeMatch(v);
+      const idx = tags.findIndex(t => normalizeMatch(t) === norm);
+      if (idx >= 0) tags.splice(idx, 1);
+      cfg.target[stateKey] = tags;
+      renderTags();
+      renderOptions(input.value);
+      if (cfg.rerender === 'rerender') rerender(); else rerenderIncoming();
+    }
+    function clearAll() {
+      cfg.target[stateKey] = [];
+      input.value = '';
+      renderTags();
+      renderOptions('');
       if (cfg.rerender === 'rerender') rerender(); else rerenderIncoming();
     }
 
     input.addEventListener('focus', open);
     input.addEventListener('input', e => {
-      cfg.target[stateKey] = e.target.value;
-      wrap.classList.toggle('has-value', !!e.target.value);
       renderOptions(e.target.value);
       wrap.classList.add('open');
-      if (cfg.rerender === 'rerender') rerender(); else rerenderIncoming();
     });
     opts.addEventListener('click', e => {
       const opt = e.target.closest('.cb-option');
       if (!opt) return;
-      setValue(opt.dataset.val);
-      close();
+      addTag(opt.dataset.val);
+      input.focus();
+      // garde dropdown ouvert pour multi-sélection
     });
-    // Clear button
+    tagsBox.addEventListener('click', e => {
+      const x = e.target.closest('.cb-tag-x');
+      if (!x) return;
+      const tag = x.parentElement.dataset.tag;
+      removeTag(tag);
+    });
     const clearBtn = wrap.querySelector('.cb-clear');
-    if (clearBtn) clearBtn.addEventListener('click', () => { setValue(''); input.focus(); open(); });
-    // Close on click outside
+    if (clearBtn) clearBtn.addEventListener('click', () => { clearAll(); input.focus(); open(); });
     document.addEventListener('click', e => {
       if (!wrap.contains(e.target)) close();
     });
-    // Close on Escape
     input.addEventListener('keydown', e => {
       if (e.key === 'Escape') { close(); input.blur(); }
+      // Backspace sur input vide → retire le dernier tag
+      if (e.key === 'Backspace' && input.value === '') {
+        const tags = getTags();
+        if (tags.length > 0) {
+          tags.pop();
+          cfg.target[stateKey] = tags;
+          renderTags();
+          renderOptions('');
+          if (cfg.rerender === 'rerender') rerender(); else rerenderIncoming();
+        }
+      }
     });
+    // Init render
+    renderTags();
   });
 }
 
@@ -2604,79 +3148,6 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 });
 
 // ================== INCOMING DATA (Engagés Fall 2026 + Fall 2027) ==================
-// Source : Google Sheet "USAP Players - Committed" (drive id 1H0OcTSqLK-MMaQZwnbwkMPmXvG3oR3Pc7wKHMj1mlwI)
-// FR rank/photo/WAGR/star enrichis depuis SCOUT (tâche ffgolf-ranking-update).
-/* DEPRECATED OLD ARRAY START
-const _DEPRECATED_DROP = [
-  // Fall 2026
-  {first:"Leopold", last:"Kostylev", sex:"Men", country:"Bulgaria", iclass:"Fall 2026", istatus:"available", fr_rank:0, wagr:2812, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/979154a5-db66-4f01-81f4-3354dafe8598/profile-1775494781269.jpg", club:"BlackSeaRama"},
-  {first:"Sacha", last:"Le Helloco", sex:"Men", country:"France", iclass:"Fall 2026", istatus:"available", fr_rank:844, star:1, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/3bcea380-d1fa-4a9e-b264-95387f028d61/profile-1764790703551.jpg", club:"Granville"},
-  {first:"Bogdan", last:"Sandrini", sex:"Men", country:"France", iclass:"Fall 2026", istatus:"committed", fr_rank:59, star:5, club:""},
-  {first:"Bastien", last:"Soula", sex:"Men", country:"France", iclass:"Fall 2026", istatus:"available", fr_rank:255, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/abfb369f-8725-4efd-bcec-f6dd21668669/profile-1768446220742.jpg", club:"Aix Marseille"},
-  {first:"Céleste", last:"Mangeat", sex:"Women", country:"France", iclass:"Fall 2026", istatus:"committed", fr_rank:177, wagr:1644, star:5, club:"Bossey Country Club"},
-  {first:"Romane", last:"Poissonnier", sex:"Women", country:"France", iclass:"Fall 2026", istatus:"committed", fr_rank:18, wagr:884, star:7, club:"St Germain"},
-  // Fall 2027
-  {first:"Samuel", last:"Aiach", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:104, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/d9baf304-e160-42d3-8ce5-e53280037aee/profile-1777576169926.jpg", club:""},
-  {first:"Elouen", last:"Boireau", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:461, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/2d74fa74-1f9a-49ad-aa05-9ab7ea273efe/profile-1775575460033.jpg", club:"Mionnay"},
-  {first:"Paul", last:"Bonnardet", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:481, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/c7382e34-d6a2-4477-a26b-7aa8f6db8f38/profile-1777389701454.jpg", club:"Chantaco"},
-  {first:"Anthony", last:"Bouhaniche", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:341, star:3, club:""},
-  {first:"Eloi", last:"Buard-Couvreur", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:760, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/adf89bfd-4c8a-42fc-ac88-7708d6c0fb76/profile-1771272080204.jpg", club:"Isle-Adam"},
-  {first:"Titouan", last:"Buisson", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:113, wagr:4228, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/a7b16ea3-ec42-4e8d-b0b1-f0bfec0f8f86/profile-1763939939189.jpg", club:"Le Havre"},
-  {first:"Timothée", last:"Chaboud", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:557, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/3c3ec9ca-4087-4622-88a9-59892d7f2aa0/profile-1769907843010.jpg", club:"Golf de Paris"},
-  {first:"Valentin", last:"Chaplin", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:145, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/3d55f1a2-7be0-4db3-b5da-8f9b22d2b5cc/profile-1770216806568.jpg", club:"Saint-Germain & Golfskills"},
-  {first:"Léo", last:"Dauvier", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:743, star:1, club:""},
-  {first:"Alban", last:"Delotte", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:0, star:1, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/56526054-c637-4e96-8ca3-6160333d314e/profile-1764040583268.jpg", club:"Dolce Fregate"},
-  {first:"Edmond", last:"Donzel", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:177, star:4, club:"Altus Performance Europe"},
-  {first:"Léo-Paul", last:"Finos", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:89, wagr:2801, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/9c83d899-7a8d-4c81-bc25-1d474f68fa54/profile-1764028488709.jpg", club:"Hossegor"},
-  {first:"Timothée", last:"Fortin", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:505, star:2, club:""},
-  {first:"Stanislas", last:"Hatier", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:584, star:2, club:""},
-  {first:"Paul", last:"Horsey", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:782, star:1, club:"Bordeaux Lac"},
-  {first:"Loris", last:"Marcon", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:0, star:1, club:"Casteljaloux"},
-  {first:"Paul", last:"Martin", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:29, wagr:2660, star:6, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/7cdcd6a3-fde7-43ca-b3b8-66d5c4bcacea/profile-1763941957035.jpg", club:"Bordelais - French Performance Center"},
-  {first:"Emiliano", last:"Mendoza-Malherbe", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:477, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/fe91beab-c1ef-4a98-aa93-90b2f2356181/profile-1771620357275.jpg", club:"Golf de Chantilly"},
-  {first:"Juan", last:"Miró Asorey", sex:"Men", country:"Spain", iclass:"Fall 2027", istatus:"available", fr_rank:0, wagr:1966, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/4ca466e4-3d86-4eec-b7af-62b747bc1920/profile-1764029269550.jpg", club:"Mediterraneo"},
-  {first:"Maxim", last:"Moreau", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:136, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/75aaa024-e153-4993-9ea0-8424e8cd175a/profile-1764027543272.jpg", club:"GC Lyon"},
-  {first:"Anthony", last:"Nadal", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:116, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/3452a23b-18d3-4cf9-ad25-a2ab707bfbcb/profile-1764712156216.jpg", club:"Whales Biarritz"},
-  {first:"Valentin", last:"Pommier", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:105, wagr:4481, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/6fa58d12-2f5a-44cf-9773-c5c3dcf6a19f/profile-1764788083750.jpg", club:"Racing La Boulie"},
-  {first:"Matisse", last:"Rabiller", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:389, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/b7caafe8-348a-46ac-a0f2-dcb556935f79/profile-1768449938708.jpg", club:"La Rochelle"},
-  {first:"Martin", last:"Rizzon", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:342, star:3, club:""},
-  {first:"Mathieu", last:"Slama", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:326, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/c8679eb1-89e1-4f09-88dd-780e0f8a95f0/profile-1770087244011.jpg", club:"Grenoble Bresson"},
-  {first:"Alexandre", last:"Vapillon", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:90, wagr:2461, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/6b7ebcd5-44f9-411b-a0b8-88b78b77897e/profile-1764037472629.jpg", club:"Aix Les Bains"},
-  {first:"Paul", last:"Velly", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:115, wagr:3310, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/ea653e87-cefe-4f2a-947a-bc0b00b1d029/profile-1771887023956.jpg", club:"Dinard"},
-  {first:"Nicolas", last:"Viroleau", sex:"Men", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:91, wagr:847, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/242baa3b-8948-44f4-a7d7-cfaff91e9be3/profile-1763942698945.jpg", club:"Mionnay"},
-  {first:"Jeanne", last:"Couvreur", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:164, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/13ddb6da-18a5-439a-8f55-c6e0a0fd3f55/profile-1764029382663.jpg", club:"Brigode"},
-  {first:"Noha", last:"Ghadi", sex:"Women", country:"Morocco", iclass:"Fall 2027", istatus:"committed", fr_rank:0, wagr:1627, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/02792c80-1247-49b8-8fe6-f49d0743632d/profile-1777390434606.jpg", club:"Windermere Prep School"},
-  {first:"Alicia", last:"Grandjean", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:123, star:3, club:""},
-  {first:"Lyloo", last:"Hourantier-Janin", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:153, star:3, club:"Terre Blanche"},
-  {first:"Océane", last:"Jorat", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:184, star:3, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/f6be392d-1dd8-4d96-8647-ac67fe0aead1/profile-1763942539893.jpg", club:"Esery, Whales Academy"},
-  {first:"Florence", last:"Laforgue", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:74, wagr:2013, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/952c8499-4e67-4290-b9d6-87880de3f3dd/profile-1764029555802.jpg", club:"Biarritz"},
-  {first:"Carlotta", last:"Locatelli", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:44, star:6, club:"Saint Nom La Bretèche"},
-  {first:"Teodora", last:"Nikolovski", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:46, wagr:1040, star:6, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/d76a6c78-9f82-4248-ad6d-9b33817ca488/profile-1776286670727.jpg", club:"Bordelais"},
-  {first:"Sasha", last:"Ochoantesana", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:198, star:3, club:"Bordeaux Lac"},
-  {first:"Rose", last:"Pitault", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:283, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/7b42665b-2049-4c40-ab6f-33c613b940cb/profile-1764204480230.jpg", club:"Norges Dijon"},
-  {first:"Agathe", last:"Sagansan", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:228, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/b4d21319-b1dd-4670-8bff-ebcc21a820e2/profile-1771518543718.jpg", club:"Colorado"},
-  {first:"Eleonore", last:"Sellami", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:143, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/4b2cc0d3-7387-45c3-9f22-3c45d7243cea/profile-1764029706963.jpg", club:"Racing La Boulie"},
-  {first:"Romane", last:"Tresnard", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"committed", fr_rank:64, wagr:3155, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/53ec9326-76b6-43f0-b75a-3f7fd5132775/profile-1763941506673.jpg", club:"Biarritz, Whales Academy"},
-  {first:"Morgane", last:"Trincadeiro", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:131, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/d052606a-e95e-432f-8409-9580c2b0f9a1/profile-1771337041461.jpg", club:"Saint-Cloud"},
-  {first:"Laetitia", last:"Vandeplas", sex:"Women", country:"Belgium", iclass:"Fall 2027", istatus:"available", fr_rank:0, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/dfe37490-5c2b-40ad-9ef8-f39b90473289/profile-1764204729529.jpg", club:"7 Fontaines"},
-  {first:"Elisa", last:"Vicherat", sex:"Women", country:"France", iclass:"Fall 2027", istatus:"available", fr_rank:358, star:1, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/7770f163-6b70-4db6-9cd4-d43895d9ad9d/profile-1764797286116.jpg", club:"Fontainebleau"},
-  // Fall 2028
-  {first:"Benjamin", last:"Bouazizi", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"available", fr_rank:134, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/607ae421-8a90-4769-a9cb-90c4faaa1feb/profile-1764036909207.jpg", club:"Mionnay"},
-  {first:"Giovanni", last:"Brûlé", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:121, star:4, club:""},
-  {first:"Matteo", last:"Da Eira", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:47, star:6, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/a73db155-150f-4cee-be8c-fa3362e79e9e/profile-1776289572538.jpg", club:""},
-  {first:"Raphaël", last:"Iralour", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:657, star:1, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/f62fc71f-ad00-4dae-8927-07151f3431f9/profile-1776289021729.jpg", club:""},
-  {first:"Louis", last:"Le Sager", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:123, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/temp/profile-1776289289399.jpg", club:""},
-  {first:"Clarence", last:"Mahé", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:null, star:1, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/4faf3a4e-34dd-43c2-ab5f-3821b86a263e/profile-1777390875522.jpg", club:""},
-  {first:"William", last:"Navidzadeh", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:325, star:3, club:""},
-  {first:"Javier", last:"Perez-Tasso", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:null, star:3, club:""},
-  {first:"Hippolyte", last:"Poux", sex:"Men", country:"France", iclass:"Fall 2028", istatus:"available", fr_rank:171, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/cd96b448-bae8-44b7-b6f1-bbd001ce061d/profile-1776289066432.jpg", club:"Le Havre"},
-  {first:"Paul", last:"Vautier", sex:"Men", country:null, iclass:"Fall 2028", istatus:"committed", fr_rank:267, star:2, club:""},
-  {first:"Anouchka", last:"Djumic", sex:"Women", country:"France", iclass:"Fall 2028", istatus:"available", fr_rank:57, star:5, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/ce4d080f-19bf-4601-8f02-73c9e986ae34/profile-1776286995481.jpg", club:"Saint-Germain"},
-  {first:"Matylda", last:"Dziadek", sex:"Women", country:"Poland", iclass:"Fall 2028", istatus:"committed", fr_rank:null, star:2, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/2b00d358-74b1-420d-b250-b2b351267470/profile-1777390948254.jpg", club:""},
-  {first:"Kim Lou", last:"Joachim", sex:"Women", country:"Switzerland", iclass:"Fall 2028", istatus:"committed", fr_rank:null, star:4, photo:"https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images/5cb8259b-31fb-4665-90cf-dffaf3c02013/profile-1776289150468.jpg", club:""},
-  {first:"Zoé", last:"Lay", sex:"Women", country:"France", iclass:"Fall 2028", istatus:"committed", fr_rank:211, star:3, club:""}
-];
-DEPRECATED OLD ARRAY END */
 
 // Helper photo URL: SCOUT storage
 const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images";
@@ -2712,6 +3183,8 @@ const INCOMING_PLAYERS = [
   {name:"Jules De Brauwere", sex:"Men", country:"France", iclass:"Fall 2026", university:"Kansas State University", fr_rank:45, wagr:1636, star:6, photo:`${SP}/4d88cb3a-15d4-4b2c-8305-3715e7ee338c/profile-1769136145240.jpg`},
   {name:"Léopold Kostylev", sex:"Men", country:"Bulgaria", iclass:"Fall 2026", university:"Southwestern Iowa CC", wagr:2812, star:3, photo:`${SP}/979154a5-db66-4f01-81f4-3354dafe8598/profile-1775494781269.jpg`},
   {name:"Corentin Jorat", sex:"Men", country:"France", iclass:"Fall 2026", university:"Defiance College", star:1, photo:`${SP}/9fb8278d-c839-4a2e-acb8-1b5c13c6bfe7/profile-1764030996006.jpg`},
+  // Ajouts mai 2026 depuis sheet "USAP Players - Committed"
+  {name:"Jan Porchet", sex:"Men", country:"France", iclass:"Fall 2026", university:"Park University"},
 
   // ===== Fall 2026 — Women =====
   {name:"Giselle Zhao", sex:"Women", country:"France", iclass:"Fall 2026", university:"UC Berkeley", star:6, photo:`${SP}/38c7a04f-c1d7-4bdd-b8bc-b1dbebfe3b1e/profile-1764029453819.jpg`},
@@ -2737,6 +3210,9 @@ const INCOMING_PLAYERS = [
   {name:"Justine Bayle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Rice University", fr_rank:62, wagr:1624, star:5, photo:`${SP}/6243c305-f853-4ccc-bf34-dcc26b6043a8/profile-1772634276581.jpg`},
   {name:"Ambre Boullot", sex:"Women", country:"France", iclass:"Fall 2026", university:"Manhattan College", star:3},
   {name:"Juliette Saillour", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas Wesleyan University", fr_rank:237, star:3, photo:`${SP}/2e5d26ff-ff11-4cd4-9e5c-774b3bc75c2b/profile-1764028769091.jpg`},
+  // Ajouts mai 2026 depuis sheet "USAP Players - Committed"
+  {name:"Céleste Mangeat", sex:"Women", country:"France", iclass:"Fall 2026", university:"Coastal Carolina University"},
+  {name:"Romane Poissonnier", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of North Carolina - Chapel Hill"},
 
   // ===== Fall 2027 =====
   {name:"Konstanty Luczak", sex:"Men", country:"Poland", iclass:"Fall 2027", university:"University of Colorado", wagr:374, star:6, photo:`${SP}/eccb334d-6125-4788-9ae4-f7b7c56d8603/profile-1764028617245.jpg`},
@@ -2749,7 +3225,7 @@ const INCOMING_PLAYERS = [
   {name:"Iris Pollet", sex:"Women", country:"France", iclass:"Fall 2027", university:"Arkansas State University", fr_rank:112, star:4, photo:`${SP}/2fbb4824-d3b4-47ba-b094-693b3e1183c3/profile-1764204642950.jpg`}
 ];
 
-let incomingFilters = { iclass:"all", igender:"all", idivision:"all", search:"", club:"", academy:"" };
+let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[], academy:[] };
 
 function enrichIncoming(p) {
   const s = SCHOOLS[p.university] || {};
@@ -2758,6 +3234,7 @@ function enrichIncoming(p) {
   return {
     ...p,
     fr_rank: currentFr != null ? currentFr : p.fr_rank,
+    wagr: (CURRENT_WAGR[p.name] != null ? CURRENT_WAGR[p.name] : p.wagr),
     state: s.state ?? "?",
     division: s.div ?? "?",
     div_full: divFull(s),
@@ -2769,20 +3246,23 @@ const INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
 
 function applyIncomingFilters() {
   const q = incomingFilters.search.toLowerCase().trim();
-  const clubQ = normalizeMatch(incomingFilters.club);
-  const acadQ = normalizeMatch(incomingFilters.academy);
+  const clubSet = (incomingFilters.club || []).map(normalizeMatch);
+  const acadSet = (incomingFilters.academy || []).map(normalizeMatch);
+  const classSet = incomingFilters.iclass || [];
   return INCOMING_ENRICHED.filter(p => {
-    if (incomingFilters.iclass !== "all" && p.iclass !== incomingFilters.iclass) return false;
-    if (incomingFilters.igender !== "all" && p.sex !== incomingFilters.igender) return false;
-    if (incomingFilters.idivision !== "all" && p.division !== incomingFilters.idivision) return false;
+    if (classSet.length > 0 && !classSet.includes(p.iclass)) return false;
+    if ((incomingFilters.igender || []).length > 0 && !incomingFilters.igender.includes(p.sex)) return false;
+    if ((incomingFilters.idivision || []).length > 0 && !incomingFilters.idivision.includes(p.div_full)) return false;
     if (q && !p.name.toLowerCase().includes(q) && !(p.university||"").toLowerCase().includes(q)) return false;
-    if (clubQ) {
+    if (clubSet.length > 0) {
       const cd = getClubData(p.name);
-      if (!cd.club || !normalizeMatch(cd.club).includes(clubQ)) return false;
+      const pc = cd.club ? normalizeMatch(cd.club) : '';
+      if (!clubSet.some(c => pc.includes(c))) return false;
     }
-    if (acadQ) {
+    if (acadSet.length > 0) {
       const cd = getClubData(p.name);
-      if (!cd.academy || !normalizeMatch(cd.academy).includes(acadQ)) return false;
+      const pa = cd.academy ? normalizeMatch(cd.academy) : '';
+      if (!acadSet.some(c => pa.includes(c))) return false;
     }
     return true;
   }).sort((a,b) => {
@@ -2814,13 +3294,15 @@ function renderIncomingStats(rows) {
   // Counter dynamique club/academy (engagés)
   const cc = document.getElementById('club-counter-incoming');
   if (cc) {
-    const cf = incomingFilters.club.trim(), af = incomingFilters.academy.trim();
-    if (cf || af) {
+    const cf = (incomingFilters.club || []), af = (incomingFilters.academy || []);
+    if (cf.length > 0 || af.length > 0) {
       const parts = [];
-      if (cf) parts.push(`Club: ${cf}`);
-      if (af) parts.push(`Academy: ${af}`);
+      if (cf.length > 0) parts.push(`Club: ${cf.join(', ')}`);
+      if (af.length > 0) parts.push(`Académie: ${af.join(', ')}`);
+      const wordPlur = fG('engagés','engagées');
+      const wordSing = fG('engagé','engagée');
       cc.style.display = 'inline-flex';
-      cc.textContent = `${rows.length} ${rows.length > 1 ? 'engagés' : 'engagé'} — ${parts.join(' · ')}`;
+      cc.textContent = `${rows.length} ${rows.length > 1 ? wordPlur : wordSing} — ${parts.join(' · ')}`;
     } else {
       cc.style.display = 'none';
     }
@@ -2837,7 +3319,7 @@ function renderIncomingMap(rows) {
   });
 
   let html = '';
-  const titleTextI = lang === 'en' ? `United States — ${placed.length} committed` : `United States — ${placed.length} engagés`;
+  const titleTextI = lang === 'en' ? `United States — ${placed.length} committed` : `United States — ${placed.length} ${fG('engagés','engagées')}`;
   html += `<text x="475" y="28" text-anchor="middle" style="font-size:13px;fill:#0B1D58;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">${titleTextI}</text>`;
 
   const pts = US_OUTLINE_LATLNG.map(([lat,lng]) => {
@@ -2896,7 +3378,11 @@ function renderIncomingMap(rows) {
       out += `<div class="tt-player-row" data-key="${opKey}">`;
       out += `<div class="tt-player-name">${escapeHtml(op.name)}</div>`;
       out += `<div class="meta">${escapeHtml(op.university)} · ${escapeHtml(op.iclass)}</div>`;
-      if (op.fr_rank) out += `<div class="meta">FR rank #${op.fr_rank}</div>`;
+      if (op.fr_rank) {
+        const sexFr = op.sex==='Men' ? 'M' : 'F';
+        const lbl = lang==='en' ? `France ${sexFr}` : `Ranking FR ${sexFr}`;
+        out += `<div class="meta">${lbl} : #${op.fr_rank}</div>`;
+      }
       out += `</div>`;
     });
     if (isPinned) out += `<div class="tt-close-hint">${lang==='en'?'Click a player for full details · Esc to close':'Cliquez un joueur pour les détails · Esc pour fermer'}</div>`;
@@ -2914,7 +3400,7 @@ function renderIncomingMap(rows) {
     });
   }
 
-  svg.querySelectorAll('.pin').forEach(pin => {
+  svg.querySelectorAll('.pin, .pin-hit').forEach(pin => {
     const cidx = parseInt(pin.dataset.cluster);
     const clusterPlayers = clusters[cidx].map(item => item.player);
     pin.addEventListener('mouseenter', e => {
@@ -2924,8 +3410,7 @@ function renderIncomingMap(rows) {
     });
     pin.addEventListener('mousemove', e => {
       if (tooltipPinned) return;
-      tt.style.left = (e.pageX + 14) + 'px';
-      tt.style.top = (e.pageY + 14) + 'px';
+      placeTooltipAt(tt, e);
     });
     pin.addEventListener('mouseleave', () => {
       if (!tooltipPinned) tt.style.opacity = 0;
@@ -2939,8 +3424,7 @@ function renderIncomingMap(rows) {
       tt.innerHTML = buildClusterTooltipI(clusterPlayers, true);
       tt.classList.add('pinned');
       tt.style.opacity = 1;
-      tt.style.left = (e.pageX + 14) + 'px';
-      tt.style.top = (e.pageY + 14) + 'px';
+      placeTooltipAt(tt, e);
       tooltipPinned = true;
       attachRowClickHandlersI();
     });
@@ -2956,6 +3440,7 @@ function renderIncomingGrid(rows) {
   // (cards listened below for click)
   grid.innerHTML = rows.map(p => {
     const frRank = (p.fr_rank != null && p.fr_rank > 0) ? `<span class="stat-chip fr">FR #${p.fr_rank}</span>` : '';
+    const wagrChip = (p.wagr != null && p.wagr > 0) ? `<span class="stat-chip fr">WAGR #${p.wagr}</span>` : '';
     const divBadge = p.div_full && p.div_full !== '—' ? `<span class="div-badge div-${p.division}" style="font-size:9px">${escapeHtml(p.div_full)}</span>` : '';
     const logoUrl = getSchoolLogo(p.university);
     const logoHtml = logoUrl ? `<img class="school-logo-card" src="${logoUrl}" onerror="this.style.display='none'" alt="">` : '';
@@ -2971,6 +3456,7 @@ function renderIncomingGrid(rows) {
           <div class="incoming-stats">
             ${divBadge}
             ${frRank}
+            ${wagrChip}
           </div>
         </div>
       </div>
@@ -3009,8 +3495,20 @@ document.querySelectorAll('.tab').forEach(t => {
 document.querySelectorAll('.chip[data-filter-in]').forEach(chip => {
   chip.addEventListener('click', () => {
     const f = chip.dataset.filterIn, v = chip.dataset.value;
-    incomingFilters[f] = v;
-    document.querySelectorAll(`.chip[data-filter-in="${f}"]`).forEach(c => c.classList.toggle('active', c.dataset.value === v));
+    // Tous les filtres incoming sont multi-select : iclass, igender, idivision
+    if (v === 'all') {
+      incomingFilters[f] = [];
+    } else {
+      if (!Array.isArray(incomingFilters[f])) incomingFilters[f] = [];
+      const idx = incomingFilters[f].indexOf(v);
+      if (idx >= 0) incomingFilters[f].splice(idx, 1);
+      else incomingFilters[f].push(v);
+    }
+    document.querySelectorAll(`.chip[data-filter-in="${f}"]`).forEach(c => {
+      const cv = c.dataset.value;
+      if (cv === 'all') c.classList.toggle('active', incomingFilters[f].length === 0);
+      else c.classList.toggle('active', incomingFilters[f].includes(cv));
+    });
     rerenderIncoming();
   });
 });
@@ -3033,6 +3531,7 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
     document.getElementById('snap-help').textContent = SNAPSHOTS[currentSnap]['help_'+lang];
     rerender();
     rerenderIncoming();
+    renderStatsBanner();
   });
 });
 
@@ -3059,6 +3558,7 @@ document.getElementById('snap-help').textContent = SNAPSHOTS[currentSnap]['help_
 rerender();
 rerenderIncoming();
 initComboboxes();
+renderStatsBanner();
 </script>
 </body>
 </html>
