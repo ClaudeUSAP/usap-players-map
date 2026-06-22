@@ -1048,7 +1048,7 @@ function openPlayerModal(p, opts={}) {
   header.classList.toggle('has-photo', !!photoUrl);
   header.classList.toggle('no-photo', !photoUrl);
   document.getElementById('modal-name').textContent = p.name;
-  document.getElementById('modal-school').textContent = `${p.university} · ${p.state || '?'} · ${p.div_full || '—'}`;
+  document.getElementById('modal-school').textContent = `${isIncoming ? (lang==='en'?'Committed to':'Engagé à') : (lang==='en'?'Plays for':'Joue pour')} ${p.university} · ${p.state || '?'} · ${p.div_full || '—'}`;
   // Accord féminin si player.sex === 'Women'
   const committedFor = (lang==='fr')
     ? (p.sex === 'Women' ? 'Engagée pour' : 'Engagé pour')
@@ -1921,15 +1921,15 @@ const CURRENT_FFGOLF = {
 // Source: Scout EU athletes.wagr_ranking (status available/in_creation/committed/in_college). Entiers > 0 uniquement.
 const CURRENT_WAGR = {
   "Romane Poissonnier": 863, "Bogdan Sandrini": 2312, "Callixte Alzas": 282, "Céleste Mangeat": 1511,
-  "Ambre Boullot": 2753, "Léa Giron": 1959, "Céleste Darloy": 918, "Romane Tresnard": 883,
-  "Léopold Kostylev": 1914, "Axelle Guillemard": 861, "Loïc Goethals": 3618, "Mila Tamisier": 1891,
-  "Justine Bayle": 1563, "Jules De Brauwere": 1722, "Eline Chau-Hu": 1578, "Manon Petitcolas": 359,
-  "Giselle Zhao": 117, "Charlotte Bouquet": 1399, "Gabrielle Duhalde": 3187, "Celeste Bobo-Lloret": 1167,
-  "Théophile Archer": 2038, "Konstanty Luczak": 395, "Paolo Fazzone": 1872, "Octavio Laurent": 956,
-  "Melliyal Schmitt": 624, "Sarah Cuney": 2073, "Léo Molino": 3761, "Salomé Lumbaca": 855,
-  "Justin Charoy": 3135, "Oscar Couilleau": 39, "Inès Marty": 2025, "Edouard Petit": 3763,
-  "Raphaël Turcaud": 2771, "Sacha Corlouer": 2578, "Théophile Lebrun": 915, "Alexis Barnetche": 2581,
-  "Nicolas Robin": 2839, "Jules Lauer": 1642, "Louise Krawiec": 818, "Sara Brentcheneff": 44
+  "Ambre Boullot": 2753, "Léa Giron": 1959, "Romane Tresnard": 883, "Mila Tamisier": 1891,
+  "Axelle Guillemard": 861, "Justine Bayle": 1563, "Jules De Brauwere": 1722, "Eline Chau-Hu": 1578,
+  "Manon Petitcolas": 359, "Salomé Lumbaca": 855, "Giselle Zhao": 117, "Charlotte Bouquet": 1399,
+  "Gabrielle Duhalde": 3187, "Konstanty Luczak": 395, "Celeste Bobo-Lloret": 1167, "Théophile Archer": 2038,
+  "Paolo Fazzone": 1872, "Octavio Laurent": 956, "Melliyal Schmitt": 624, "Sarah Cuney": 2073,
+  "Léo Molino": 3761, "Justin Charoy": 3135, "Oscar Couilleau": 39, "Céleste Darloy": 918,
+  "Inès Marty": 2025, "Edouard Petit": 3763, "Raphaël Turcaud": 2771, "Sacha Corlouer": 2578,
+  "Léopold Kostylev": 1914, "Alexis Barnetche": 2581, "Nicolas Robin": 2839, "Loïc Goethals": 3618,
+  "Théophile Lebrun": 915, "Jules Lauer": 1642, "Louise Krawiec": 818, "Sara Brentcheneff": 44
 };
 
 // ================== SCHOOLS DATA ==================
@@ -2863,7 +2863,7 @@ function renderMap(rows) {
 
 function buildTooltip(p) {
   let out = `<strong>${escapeHtml(p.name)}</strong>`;
-  out += `<div class="meta">${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
+  out += `<div class="meta">${lang==='en'?'Plays for':'Joue pour'} ${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
   out += `<div class="meta">${escapeHtml(p.cclass)} · ${t('starting')} ${escapeHtml(p.signing)}*</div>`;
   if (p.sb_rank != null) {
     const divPart = p.div_full && p.div_full !== '—' ? ` ${escapeHtml(p.div_full)}` : '';
@@ -3149,7 +3149,7 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 
 // ================== INCOMING DATA (Engagés Fall 2026 + Fall 2027) ==================
 
-// Helper photo URL: SCOUT storage
+// Helper photo URL
 const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images";
 const INCOMING_PLAYERS = [
   // ===== Fall 2026 — Men =====
@@ -3367,7 +3367,7 @@ function renderIncomingMap(rows) {
     if (clusterPlayers.length === 1) {
       const p = clusterPlayers[0];
       let out = `<strong>${escapeHtml(p.name)}</strong>`;
-      out += `<div class="meta">${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
+      out += `<div class="meta">${lang==='en'?'Committed to':'Engagé à'} ${escapeHtml(p.university)} · ${escapeHtml(p.state)} · ${escapeHtml(p.div_full)}</div>`;
       out += `<div class="meta">${t('committed_for')} ${escapeHtml(p.iclass)}</div>`;
       if (p.fr_rank) out += `<div class="row"><span>${t('fr_ranking')}</span><span>${p.fr_rank}</span></div>`;
       return out;
@@ -3452,7 +3452,7 @@ function renderIncomingGrid(rows) {
             <span class="gender-badge" style="background:${p.sex==='Men'?'#0B1D58':'#F6772A'}"></span>
             ${escapeHtml(p.name)}
           </div>
-          <div class="incoming-meta">${escapeHtml(p.university)} · ${escapeHtml(p.state || '?')} · ${escapeHtml(p.iclass)}</div>
+          <div class="incoming-meta">${lang==='en'?'Committed to':'Engagé à'} ${escapeHtml(p.university)} · ${escapeHtml(p.state || '?')} · ${escapeHtml(p.iclass)}</div>
           <div class="incoming-stats">
             ${divBadge}
             ${frRank}
