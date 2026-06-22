@@ -2008,6 +2008,7 @@ const SCHOOLS = {
   "Coastal Carolina University":      {state:"SC", div:"D1",   gov:"NCAA",  lat:33.79,  lng:-79.01},
   "University of Arkansas Little Rock": {state:"AR", div:"D1", gov:"NCAA",  lat:34.71,  lng:-92.34},
   "University of Montevallo":         {state:"AL", div:"D2",   gov:"NCAA",  lat:33.10,  lng:-86.86},
+  "East Tennessee State University":  {state:"TN", div:"D1",   gov:"NCAA",  lat:36.30,  lng:-82.37},
   // Écoles ajoutées pour les Engagés Class 2026/2027 (sheet USAP Players - Committed)
   "Arizona State University":         {state:"AZ", div:"D1",   gov:"NCAA",  lat:33.42,  lng:-111.93},
   "Jacksonville State University":    {state:"AL", div:"D1",   gov:"NCAA",  lat:33.82,  lng:-85.77},
@@ -2167,6 +2168,9 @@ const PLAYERS = [
   // Octavio Laurent — transfer Kansas State pour Sophomore year (Freshman à USCB Fall 2025)
   {name:"Octavio Laurent", country:"France/Chili", sex:"Men", signing:"Fall 2026", university:"Kansas State University", transfer:true,
     start_year:"Sophomore"},
+  // Simon Germain — transfer Eckerd College pour Junior year (Freshman à CSU Monterey Bay Fall 2024)
+  {name:"Simon Germain", country:"France", sex:"Men", signing:"Fall 2026", university:"Eckerd College", transfer:true,
+    start_year:"Junior"},
   {name:"Ali Elsayed", country:"France", sex:"Men", signing:"Fall 2025", university:"Lawrence Technological University",
     fr_rank_prior:471, fr_rank_commit:415, fr_rank_recent:415, commit_date:"Dec 23",
     fr_score:75.2, fr_rank_sb:470},
@@ -3157,7 +3161,7 @@ const INCOMING_PLAYERS = [
   {name:"Oscar Couilleau", sex:"Men", country:"France", iclass:"Fall 2026", university:"Arizona State University", star:3, photo:`${SP}/57262654-6c4c-468e-a575-b08f3ec94267/profile-1763942441210.jpg`},
   {name:"Raphaël Turcaud", sex:"Men", country:"France", iclass:"Fall 2026", university:"Jacksonville State University", fr_rank:48, star:3, photo:`${SP}/4d4e5f27-7d67-41b5-8ecb-bde19e8b4da4/profile-1763941630278.jpg`},
   {name:"Justin Charoy", sex:"Men", country:"France", iclass:"Fall 2026", university:"University of South Carolina - Beaufort", star:3, photo:`${SP}/c9a40f50-eac0-4743-84dc-a3f7769f2dec/profile-1764028721978.jpg`},
-  {name:"Théophile Lebrun", sex:"Men", country:"France", iclass:"Fall 2026", university:"Wingate University", fr_rank:64, wagr:2255, star:5, photo:`${SP}/a2ff3c11-0dcb-43f2-91a1-218b09d8d0d5/profile-1763941064315.jpg`},
+  {name:"Théophile Lebrun", sex:"Men", country:"France", iclass:"Fall 2026", university:"East Tennessee State University", fr_rank:64, wagr:2255, star:5, photo:`${SP}/a2ff3c11-0dcb-43f2-91a1-218b09d8d0d5/profile-1763941064315.jpg`},
   {name:"Callixte Alzas", sex:"Men", country:"France", iclass:"Fall 2026", university:"UC Berkeley", star:6, photo:`${SP}/5d7f13dc-3243-4352-a23f-302e9f33c774/profile-1764031494166.jpg`},
   {name:"Melvil Jacquelin", sex:"Men", country:"France", iclass:"Fall 2026", university:"CSU Monterey Bay", fr_rank:96, star:5, photo:`${SP}/ba128c1c-d453-4e03-ac96-448b1ba061e7/profile-1763942933784.jpg`},
   {name:"Sacha Molino", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mid America Nazarene University", fr_rank:175, star:3, photo:`${SP}/6bb889fd-20f8-44a6-885f-8448163c0c54/profile-1763941442366.jpg`},
@@ -3207,6 +3211,7 @@ const INCOMING_PLAYERS = [
   {name:"Eline Chau-Hu", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Cincinnati"},
   {name:"Sarah Sayah", sex:"Women", country:"France", iclass:"Fall 2026", university:"Weatherford College", fr_rank:433, star:2, photo:`${SP}/ca94a14b-9721-4baa-b34e-b14074cb7d54/profile-1763940667268.jpg`},
   {name:"Sarah Binaghi", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:262, star:3, photo:`${SP}/6c28ef11-1e74-4747-8c63-832eb9a92042/profile-1763940798099.jpg`},
+  {name:"Diane Becassis", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:237, transfer:true},
   {name:"Justine Bayle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Rice University", fr_rank:62, wagr:1624, star:5, photo:`${SP}/6243c305-f853-4ccc-bf34-dcc26b6043a8/profile-1772634276581.jpg`},
   {name:"Ambre Boullot", sex:"Women", country:"France", iclass:"Fall 2026", university:"Manhattan College", star:3},
   {name:"Juliette Saillour", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas Wesleyan University", fr_rank:237, star:3, photo:`${SP}/2e5d26ff-ff11-4cd4-9e5c-774b3bc75c2b/profile-1764028769091.jpg`},
