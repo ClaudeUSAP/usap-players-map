@@ -1170,23 +1170,10 @@ function openPlayerModal(p, opts={}) {
       body += '</div>';
     }
   }
-  // FR Ranking history (joueurs aux US) — pour les transferts on récupère commit_date de l'entrée originale
-  if (!isIncoming && (p.fr_rank_prior != null || p.fr_rank_commit != null || p.fr_rank_recent != null)) {
-    const sd = signingToDate(p.signing);
-    // Fallback : pour les transferts, l'entrée current peut ne pas avoir commit_date — lookup depuis l'entrée originale
-    let commitDate = p.commit_date;
-    if (!commitDate && typeof PLAYERS !== 'undefined') {
-      const orig = PLAYERS.find(x => x.name === p.name && x.commit_date);
-      if (orig) commitDate = orig.commit_date;
-    }
-    body += '<div class="modal-section"><h3>' + (lang==='en'?'French ranking history':'Historique ranking FR') + '</h3>';
-    if (p.fr_rank_prior != null) body += `<div class="modal-history-row"><span class="yr">Aug ${sd.y - 1}</span><span class="val">#${p.fr_rank_prior}</span></div>`;
-    if (p.fr_rank_commit != null) {
-      const dateLbl = commitDate ? ` (${escapeHtml(commitDate)})` : '';
-      body += `<div class="modal-history-row"><span class="yr">${(lang==='en'?'At commit':'Au commit')}${dateLbl}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
-    }
-    if (p.fr_rank_recent != null) body += `<div class="modal-history-row"><span class="yr">Aug ${sd.y}</span><span class="val">#${p.fr_rank_recent}</span></div>`;
-    if (CURRENT_FFGOLF[p.name] != null) body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Juin 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+  // Current FR ranking — historical hidden for competitive privacy (V46)
+  if (!isIncoming && CURRENT_FFGOLF[p.name] != null) {
+    body += '<div class="modal-section"><h3>' + (lang==='en'?'French ranking':'Ranking FR') + '</h3>';
+    body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Juin 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
     body += '</div>';
   }
   // Engagés data
@@ -2094,78 +2081,61 @@ const PLAYERS = [
 
   // ==== MEN — Fall 2024 (Class of 2024) ====
   {name:"Samuel Guigui-Baruchel", country:"France", sex:"Men", signing:"Fall 2024", university:"Lander University",
-    fr_rank_prior:112, fr_rank_commit:71, fr_rank_recent:85, commit_date:"Nov 23",
-    fr_score:74, fr_rank_sb:386, so_score:74, so_rank_sb:458},
+        fr_score:74, fr_rank_sb:386, so_score:74, so_rank_sb:458},
   {name:"Gabriel Dulon-Villoslada", country:"France", sex:"Men", signing:"Fall 2024", university:"Faulkner University",
-    fr_rank_prior:162, fr_rank_commit:162, fr_rank_recent:34, commit_date:"Aug 23",
-    fr_score:70.5, fr_rank_sb:19, so_score:72.7, so_rank_sb:747},
+        fr_score:70.5, fr_rank_sb:19, so_score:72.7, so_rank_sb:747},
   // Noa Tissot — n'est plus aux US (à confirmer date exacte)
   {name:"Noa Tissot", country:"France", sex:"Men", signing:"Fall 2024", university:"Western New Mexico University", stopped:{y:2025, m:5}},
   {name:"Bogdan Sandrini", country:"France", sex:"Men", signing:"Fall 2024", university:"University of Central Arkansas",
-    fr_rank_prior:85, fr_rank_commit:97, fr_rank_recent:87, commit_date:"Dec 23",
-    fr_score:73.7, fr_rank_sb:976, so_score:72.8, so_rank_sb:849},
+        fr_score:73.7, fr_rank_sb:976, so_score:72.8, so_rank_sb:849},
   {name:"Antoine Lianos", country:"France", sex:"Men", signing:"Fall 2024", university:"Sterling College",
-    fr_rank_recent:951, commit_date:"Jan 24",
-    fr_score:82.7, fr_rank_sb:1210, so_score:80, so_rank_sb:1032},
+        fr_score:82.7, fr_rank_sb:1210, so_score:80, so_rank_sb:1032},
   {name:"Léo Molino", country:"France", sex:"Men", signing:"Fall 2024", university:"Oakland City University",
-    fr_rank_prior:374, fr_rank_commit:511, fr_rank_recent:674, commit_date:"Dec 23",
-    fr_score:74.7, fr_rank_sb:268, so_score:72.2, so_rank_sb:117},
+        fr_score:74.7, fr_rank_sb:268, so_score:72.2, so_rank_sb:117},
   {name:"Hugo Almeida", country:"France", sex:"Men", signing:"Fall 2024", university:"Chestnut Hill College",
-    fr_rank_prior:333, fr_rank_commit:301, fr_rank_recent:294, commit_date:"Oct 23",
-    fr_score:79.9, fr_rank_sb:1237, so_score:77.2, so_rank_sb:785},
+        fr_score:79.9, fr_rank_sb:1237, so_score:77.2, so_rank_sb:785},
   {name:"Alois Casalonga", country:"France", sex:"Men", signing:"Fall 2024", university:"Cameron University",
-    fr_rank_prior:451, fr_rank_commit:234, fr_rank_recent:286, commit_date:"Mar 24",
-    fr_score:73.6, fr_rank_sb:344, so_score:73.8, so_rank_sb:448},
+        fr_score:73.6, fr_rank_sb:344, so_score:73.8, so_rank_sb:448},
   // Enzo Rousse — stoppé après Freshman (Mai 2025), "Did not return" sophomore
   {name:"Enzo Rousse", country:"France", sex:"Men", signing:"Fall 2024", university:"Ranger College",
-    fr_rank_prior:308, fr_rank_commit:229, fr_rank_recent:160, commit_date:"Mar 24",
-    fr_score:74.3, fr_rank_sb:90, stopped:{y:2025, m:5}},
+        fr_score:74.3, fr_rank_sb:90, stopped:{y:2025, m:5}},
   // Ylan transfer to FAU pour Sophomore year, arrêté fin de Sophomore (Mai 2025)
   {name:"Ylan Guerin-Pozzalo", country:"France", sex:"Men", signing:"Fall 2024", university:"Florida Atlantic University", transfer:true,
     start_year:"Sophomore", stopped:{y:2025, m:5}},
   {name:"Joseph Linel", country:"France", sex:"Men", signing:"Fall 2024", university:"Odessa Junior College",
-    fr_rank_prior:64, fr_rank_commit:305, fr_rank_recent:439, commit_date:"Mar 24",
-    fr_score:74.3, fr_rank_sb:63, so_score:73.6, so_rank_sb:92},
+        fr_score:74.3, fr_rank_sb:63, so_score:73.6, so_rank_sb:92},
   {name:"Thomas Romani", country:"Swiss/Italy", sex:"Men", signing:"Fall 2024", university:"University of West Georgia"},
   {name:"Simon Germain", country:"France", sex:"Men", signing:"Fall 2024", university:"CSU Monterey Bay",
-    fr_rank_prior:243, fr_rank_commit:190, fr_rank_recent:191, commit_date:"Jun 24",
-    fr_score:75.7, so_score:73.7, so_rank_sb:335},
+        fr_score:75.7, so_score:73.7, so_rank_sb:335},
   // Edouard Cereto — Junior dès la rentrée Fall 2024, donc Senior en 2025-26
   {name:"Edouard Cereto", country:"France", sex:"Men", signing:"Fall 2024", university:"Georgia Southern University", start_year:"Junior"},
   // Maxime Lam original entry (Henderson State - début Fall 2024). Transfer to GW Fall 2025.
   {name:"Maxime Lam", country:"France", sex:"Men", signing:"Fall 2024", university:"Henderson State University",
-    fr_rank_prior:29, fr_rank_commit:33, fr_rank_recent:49, commit_date:"Feb 24",
-    fr_score:71.5, fr_rank_sb:79, so_score:73.2, so_rank_sb:931},
+        fr_score:71.5, fr_rank_sb:79, so_score:73.2, so_rank_sb:931},
 
   // ==== MEN — Spring 2025 ====
   {name:"Loris Bonnetton Alban", country:"France", sex:"Men", signing:"Spring 2025", university:"Texas A&M University - San Antonio",
-    fr_rank_prior:363, fr_rank_commit:399, fr_rank_recent:378, commit_date:"Dec 24",
-    fr_score:77.0, fr_rank_sb:511, so_score:76.6, so_rank_sb:646},
+        fr_score:77.0, fr_rank_sb:511, so_score:76.6, so_rank_sb:646},
   // Oihan Silva — démarré Spring 2026 à Otero College (Freshman)
   {name:"Oihan Silva", country:"France", sex:"Men", signing:"Spring 2026", university:"Otero College",
-    fr_rank_prior:811, fr_rank_commit:550, fr_rank_recent:550, commit_date:"Feb 25"},
+    },
   // Jules Lauer — démarré Spring 2026 à College of Charleston (était dans Engagés Fall 2026, déplacé)
   {name:"Jules Lauer", country:"France", sex:"Men", signing:"Spring 2026", university:"College of Charleston",
-    fr_rank_recent:93, commit_date:"Jul 25"},
+    },
 
   // ==== MEN — Fall 2025 (Class of 2025) ====
   {name:"Hugo Soubran", country:"France", sex:"Men", signing:"Fall 2025", university:"Hesston College",
-    fr_rank_prior:898, fr_rank_commit:916, fr_rank_recent:916, commit_date:"Feb 25",
-    fr_score:80.9, fr_rank_sb:1091},
+        fr_score:80.9, fr_rank_sb:1091},
   {name:"Matis Sayah", country:"France", sex:"Men", signing:"Fall 2025", university:"Southern Wesleyan University",
-    fr_rank_prior:255, fr_rank_commit:258, fr_rank_recent:258, commit_date:"Sep 24",
-    fr_score:81.1},
+        fr_score:81.1},
   {name:"Charles Cirier", country:"France", sex:"Men", signing:"Fall 2025", university:"Wingate University",
-    fr_rank_prior:633, fr_rank_commit:633, fr_rank_recent:633, commit_date:"Aug 24"},
+    },
   {name:"Lucas Raoul", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Northern Colorado",
-    fr_rank_prior:184, fr_rank_commit:96, fr_rank_recent:96, commit_date:"Oct 24",
-    fr_score:76.6, fr_rank_sb:1910},
+        fr_score:76.6, fr_rank_sb:1910},
   {name:"Rafael Bobo-Lloret", country:"France", sex:"Men", signing:"Fall 2025", university:"Cal Poly",
-    fr_rank_prior:42, fr_rank_commit:34, fr_rank_recent:34, commit_date:"Mar 25",
-    fr_score:72.8, fr_rank_sb:855},
+        fr_score:72.8, fr_rank_sb:855},
   {name:"Octavio Laurent", country:"France/Chili", sex:"Men", signing:"Fall 2025", university:"University of South Carolina - Beaufort",
-    fr_rank_prior:55, fr_rank_commit:55, fr_rank_recent:55, commit_date:"Apr 25",
-    fr_score:70.3, fr_rank_sb:25},
+        fr_score:70.3, fr_rank_sb:25},
   // Octavio Laurent — transfer Kansas State pour Sophomore year (Freshman à USCB Fall 2025)
   {name:"Octavio Laurent", country:"France/Chili", sex:"Men", signing:"Fall 2026", university:"Kansas State University", transfer:true,
     start_year:"Sophomore"},
@@ -2173,51 +2143,40 @@ const PLAYERS = [
   {name:"Simon Germain", country:"France", sex:"Men", signing:"Fall 2026", university:"Eckerd College", transfer:true,
     start_year:"Junior"},
   {name:"Ali Elsayed", country:"France", sex:"Men", signing:"Fall 2025", university:"Lawrence Technological University",
-    fr_rank_prior:471, fr_rank_commit:415, fr_rank_recent:415, commit_date:"Dec 23",
-    fr_score:75.2, fr_rank_sb:470},
+        fr_score:75.2, fr_rank_sb:470},
   {name:"Gaspard Maréchal Dubourg", country:"France", sex:"Men", signing:"Fall 2025", university:"Southwestern Christian University",
-    fr_rank_prior:239, fr_rank_commit:239, fr_rank_recent:239, commit_date:"Aug 24",
-    fr_score:74.6, fr_rank_sb:389},
+        fr_score:74.6, fr_rank_sb:389},
   {name:"Corentin Guilloux", country:"France", sex:"Men", signing:"Fall 2025", university:"Northern Illinois University",
-    fr_rank_prior:90, fr_rank_commit:204, fr_rank_recent:204, commit_date:"Jun 24",
-    fr_score:73.9, fr_rank_sb:1265},
+        fr_score:73.9, fr_rank_sb:1265},
   {name:"Léo Testas", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
-    fr_rank_prior:116, fr_rank_commit:269, fr_rank_recent:269, commit_date:"Feb 25",
-    fr_score:74.5, fr_rank_sb:286},
+        fr_score:74.5, fr_rank_sb:286},
   {name:"Sacha Corlouer", country:"France", sex:"Men", signing:"Fall 2025", university:"Georgia Southwestern State University",
-    fr_rank_prior:80, fr_rank_commit:78, fr_rank_recent:78, commit_date:"Sep 24"},
+    },
   {name:"Louis Delattre", country:"France", sex:"Men", signing:"Fall 2025", university:"Sterling College"},
   {name:"Elie Bennatan", country:"France", sex:"Men", signing:"Fall 2025", university:"Point Park University",
-    fr_rank_recent:398, commit_date:"Jan 25",
-    fr_score:82, fr_rank_sb:1413},
+        fr_score:82, fr_rank_sb:1413},
   {name:"Alphonse Hermansson", country:"Finland/Sweden/Switzerland", sex:"Men", signing:"Fall 2025", university:"Newman University"},
   {name:"Hugo Duquaine", country:"Belgium", sex:"Men", signing:"Fall 2025", university:"Hutchinson Community College"},
   {name:"Maxence Bonnet", country:"France", sex:"Men", signing:"Fall 2025", university:"Catawba College",
-    fr_rank_prior:125, fr_rank_commit:134, fr_rank_recent:134, commit_date:"Sep 24",
-    fr_score:73.1, fr_rank_sb:306},
+        fr_score:73.1, fr_rank_sb:306},
   {name:"Martin Chaney", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Mobile",
-    fr_rank_prior:872, fr_rank_commit:822, fr_rank_recent:822, commit_date:"Oct 24",
-    fr_score:76.1, fr_rank_sb:612},
+        fr_score:76.1, fr_rank_sb:612},
   {name:"Amaury Wouters", country:"Belgium", sex:"Men", signing:"Fall 2025", university:"Bethel University (IN)"},
   // (Oihan Silva déplacé en Spring 2025 ci-dessus)
   {name:"Gabriel Delaval", country:"France", sex:"Men", signing:"Fall 2025", university:"Lewis University",
-    fr_rank_prior:356, fr_rank_commit:349, fr_rank_recent:349, commit_date:"Dec 24",
-    fr_score:75.6, fr_rank_sb:572},
+        fr_score:75.6, fr_rank_sb:572},
   {name:"Lucas Nicola", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
-    fr_rank_prior:1008, fr_rank_commit:527, fr_rank_recent:527, commit_date:"Jan 25",
-    fr_score:75, fr_rank_sb:298},
+        fr_score:75, fr_rank_sb:298},
   {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior"},
   {name:"Florian Simon", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Houston - Victoria",
-    fr_rank_prior:348, fr_rank_commit:288, fr_rank_recent:288, commit_date:"Apr 25",
-    fr_score:74.9, fr_rank_sb:455},
+        fr_score:74.9, fr_rank_sb:455},
   // Noah Vieilleville n'est jamais parti aux US — retiré de la liste
   // Alexandre Genet (Fall 2025) — Senior dès la rentrée
   {name:"Alexandre Genet", country:"France", sex:"Men", signing:"Fall 2025", university:"Wayland Baptist University", start_year:"Senior"},
   {name:"Faust Amat", country:"France", sex:"Men", signing:"Fall 2025", university:"Lewis University",
-    fr_rank_prior:456, fr_rank_commit:214, fr_rank_recent:214, commit_date:"Jan 25",
-    fr_score:76.4, fr_rank_sb:926},
+        fr_score:76.4, fr_rank_sb:926},
   {name:"Fadi Burnet", country:"France", sex:"Men", signing:"Fall 2025", university:"Northwest Mississippi Community College",
-    fr_rank_prior:725},
+    },
   {name:"Andrea Matlega", country:"France", sex:"Men", signing:"Fall 2025", university:"Southwestern Christian University", transfer:true, start_year:"Senior"},
   {name:"Alexian Rouault", country:"France", sex:"Men", signing:"Fall 2025", university:"Mid America Nazarene University", transfer:true, start_year:"Senior"},
   {name:"Gabriele Romani", country:"Italy/Switzerland", sex:"Men", signing:"Fall 2025", university:"Friends University", transfer:true, start_year:"5th year"},
@@ -2227,13 +2186,11 @@ const PLAYERS = [
   // Dulon-Villoslada transfer UTRGV pour Sophomore year (Freshman à Faulkner)
   {name:"Gabriel Dulon-Villoslada", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Texas Rio Grande Valley", transfer:true,
     start_year:"Sophomore",
-    fr_rank_prior:162, fr_rank_commit:162, fr_rank_recent:34,
-    so_score:72.7, so_rank_sb:747},
+        so_score:72.7, so_rank_sb:747},
   // Maxime Lam transfer GW pour Sophomore year (Freshman à Henderson State)
   {name:"Maxime Lam", country:"France", sex:"Men", signing:"Fall 2025", university:"George Washington University", transfer:true,
     start_year:"Sophomore",
-    fr_rank_prior:29, fr_rank_commit:33, fr_rank_recent:49, commit_date:"Feb 24",
-    so_score:73.2, so_rank_sb:931},
+        so_score:73.2, so_rank_sb:931},
   {name:"Kilian Juget", country:"France", sex:"Men", signing:"Fall 2025", university:"Ottawa University KS", transfer:true, start_year:"Junior"},
 
   // ==== WOMEN — Fall 2023 (Class 2023) ====
@@ -2244,47 +2201,35 @@ const PLAYERS = [
 
   // ==== WOMEN — Fall 2024 (Class of 2024) ====
   {name:"Faustine Errecade", country:"France", sex:"Women", signing:"Fall 2024", university:"University of Notre Dame",
-    fr_rank_prior:74, fr_rank_commit:53, fr_rank_recent:111, commit_date:"Mar 23",
-    fr_score:75.8, fr_rank_sb:698, so_score:78.9, so_rank_sb:1269},
+        fr_score:75.8, fr_rank_sb:698, so_score:78.9, so_rank_sb:1269},
   {name:"Camille Rosier", country:"France", sex:"Women", signing:"Fall 2024", university:"University of Illinois - Chicago",
-    fr_rank_prior:154, fr_rank_commit:133, fr_rank_recent:123, commit_date:"Dec 23",
-    fr_score:79.0, fr_rank_sb:1183, so_score:77, so_rank_sb:1078},
+        fr_score:79.0, fr_rank_sb:1183, so_score:77, so_rank_sb:1078},
   {name:"Anna Pillard", country:"France", sex:"Women", signing:"Fall 2024", university:"University of Maryland",
-    fr_rank_prior:41, fr_rank_commit:42, fr_rank_recent:63, commit_date:"Jul 23",
-    fr_score:73.5, fr_rank_sb:296, so_score:73.3, so_rank_sb:430},
+        fr_score:73.5, fr_rank_sb:296, so_score:73.3, so_rank_sb:430},
   {name:"Cloé Poizac", country:"France", sex:"Women", signing:"Fall 2024", university:"Henderson State University",
-    fr_rank_prior:228, fr_rank_commit:156, fr_rank_recent:136, commit_date:"Nov 23",
-    fr_score:77.2, fr_rank_sb:237, so_score:77, so_rank_sb:1076},
+        fr_score:77.2, fr_rank_sb:237, so_score:77, so_rank_sb:1076},
   {name:"Emma Leroy-Fabry", country:"France", sex:"Women", signing:"Fall 2024", university:"University of Central Arkansas",
-    fr_rank_prior:45, fr_rank_commit:45, fr_rank_recent:23, commit_date:"Aug 23",
-    fr_score:75.7, fr_rank_sb:741, so_score:75.7, so_rank_sb:878},
+        fr_score:75.7, fr_rank_sb:741, so_score:75.7, so_rank_sb:878},
   {name:"Juliette Daviau", country:"France", sex:"Women", signing:"Fall 2024", university:"Lamar University",
-    fr_rank_prior:224, fr_rank_commit:209, fr_rank_recent:199, commit_date:"Feb 24",
-    fr_score:80.0, fr_rank_sb:1403, so_score:77.5},
+        fr_score:80.0, fr_rank_sb:1403, so_score:77.5},
   // Amélie Kumar — arrêtée Mai 2025 après 1 saison (Freshman uniquement)
   {name:"Amélie Kumar", country:"France", sex:"Women", signing:"Fall 2024", university:"Southern Methodist University",
-    fr_rank_prior:98, fr_rank_commit:106, fr_rank_recent:93, commit_date:"Nov 23",
-    fr_score:75.4, fr_rank_sb:641, stopped:{y:2025, m:5}},
+        fr_score:75.4, fr_rank_sb:641, stopped:{y:2025, m:5}},
   {name:"Ambre Matlega", country:"France", sex:"Women", signing:"Fall 2024", university:"High Point University",
-    fr_rank_prior:152, fr_rank_commit:102, fr_rank_recent:130, commit_date:"Nov 23",
-    fr_score:77.0, fr_rank_sb:961, so_score:75.8},
+        fr_score:77.0, fr_rank_sb:961, so_score:75.8},
   {name:"Lauren Thompstone", country:"France", sex:"Women", signing:"Fall 2024", university:"Pennsylvania State University"},
   {name:"Anaëlle Picot", country:"France", sex:"Women", signing:"Fall 2024", university:"Carson Newman University"},
   {name:"Lehane Louis-Dumond", country:"France", sex:"Women", signing:"Fall 2024", university:"Lee University",
-    fr_rank_prior:90, fr_rank_commit:98, fr_rank_recent:135, commit_date:"Jan 24",
-    fr_score:74.7, fr_rank_sb:100, so_score:74.9, so_rank_sb:121},
+        fr_score:74.7, fr_rank_sb:100, so_score:74.9, so_rank_sb:121},
   {name:"Melissa Gilloz", country:"Switzerland", sex:"Women", signing:"Fall 2024", university:"Seattle University"},
   {name:"Amély Bochaton", country:"France", sex:"Women", signing:"Fall 2024", university:"Wingate University",
-    fr_rank_prior:119, fr_rank_commit:106, fr_rank_recent:39, commit_date:"Jan 24",
-    fr_score:69.9, fr_rank_sb:1, so_score:69.9, so_rank_sb:1},
+        fr_score:69.9, fr_rank_sb:1, so_score:69.9, so_rank_sb:1},
   // Liza Bogard — partie des US Juin 2025 après 1 an (Freshman uniquement)
   {name:"Liza Bogard", country:"France", sex:"Women", signing:"Fall 2024", university:"Lawrence Tech University",
-    fr_rank_prior:390, fr_rank_commit:360, commit_date:"Apr 24",
-    fr_score:86.9, fr_rank_sb:454, stopped:{y:2025, m:6}},
+        fr_score:86.9, fr_rank_sb:454, stopped:{y:2025, m:6}},
   // Julia Paviet — démarré Spring 2024, partie Mai 2025 (1.5 an)
   {name:"Julia Paviet", country:"France", sex:"Women", signing:"Spring 2024", university:"University of Delaware",
-    fr_rank_prior:263, fr_rank_commit:262, commit_date:"Sep 23",
-    fr_score:80.8, stopped:{y:2025, m:5}},
+        fr_score:80.8, stopped:{y:2025, m:5}},
 
   // ==== WOMEN — Spring 2025 ====
   {name:"Anna Olesen", country:"Switzerland", sex:"Women", signing:"Spring 2025", university:"University of West Georgia"},
@@ -2292,47 +2237,36 @@ const PLAYERS = [
   // ==== WOMEN — Fall 2025 (Class of 2025) ====
   // Romane Poissonnier retirée — pas un placement USAP, sera réintégrée si elle apparaît dans le sheet "Players Committed"
   {name:"Aubane Statiotis", country:"France", sex:"Women", signing:"Fall 2025", university:"Eckerd College",
-    fr_rank_prior:165, fr_rank_commit:169, fr_rank_recent:169, commit_date:"Sep 24",
-    fr_score:73.9, fr_rank_sb:59},
+        fr_score:73.9, fr_rank_sb:59},
   {name:"Inès Marty", country:"France", sex:"Women", signing:"Fall 2025", university:"Wingate University",
-    fr_rank_prior:159, fr_rank_commit:151, fr_rank_recent:151, commit_date:"May 24"},
+    },
   {name:"Clara Willem", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Cincinnati",
-    fr_rank_prior:65, fr_rank_commit:65, fr_rank_recent:65, commit_date:"Aug 24",
-    fr_score:75.8, fr_rank_sb:864},
+        fr_score:75.8, fr_rank_sb:864},
   // Clara Willem — transfer Stetson pour Sophomore year (Freshman à Cincinnati Fall 2025)
   {name:"Clara Willem", country:"France", sex:"Women", signing:"Fall 2026", university:"Stetson University", transfer:true,
     start_year:"Sophomore"},
   {name:"Zoé Rubichon", country:"France", sex:"Women", signing:"Fall 2025", university:"Seattle University",
-    fr_rank_prior:79, fr_rank_commit:89, fr_rank_recent:89, commit_date:"Jul 24",
-    fr_score:75.7, fr_rank_sb:825},
+        fr_score:75.7, fr_rank_sb:825},
   {name:"Lou Fourdan", country:"France", sex:"Women", signing:"Fall 2025", university:"Rogers State University",
-    fr_rank_prior:133, fr_rank_commit:133, fr_rank_recent:133, commit_date:"Aug 24",
-    fr_score:75.2, fr_rank_sb:130},
+        fr_score:75.2, fr_rank_sb:130},
   {name:"Camille Padieu", country:"France", sex:"Women", signing:"Fall 2025", university:"Eckerd College",
-    fr_rank_prior:233, fr_rank_commit:173, fr_rank_recent:173, commit_date:"Dec 24",
-    fr_score:76.8, fr_rank_sb:251},
+        fr_score:76.8, fr_rank_sb:251},
   {name:"Clara Ledun", country:"France", sex:"Women", signing:"Fall 2025", university:"Rogers State University",
-    fr_rank_prior:232, fr_rank_commit:232, fr_rank_recent:232, commit_date:"Aug 24",
-    fr_score:78.4, fr_rank_sb:386},
+        fr_score:78.4, fr_rank_sb:386},
   {name:"Tina Genoulaz", country:"France", sex:"Women", signing:"Fall 2025", university:"Florida Atlantic University",
-    fr_rank_prior:72, fr_rank_commit:83, fr_rank_recent:83, commit_date:"May 24",
-    fr_score:73.5, fr_rank_sb:416},
+        fr_score:73.5, fr_rank_sb:416},
   {name:"Enora Castillon", country:"France", sex:"Women", signing:"Fall 2025", university:"Murray State College",
-    commit_date:"Feb 25", fr_score:87.7, fr_rank_sb:51},
+    fr_score:87.7, fr_rank_sb:51},
   {name:"Fantine Cabry", country:"France", sex:"Women", signing:"Fall 2025", university:"Erskine College",
-    fr_rank_prior:190, fr_rank_commit:175, fr_rank_recent:175, commit_date:"Sep 24",
-    fr_score:77.6, fr_rank_sb:322},
+        fr_score:77.6, fr_rank_sb:322},
   {name:"Manon Verret", country:"France", sex:"Women", signing:"Fall 2025", university:"St Mary's University (TX)",
-    fr_rank_prior:116, fr_rank_commit:77, fr_rank_recent:77, commit_date:"Oct 24",
-    fr_score:76.3, fr_rank_sb:209},
+        fr_score:76.3, fr_rank_sb:209},
   {name:"Jeanne Pagnier", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Tulsa",
-    fr_rank_prior:31, fr_rank_commit:35, fr_rank_recent:35, commit_date:"Dec 24",
-    fr_score:74.4, fr_rank_sb:615},
+        fr_score:74.4, fr_rank_sb:615},
   {name:"Mahé Happiette", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Charleston (WV)",
-    fr_rank_prior:319, fr_rank_commit:323, fr_rank_recent:323, commit_date:"Jan 25",
-    fr_score:80.5, fr_rank_sb:567},
+        fr_score:80.5, fr_rank_sb:567},
   {name:"Maeva Constantinoff", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Mobile",
-    commit_date:"Oct 24", fr_score:91, fr_rank_sb:541},
+    fr_score:91, fr_rank_sb:541},
   // Lacoste sisters — démarré directement Junior (transferts JC ou crédits)
   {name:"Agathe Lacoste", country:"France", sex:"Women", signing:"Fall 2025", university:"Texas A&M International University", start_year:"Junior"},
   {name:"Romane Lacoste", country:"France", sex:"Women", signing:"Fall 2025", university:"Midwestern State University", start_year:"Junior"},
@@ -2341,13 +2275,11 @@ const PLAYERS = [
   // Cloé transfer Arkansas Little Rock pour Sophomore year
   {name:"Cloé Poizac", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Arkansas Little Rock", transfer:true,
     start_year:"Sophomore",
-    fr_rank_prior:228, fr_rank_commit:156, fr_rank_recent:136,
-    so_score:77, so_rank_sb:1076},
+        so_score:77, so_rank_sb:1076},
   // Juliette transfer Montevallo pour Sophomore year
   {name:"Juliette Daviau", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Montevallo", transfer:true,
     start_year:"Sophomore",
-    fr_rank_prior:224, fr_rank_commit:209, fr_rank_recent:199,
-    so_score:77.5},
+        so_score:77.5},
   // NOUVELLE — Sara Brentcheneff, University of Arkansas NCAA D1 (Freshman 25/26, scoring 71.0 #69 SB)
   {name:"Sara Brentcheneff", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Arkansas",
     fr_score:71.0, fr_rank_sb:69}
@@ -2443,30 +2375,10 @@ function getScoreAtSnap(p, snapDate, snapKey) {
 }
 
 function getFrRankAtSnap(p, snapDate) {
-  const sd = signingToDate(p.signing);
-  const points = [];
-  if (p.fr_rank_prior != null) points.push({ date: {y: sd.y - 1, m: 8}, value: p.fr_rank_prior });
-  if (p.fr_rank_commit != null) {
-    const cd = commitDateToDate(p.commit_date);
-    if (cd) points.push({ date: cd, value: p.fr_rank_commit });
-  }
-  if (p.fr_rank_recent != null) points.push({ date: {y: sd.y, m: 8}, value: p.fr_rank_recent });
-  // Latest FFGOLF ranking (Mai 2026) — overrides historical for current snap
-  if (CURRENT_FFGOLF[p.name] != null) points.push({ date: {y: 2026, m: 5}, value: CURRENT_FFGOLF[p.name] });
-
-  // Find the most recent point that is at or before snapDate
-  let best = null;
-  for (const pt of points) {
-    if (monthsBetween(pt.date, snapDate) >= 0) {
-      if (!best || monthsBetween(best.date, pt.date) > 0) best = pt;
-    }
-  }
-  // If no past points, use the earliest available (best approximation for very old snapshots)
-  if (!best && points.length > 0) {
-    points.sort((a,b) => monthsBetween(b.date, a.date));
-    best = points[0];
-  }
-  return best ? best.value : null;
+  // V46 privacy refactor: historical FR ranks removed from public artifact.
+  // Only the CURRENT FFGOLF (Juin 2026) is exposed. Historical snapshots show null.
+  if (CURRENT_FFGOLF[p.name] != null) return CURRENT_FFGOLF[p.name];
+  return null;
 }
 
 // Find the active player entry per name at the given snapshot
@@ -3160,32 +3072,32 @@ const INCOMING_PLAYERS = [
   // ===== Fall 2026 — Men =====
   {name:"Alexis Barnetche", sex:"Men", country:"France", iclass:"Fall 2026", university:"Florida Atlantic University", star:3, photo:`${SP}/320fb740-e3d0-4630-a39c-ec059dd3e190/profile-1764031437612.jpg`},
   {name:"Oscar Couilleau", sex:"Men", country:"France", iclass:"Fall 2026", university:"Arizona State University", star:3, photo:`${SP}/57262654-6c4c-468e-a575-b08f3ec94267/profile-1763942441210.jpg`},
-  {name:"Raphaël Turcaud", sex:"Men", country:"France", iclass:"Fall 2026", university:"Jacksonville State University", fr_rank:48, star:3, photo:`${SP}/4d4e5f27-7d67-41b5-8ecb-bde19e8b4da4/profile-1763941630278.jpg`},
+  {name:"Raphaël Turcaud", sex:"Men", country:"France", iclass:"Fall 2026", university:"Jacksonville State University", star:3, photo:`${SP}/4d4e5f27-7d67-41b5-8ecb-bde19e8b4da4/profile-1763941630278.jpg`},
   {name:"Justin Charoy", sex:"Men", country:"France", iclass:"Fall 2026", university:"University of South Carolina - Beaufort", star:3, photo:`${SP}/c9a40f50-eac0-4743-84dc-a3f7769f2dec/profile-1764028721978.jpg`},
-  {name:"Théophile Lebrun", sex:"Men", country:"France", iclass:"Fall 2026", university:"East Tennessee State University", fr_rank:64, wagr:2255, star:5, photo:`${SP}/a2ff3c11-0dcb-43f2-91a1-218b09d8d0d5/profile-1763941064315.jpg`},
+  {name:"Théophile Lebrun", sex:"Men", country:"France", iclass:"Fall 2026", university:"East Tennessee State University", wagr:2255, star:5, photo:`${SP}/a2ff3c11-0dcb-43f2-91a1-218b09d8d0d5/profile-1763941064315.jpg`},
   {name:"Callixte Alzas", sex:"Men", country:"France", iclass:"Fall 2026", university:"UC Berkeley", star:6, photo:`${SP}/5d7f13dc-3243-4352-a23f-302e9f33c774/profile-1764031494166.jpg`},
-  {name:"Melvil Jacquelin", sex:"Men", country:"France", iclass:"Fall 2026", university:"CSU Monterey Bay", fr_rank:96, star:5, photo:`${SP}/ba128c1c-d453-4e03-ac96-448b1ba061e7/profile-1763942933784.jpg`},
-  {name:"Sacha Molino", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mid America Nazarene University", fr_rank:175, star:3, photo:`${SP}/6bb889fd-20f8-44a6-885f-8448163c0c54/profile-1763941442366.jpg`},
-  {name:"Adam Carreyn", sex:"Men", country:"France", iclass:"Fall 2026", university:"Faulkner University", fr_rank:178, star:3, photo:`${SP}/e3550a32-623b-44bc-802f-a5474693ed1e/profile-1764030881440.jpg`},
-  {name:"Théophile Archer", sex:"Men", country:"France", iclass:"Fall 2026", university:"Virginia Commonwealth University", fr_rank:45, wagr:2020, star:5, photo:`${SP}/f79ac28e-d3a4-4a88-b9a5-0c0c352e233e/profile-1762465335425.jpeg`},
-  {name:"Matthieu Riffet", sex:"Men", country:"France", iclass:"Fall 2026", university:"Murray State College", fr_rank:192, star:4, photo:`${SP}/8aed2e97-215a-4909-94ee-693318e2c3b0/profile-1764028036518.jpg`},
+  {name:"Melvil Jacquelin", sex:"Men", country:"France", iclass:"Fall 2026", university:"CSU Monterey Bay", star:5, photo:`${SP}/ba128c1c-d453-4e03-ac96-448b1ba061e7/profile-1763942933784.jpg`},
+  {name:"Sacha Molino", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mid America Nazarene University", star:3, photo:`${SP}/6bb889fd-20f8-44a6-885f-8448163c0c54/profile-1763941442366.jpg`},
+  {name:"Adam Carreyn", sex:"Men", country:"France", iclass:"Fall 2026", university:"Faulkner University", star:3, photo:`${SP}/e3550a32-623b-44bc-802f-a5474693ed1e/profile-1764030881440.jpg`},
+  {name:"Théophile Archer", sex:"Men", country:"France", iclass:"Fall 2026", university:"Virginia Commonwealth University", wagr:2020, star:5, photo:`${SP}/f79ac28e-d3a4-4a88-b9a5-0c0c352e233e/profile-1762465335425.jpeg`},
+  {name:"Matthieu Riffet", sex:"Men", country:"France", iclass:"Fall 2026", university:"Murray State College", star:4, photo:`${SP}/8aed2e97-215a-4909-94ee-693318e2c3b0/profile-1764028036518.jpg`},
   {name:"Alexandre Guiserix", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mount Mercy University", star:1, photo:`${SP}/e1bb171f-e210-4aee-a6e7-ee08d80762c7/profile-1764040786548.jpg`},
   // Jules Lauer déplacé en PLAYERS (a démarré Spring 2026 à College of Charleston)
-  {name:"Edouard Petit", sex:"Men", country:"France", iclass:"Fall 2026", university:"Wayland Baptist University", fr_rank:212, wagr:3763, star:3, photo:`${SP}/86a99cba-c02f-4835-bf64-eeb48d268411/profile-1764029768113.jpg`},
-  {name:"Maxime Olivo", sex:"Men", country:"France", iclass:"Fall 2026", university:"Wayland Baptist University", fr_rank:108, star:4, photo:`${SP}/d4a1ca2d-038a-472e-a682-495ea49b99ca/profile-1764027430447.jpg`},
+  {name:"Edouard Petit", sex:"Men", country:"France", iclass:"Fall 2026", university:"Wayland Baptist University", wagr:3763, star:3, photo:`${SP}/86a99cba-c02f-4835-bf64-eeb48d268411/profile-1764029768113.jpg`},
+  {name:"Maxime Olivo", sex:"Men", country:"France", iclass:"Fall 2026", university:"Wayland Baptist University", star:4, photo:`${SP}/d4a1ca2d-038a-472e-a682-495ea49b99ca/profile-1764027430447.jpg`},
   {name:"Evann Bourgerie", sex:"Men", country:"France", iclass:"Fall 2026", university:"Truett McConnell University", star:1, photo:`${SP}/e2e941e1-92fe-424c-83a4-ae628ff179ea/profile-1764204581457.jpg`},
-  {name:"Tibo Van De Neste", sex:"Men", country:"France", iclass:"Fall 2026", university:"King University", fr_rank:349, star:3, photo:`${SP}/645fc5c1-cb53-440c-805f-19cf6cc89bab/profile-1763940519930.jpg`},
-  {name:"Victor Siguier", sex:"Men", country:"France", iclass:"Fall 2026", university:"Bethel University", fr_rank:573, star:2, photo:`${SP}/b8df1b90-8a22-41bc-bd93-373db97700b7/profile-1763938915814.jpg`},
-  {name:"Paul Couston", sex:"Men", country:"France", iclass:"Fall 2026", university:"Bethel University", fr_rank:221, star:3, photo:`${SP}/255fc60e-57bf-43f0-bc84-17659b2d4d38/profile-1763942046933.jpg`},
-  {name:"Léo-Paul Cesari", sex:"Men", country:"France", iclass:"Fall 2026", university:"UT Southern", fr_rank:273, star:3, photo:`${SP}/temp/profile-1767908987878.jpg`},
+  {name:"Tibo Van De Neste", sex:"Men", country:"France", iclass:"Fall 2026", university:"King University", star:3, photo:`${SP}/645fc5c1-cb53-440c-805f-19cf6cc89bab/profile-1763940519930.jpg`},
+  {name:"Victor Siguier", sex:"Men", country:"France", iclass:"Fall 2026", university:"Bethel University", star:2, photo:`${SP}/b8df1b90-8a22-41bc-bd93-373db97700b7/profile-1763938915814.jpg`},
+  {name:"Paul Couston", sex:"Men", country:"France", iclass:"Fall 2026", university:"Bethel University", star:3, photo:`${SP}/255fc60e-57bf-43f0-bc84-17659b2d4d38/profile-1763942046933.jpg`},
+  {name:"Léo-Paul Cesari", sex:"Men", country:"France", iclass:"Fall 2026", university:"UT Southern", star:3, photo:`${SP}/temp/profile-1767908987878.jpg`},
   {name:"Loïc Goethals", sex:"Men", country:"France", iclass:"Fall 2026", university:"Hesston College", star:2, photo:`${SP}/b506dc8e-8245-4e95-9f64-73454930897f/profile-1764028317181.jpg`},
   // Oscar Beziat retiré — soccer player, pas golf
-  {name:"Andreas Brun", sex:"Men", country:"France", iclass:"Fall 2026", university:"Central Baptist College", fr_rank:100, star:1, photo:`${SP}/2adb5782-360a-42d4-b5ec-38f0dfc9ef0a/profile-1766067907811.jpg`},
-  {name:"Timothée Restout", sex:"Men", country:"France", iclass:"Fall 2026", university:"Texas A&M International University", fr_rank:151, star:4, photo:`${SP}/c9077146-e3a1-456e-b355-c1ab2b8c9a2a/profile-1763940024627.jpg`},
-  {name:"Axel Houdaille", sex:"Men", country:"France", iclass:"Fall 2026", university:"Blue Mountain Christian University", fr_rank:439, star:4, photo:`${SP}/a7508414-f267-41e3-b555-658b40585c84/profile-1764037245984.jpg`},
-  {name:"Vadim Dejour", sex:"Men", country:"France", iclass:"Fall 2026", university:"College of the Canyons", fr_rank:419, star:2, photo:`${SP}/b506fb22-2248-4870-8631-db1efe335448/profile-1763939244496.jpg`},
-  {name:"Nicolas Robin", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mid America Nazarene University", fr_rank:121, star:4, photo:`${SP}/d7818e50-ae37-4fa4-a3d2-12d9fb4d906e/profile-1764798804125.jpg`},
-  {name:"Jules De Brauwere", sex:"Men", country:"France", iclass:"Fall 2026", university:"Kansas State University", fr_rank:45, wagr:1636, star:6, photo:`${SP}/4d88cb3a-15d4-4b2c-8305-3715e7ee338c/profile-1769136145240.jpg`},
+  {name:"Andreas Brun", sex:"Men", country:"France", iclass:"Fall 2026", university:"Central Baptist College", star:1, photo:`${SP}/2adb5782-360a-42d4-b5ec-38f0dfc9ef0a/profile-1766067907811.jpg`},
+  {name:"Timothée Restout", sex:"Men", country:"France", iclass:"Fall 2026", university:"Texas A&M International University", star:4, photo:`${SP}/c9077146-e3a1-456e-b355-c1ab2b8c9a2a/profile-1763940024627.jpg`},
+  {name:"Axel Houdaille", sex:"Men", country:"France", iclass:"Fall 2026", university:"Blue Mountain Christian University", star:4, photo:`${SP}/a7508414-f267-41e3-b555-658b40585c84/profile-1764037245984.jpg`},
+  {name:"Vadim Dejour", sex:"Men", country:"France", iclass:"Fall 2026", university:"College of the Canyons", star:2, photo:`${SP}/b506fb22-2248-4870-8631-db1efe335448/profile-1763939244496.jpg`},
+  {name:"Nicolas Robin", sex:"Men", country:"France", iclass:"Fall 2026", university:"Mid America Nazarene University", star:4, photo:`${SP}/d7818e50-ae37-4fa4-a3d2-12d9fb4d906e/profile-1764798804125.jpg`},
+  {name:"Jules De Brauwere", sex:"Men", country:"France", iclass:"Fall 2026", university:"Kansas State University", wagr:1636, star:6, photo:`${SP}/4d88cb3a-15d4-4b2c-8305-3715e7ee338c/profile-1769136145240.jpg`},
   {name:"Léopold Kostylev", sex:"Men", country:"Bulgaria", iclass:"Fall 2026", university:"Southwestern Iowa CC", wagr:2812, star:3, photo:`${SP}/979154a5-db66-4f01-81f4-3354dafe8598/profile-1775494781269.jpg`},
   {name:"Corentin Jorat", sex:"Men", country:"France", iclass:"Fall 2026", university:"Defiance College", star:1, photo:`${SP}/9fb8278d-c839-4a2e-acb8-1b5c13c6bfe7/profile-1764030996006.jpg`},
   // Ajouts mai 2026 depuis sheet "USAP Players - Committed"
@@ -3195,30 +3107,30 @@ const INCOMING_PLAYERS = [
   {name:"Giselle Zhao", sex:"Women", country:"France", iclass:"Fall 2026", university:"UC Berkeley", star:6, photo:`${SP}/38c7a04f-c1d7-4bdd-b8bc-b1dbebfe3b1e/profile-1764029453819.jpg`},
   {name:"Mila Tamisier", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of North Carolina - Chapel Hill", star:6, photo:`${SP}/03af0e11-2e90-4e45-8692-e7560c91c0c4/profile-1763942826580.jpg`},
   {name:"Melliyal Schmitt", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Arkansas", star:6, photo:`${SP}/3a83908f-fea3-4a0d-b1cb-45f46a70f63b/profile-1763943003792.jpg`},
-  {name:"Charlotte Bouquet", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Louisiana-Monroe", fr_rank:100, star:3, photo:`${SP}/d83f7d1f-4f5a-41aa-9dbd-38f5eb967426/profile-1764031396706.jpg`},
+  {name:"Charlotte Bouquet", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Louisiana-Monroe", star:3, photo:`${SP}/d83f7d1f-4f5a-41aa-9dbd-38f5eb967426/profile-1764031396706.jpg`},
   {name:"Léa Giron", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of South Alabama", star:3, photo:`${SP}/cd5f815b-e0af-493c-8d79-39c2d8c71787/profile-1764028272081.jpg`},
   {name:"Gabrielle Duhalde", sex:"Women", country:"France", iclass:"Fall 2026", university:"Wingate University", star:3, photo:`${SP}/4f337ba0-11a9-4878-9e30-7adf87f931ba/profile-1764029612655.jpg`},
   {name:"Sarah Cuney", sex:"Women", country:"France", iclass:"Fall 2026", university:"UMSL", star:3, photo:`${SP}/936eca94-7e6e-499d-ad79-b314bf6ff78f/profile-1763941206588.jpg`},
   {name:"Manon Petitcolas", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Alabama", star:3, photo:`${SP}/cfea553e-c65c-4143-963c-df6514f63791/profile-1764028218080.jpg`},
   {name:"Louise Krawiec", sex:"Women", country:"France", iclass:"Fall 2026", university:"East Carolina University", star:3, photo:`${SP}/4e2fb9fe-4ce9-4793-8f51-de55051eee29/profile-1764028376098.jpg`},
-  {name:"Margot Lamothe", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M International University", fr_rank:187, star:4, photo:`${SP}/c02c4c29-20d5-4cfd-8a2f-f5756d1718f1/profile-1764028151017.jpg`},
-  {name:"Anne Charlotte Otto", sex:"Women", country:"France", iclass:"Fall 2026", university:"Florida Southern College", fr_rank:192, star:3, photo:`${SP}/3cb9f9ac-8330-4332-90cc-e1010203b20e/profile-1764037294729.jpg`},
-  {name:"Marie Bachelet", sex:"Women", country:"France", iclass:"Fall 2026", university:"CSU East Bay", fr_rank:85, star:5, photo:`${SP}/607a3345-4f3d-4446-82dd-c073087e86d5/profile-1764028088919.jpg`},
-  {name:"Bertille Lorin", sex:"Women", country:"France", iclass:"Fall 2026", university:"Redlands CC", fr_rank:229, star:3, photo:`${SP}/f36fe29b-e28c-40e0-954d-64ffe75ef81e/profile-1764036849577.jpg`},
-  {name:"Clémence Chouvin", sex:"Women", country:"France", iclass:"Fall 2026", university:"Elon University", fr_rank:140, star:4, photo:`${SP}/5022af41-36cf-4c25-9c39-d1a205ceaa85/profile-1764031352650.jpg`},
-  {name:"Juliette Gastoud", sex:"Women", country:"France", iclass:"Fall 2026", university:"Newberry College", fr_rank:320, star:3, photo:`${SP}/8c968dae-6900-47eb-9a7a-5fec0dc535c9/profile-1764028818261.jpg`},
-  {name:"Salomé Paumelle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M - Texarkana", fr_rank:279, star:2, photo:`${SP}/4825bfb7-b5a6-4aab-9817-1dea8024bf6a/profile-1763941319385.jpg`},
+  {name:"Margot Lamothe", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M International University", star:4, photo:`${SP}/c02c4c29-20d5-4cfd-8a2f-f5756d1718f1/profile-1764028151017.jpg`},
+  {name:"Anne Charlotte Otto", sex:"Women", country:"France", iclass:"Fall 2026", university:"Florida Southern College", star:3, photo:`${SP}/3cb9f9ac-8330-4332-90cc-e1010203b20e/profile-1764037294729.jpg`},
+  {name:"Marie Bachelet", sex:"Women", country:"France", iclass:"Fall 2026", university:"CSU East Bay", star:5, photo:`${SP}/607a3345-4f3d-4446-82dd-c073087e86d5/profile-1764028088919.jpg`},
+  {name:"Bertille Lorin", sex:"Women", country:"France", iclass:"Fall 2026", university:"Redlands CC", star:3, photo:`${SP}/f36fe29b-e28c-40e0-954d-64ffe75ef81e/profile-1764036849577.jpg`},
+  {name:"Clémence Chouvin", sex:"Women", country:"France", iclass:"Fall 2026", university:"Elon University", star:4, photo:`${SP}/5022af41-36cf-4c25-9c39-d1a205ceaa85/profile-1764031352650.jpg`},
+  {name:"Juliette Gastoud", sex:"Women", country:"France", iclass:"Fall 2026", university:"Newberry College", star:3, photo:`${SP}/8c968dae-6900-47eb-9a7a-5fec0dc535c9/profile-1764028818261.jpg`},
+  {name:"Salomé Paumelle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M - Texarkana", star:2, photo:`${SP}/4825bfb7-b5a6-4aab-9817-1dea8024bf6a/profile-1763941319385.jpg`},
   {name:"Pauline Biglione", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Mobile", star:2, photo:`${SP}/daacefad-f18a-44d7-bbc9-5207ed76f39d/profile-1763941866166.jpg`},
   {name:"Eline Chau-Hu", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of Cincinnati"},
-  {name:"Sarah Sayah", sex:"Women", country:"France", iclass:"Fall 2026", university:"Weatherford College", fr_rank:433, star:2, photo:`${SP}/ca94a14b-9721-4baa-b34e-b14074cb7d54/profile-1763940667268.jpg`},
-  {name:"Sarah Binaghi", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:262, star:3, photo:`${SP}/6c28ef11-1e74-4747-8c63-832eb9a92042/profile-1763940798099.jpg`},
-  {name:"Diane Becassis", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:237, transfer:true},
+  {name:"Sarah Sayah", sex:"Women", country:"France", iclass:"Fall 2026", university:"Weatherford College", star:2, photo:`${SP}/ca94a14b-9721-4baa-b34e-b14074cb7d54/profile-1763940667268.jpg`},
+  {name:"Sarah Binaghi", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", star:3, photo:`${SP}/6c28ef11-1e74-4747-8c63-832eb9a92042/profile-1763940798099.jpg`},
+  {name:"Diane Becassis", sex:"Women", country:"France", iclass:"Fall 2026", university:"Eckerd College", transfer:true},
 
   // ===== Fall 2026 — Men transfers (déjà en US, transfèrent pour Fall 2026) =====
-  {name:"Simon Germain", sex:"Men", country:"France", iclass:"Fall 2026", university:"Eckerd College", fr_rank:476, transfer:true},
-  {name:"Justine Bayle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Rice University", fr_rank:62, wagr:1624, star:5, photo:`${SP}/6243c305-f853-4ccc-bf34-dcc26b6043a8/profile-1772634276581.jpg`},
+  {name:"Simon Germain", sex:"Men", country:"France", iclass:"Fall 2026", university:"Eckerd College", transfer:true},
+  {name:"Justine Bayle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Rice University", wagr:1624, star:5, photo:`${SP}/6243c305-f853-4ccc-bf34-dcc26b6043a8/profile-1772634276581.jpg`},
   {name:"Ambre Boullot", sex:"Women", country:"France", iclass:"Fall 2026", university:"Manhattan College", star:3},
-  {name:"Juliette Saillour", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas Wesleyan University", fr_rank:237, star:3, photo:`${SP}/2e5d26ff-ff11-4cd4-9e5c-774b3bc75c2b/profile-1764028769091.jpg`},
+  {name:"Juliette Saillour", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas Wesleyan University", star:3, photo:`${SP}/2e5d26ff-ff11-4cd4-9e5c-774b3bc75c2b/profile-1764028769091.jpg`},
   // Ajouts mai 2026 depuis sheet "USAP Players - Committed"
   {name:"Céleste Mangeat", sex:"Women", country:"France", iclass:"Fall 2026", university:"Coastal Carolina University"},
   {name:"Romane Poissonnier", sex:"Women", country:"France", iclass:"Fall 2026", university:"University of North Carolina - Chapel Hill"},
@@ -3226,12 +3138,12 @@ const INCOMING_PLAYERS = [
   // ===== Fall 2027 =====
   {name:"Konstanty Luczak", sex:"Men", country:"Poland", iclass:"Fall 2027", university:"University of Colorado", wagr:374, star:6, photo:`${SP}/eccb334d-6125-4788-9ae4-f7b7c56d8603/profile-1764028617245.jpg`},
   {name:"Paolo Fazzone", sex:"Men", country:"Switzerland", iclass:"Fall 2027", university:"University of Texas Rio Grande Valley", wagr:1755, star:5, photo:`${SP}/bae23f67-7e85-4499-a36c-2446cea178bc/profile-1763942128511.jpg`},
-  {name:"Axelle Guillemard", sex:"Women", country:"France", iclass:"Fall 2027", university:"Oklahoma State University", fr_rank:24, wagr:1115, star:6, photo:`${SP}/6e22ce44-c062-4e70-8fcf-f0fc0231e8eb/profile-1764037118072.jpg`},
-  {name:"Céleste Darloy", sex:"Women", country:"France", iclass:"Fall 2027", university:"Purdue University", fr_rank:47, wagr:964, star:6, photo:`${SP}/8afde579-f035-46b1-978d-48a27a2329b3/profile-1764030823624.jpg`},
-  {name:"Salomé Lumbaca", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of South Carolina", fr_rank:18, wagr:846, star:3, photo:`${SP}/ceb05c78-2cdc-47d9-974e-391fcb7c5625/profile-1763941371781.jpg`},
+  {name:"Axelle Guillemard", sex:"Women", country:"France", iclass:"Fall 2027", university:"Oklahoma State University", wagr:1115, star:6, photo:`${SP}/6e22ce44-c062-4e70-8fcf-f0fc0231e8eb/profile-1764037118072.jpg`},
+  {name:"Céleste Darloy", sex:"Women", country:"France", iclass:"Fall 2027", university:"Purdue University", wagr:964, star:6, photo:`${SP}/8afde579-f035-46b1-978d-48a27a2329b3/profile-1764030823624.jpg`},
+  {name:"Salomé Lumbaca", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of South Carolina", wagr:846, star:3, photo:`${SP}/ceb05c78-2cdc-47d9-974e-391fcb7c5625/profile-1763941371781.jpg`},
   {name:"Celeste Bobo-Lloret", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of Houston"},
-  {name:"Romane Tresnard", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of Louisiana-Monroe", fr_rank:64, wagr:3155, star:5, photo:`${SP}/53ec9326-76b6-43f0-b75a-3f7fd5132775/profile-1763941506673.jpg`},
-  {name:"Iris Pollet", sex:"Women", country:"France", iclass:"Fall 2027", university:"Arkansas State University", fr_rank:112, star:4, photo:`${SP}/2fbb4824-d3b4-47ba-b094-693b3e1183c3/profile-1764204642950.jpg`}
+  {name:"Romane Tresnard", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of Louisiana-Monroe", wagr:3155, star:5, photo:`${SP}/53ec9326-76b6-43f0-b75a-3f7fd5132775/profile-1763941506673.jpg`},
+  {name:"Iris Pollet", sex:"Women", country:"France", iclass:"Fall 2027", university:"Arkansas State University", star:4, photo:`${SP}/2fbb4824-d3b4-47ba-b094-693b3e1183c3/profile-1764204642950.jpg`}
 ];
 
 let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[], academy:[] };
