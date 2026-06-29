@@ -1170,8 +1170,17 @@ function openPlayerModal(p, opts={}) {
       body += '</div>';
     }
   }
-  // Current FR ranking — historical hidden for competitive privacy (V46)
-  if (!isIncoming && CURRENT_FFGOLF[p.name] != null) {
+  // Engagement section (V47) — commit_date + fr_rank_commit (from COMMIT_DATA sheet) + current FFGOLF
+  // Applies to PLAYERS + INCOMING. Players without commit data fall back to current-only display.
+  if (p.commit_date && p.fr_rank_commit != null) {
+    body += '<div class="modal-section"><h3>' + (lang==='en'?'Commitment':'Engagement') + '</h3>';
+    body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Committed in':'Engagé en'} ${escapeHtml(p.commit_date)}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
+    if (CURRENT_FFGOLF[p.name] != null) {
+      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now (June 2026)':'Maintenant (Juin 2026)'}</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+    }
+    body += '</div>';
+  } else if (!isIncoming && CURRENT_FFGOLF[p.name] != null) {
+    // Fallback : no commit data in sheet → show current FFGOLF only
     body += '<div class="modal-section"><h3>' + (lang==='en'?'French ranking':'Ranking FR') + '</h3>';
     body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Juin 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
     body += '</div>';
@@ -1920,6 +1929,93 @@ const CURRENT_WAGR = {
   "Théophile Lebrun": 915, "Jules Lauer": 1642, "Louise Krawiec": 818, "Sara Brentcheneff": 44
 };
 
+// ================== USAP COMMIT DATA ==================
+// Source: Google Sheet "USAP Players in NCAA Stats" (id 1qh07615Mf5HKd_KkJ7yaC8AQw8NXg7zNkT4owkmVcmk).
+// Tuple : commit_date (mois année abrégé, ex "Feb 24") + fr_rank_commit (rank FFGOLF au moment de la signature).
+// Affiché dans le modal "Engagement". Joueurs absents du sheet (internationaux, anciens, ou commit data manquant)
+// sont silencieusement skipés — Nico maintient ce sheet manuellement.
+const COMMIT_DATA = {
+  // ===== Men — Class 2024 (Fall 2024) =====
+  "Maxime Lam":               {date:"Feb 24", rank:33},
+  "Joseph Linel":              {date:"Mar 24", rank:305},
+  "Bogdan Sandrini":           {date:"Dec 23", rank:97},
+  "Samuel Guigui-Baruchel":    {date:"Nov 23", rank:71},
+  "Gabriel Dulon-Villoslada":  {date:"Aug 23", rank:162},
+  "Simon Germain":             {date:"Jun 24", rank:190},
+  "Enzo Rousse":               {date:"Mar 24", rank:229},
+  "Hugo Almeida":              {date:"Oct 23", rank:301},
+  "Loris Bonnetton Alban":     {date:"Dec 24", rank:399},
+  "Léo Molino":                {date:"Dec 23", rank:511},
+  "Alois Casalonga":           {date:"Mar 24", rank:234},
+  "Antoine Lianos":            {date:"Jan 24", rank:null /* Unranked at commit */},
+
+  // ===== Men — Class 2025 (Fall 2025) =====
+  "Rafael Bobo-Lloret":        {date:"Mar 25", rank:34},
+  "Octavio Laurent":           {date:"Apr 25", rank:55},
+  "Jules De Brauwere":         {date:"Dec 24", rank:56},
+  "Sacha Corlouer":            {date:"Sep 24", rank:78},
+  "Corentin Guilloux":         {date:"Jun 24", rank:204},
+  "Léo Testas":                {date:"Feb 25", rank:269},
+  "Maxence Bonnet":            {date:"Sep 24", rank:134},
+  "Lucas Raoul":               {date:"Oct 24", rank:96},
+  "Gaspard Maréchal Dubourg":  {date:"Aug 24", rank:239},
+  "Matis Sayah":               {date:"Sep 24", rank:258},
+  "Florian Simon":             {date:"Apr 25", rank:288},
+  "Gabriel Delaval":           {date:"Dec 24", rank:349},
+  "Faust Amat":                {date:"Jan 25", rank:214},
+  "Ali Elsayed":               {date:"Dec 23", rank:415},
+  "Charles Cirier":            {date:"Aug 24", rank:633},
+  "Oihan Silva":               {date:"Feb 25", rank:550},
+  "Martin Chaney":             {date:"Oct 24", rank:822},
+  "Hugo Soubran":              {date:"Feb 25", rank:916},
+  "Lucas Nicola":              {date:"Jan 25", rank:527},
+
+  // ===== Men — Class 2026 (Fall 2026 INCOMING) =====
+  "Oscar Couilleau":           {date:"Sep 24", rank:12},
+  "Callixte Alzas":            {date:"Oct 24", rank:12},
+  "Alexis Barnetche":          {date:"Jun 25", rank:49},
+  "Raphaël Turcaud":           {date:"Oct 25", rank:48},
+  "Justin Charoy":             {date:"Feb 25", rank:68},
+  "Théophile Archer":          {date:"Oct 25", rank:45},
+  "Théophile Lebrun":          {date:"Jun 26", rank:21},
+  "Maxime Olivo":              {date:"Jan 26", rank:97},
+  "Nicolas Robin":             {date:"Feb 26", rank:115},
+  "Sacha Molino":              {date:"Sep 25", rank:175},
+  "Paul Couston":              {date:"Feb 26", rank:214},
+  "Adam Carreyn":              {date:"Oct 25", rank:178},
+  "Tibo Van De Neste":         {date:"Jan 26", rank:343},
+  "Vadim Dejour":              {date:"Dec 25", rank:397},
+  "Victor Siguier":            {date:"Feb 26", rank:559},
+  "Edouard Petit":             {date:"Jan 26", rank:197},
+
+  // ===== Women — Class 2024 (Fall 2024) =====
+  "Anna Pillard":              {date:"Jul 23", rank:42},
+  "Emma Leroy-Fabry":          {date:"Aug 23", rank:45},
+  "Faustine Errecade":         {date:"Mar 23", rank:53},
+  "Lehane Louis-Dumond":       {date:"Jan 24", rank:98},
+  "Amély Bochaton":            {date:"Jan 24", rank:106},
+  "Ambre Matlega":             {date:"Nov 23", rank:102},
+  "Camille Rosier":            {date:"Dec 23", rank:133},
+  "Juliette Daviau":           {date:"Feb 24", rank:209},
+  "Cloé Poizac":               {date:"Nov 23", rank:156},
+
+  // ===== Women — Class 2025 (Fall 2025) =====
+  "Jeanne Pagnier":            {date:"Dec 24", rank:35},
+  "Romane Poissonnier":        {date:"Nov 23", rank:84},
+  "Clara Willem":              {date:"Aug 24", rank:65},
+  "Tina Genoulaz":             {date:"May 24", rank:83},
+  "Zoé Rubichon":              {date:"Jul 24", rank:89},
+  "Manon Verret":              {date:"Oct 24", rank:77},
+  "Diane Becassis":            {date:"Jan 25", rank:101},
+  "Lou Fourdan":               {date:"Aug 24", rank:133},
+  "Inès Marty":                {date:"May 24", rank:151},
+  "Aubane Statiotis":          {date:"Sep 24", rank:169},
+  "Fantine Cabry":             {date:"Sep 24", rank:175},
+  "Clara Ledun":               {date:"Aug 24", rank:232},
+  "Camille Padieu":            {date:"Dec 24", rank:173},
+  "Mahé Happiette":            {date:"Jan 25", rank:323}
+};
+
 // ================== SCHOOLS DATA ==================
 const SCHOOLS = {
   "Charleston Southern":              {state:"SC", div:"D1",   gov:"NCAA",  lat:32.92,  lng:-79.99},
@@ -2417,6 +2513,7 @@ function buildSnapshot(snapKey) {
     }
     const frRank = getFrRankAtSnap(p, snapDate);
     const school = SCHOOLS[p.university] || {};
+    const commit = COMMIT_DATA[p.name];
     return {
       ...p,
       cclass,
@@ -2429,7 +2526,9 @@ function buildSnapshot(snapKey) {
       lat: school.lat ?? null,
       lng: school.lng ?? null,
       division: school.div ?? "?",
-      div_full: divFull(school)
+      div_full: divFull(school),
+      commit_date: commit?.date ?? null,
+      fr_rank_commit: commit?.rank ?? null
     };
   });
 }
@@ -3150,8 +3249,9 @@ let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[],
 
 function enrichIncoming(p) {
   const s = SCHOOLS[p.university] || {};
-  // Override fr_rank with latest FFGOLF Mai 2026 if available
+  // Override fr_rank with latest FFGOLF Juin 2026 if available
   const currentFr = CURRENT_FFGOLF[p.name];
+  const commit = COMMIT_DATA[p.name];
   return {
     ...p,
     fr_rank: currentFr != null ? currentFr : p.fr_rank,
@@ -3160,7 +3260,9 @@ function enrichIncoming(p) {
     division: s.div ?? "?",
     div_full: divFull(s),
     lat: s.lat ?? null,
-    lng: s.lng ?? null
+    lng: s.lng ?? null,
+    commit_date: commit?.date ?? null,
+    fr_rank_commit: commit?.rank ?? null
   };
 }
 const INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
