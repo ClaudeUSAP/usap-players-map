@@ -506,18 +506,19 @@ document.getElementById('pill-clear').addEventListener('click', () => {
 });
 document.getElementById('btn-export').addEventListener('click', exportCSV);
 document.getElementById('btn-print').addEventListener('click', () => window.print());
-document.querySelectorAll('th[data-sort]').forEach(th => {
-  th.addEventListener('click', () => {
-    const col = th.dataset.sort;
-    // 3-state cycle on same column: asc → desc → default (name asc). New column: start at asc.
-    if (currentSort.col === col) {
-      if (currentSort.dir === 'asc') { currentSort = {col, dir: 'desc'}; }
-      else { currentSort = {...DEFAULT_SORT}; }
-    } else {
-      currentSort = {col, dir: 'asc'};
-    }
-    applyLang(currentLang);
-  });
+// Event delegation on thead (survives innerHTML rebuilds + click on child span)
+document.querySelector('thead').addEventListener('click', (e) => {
+  const th = e.target.closest('th[data-sort]');
+  if (!th) return;
+  const col = th.dataset.sort;
+  // 3-state cycle on same column: asc → desc → default (name asc). New column: start at asc.
+  if (currentSort.col === col) {
+    if (currentSort.dir === 'asc') { currentSort = {col, dir: 'desc'}; }
+    else { currentSort = {...DEFAULT_SORT}; }
+  } else {
+    currentSort = {col, dir: 'asc'};
+  }
+  applyLang(currentLang);
 });
 
 applyLang('en');
