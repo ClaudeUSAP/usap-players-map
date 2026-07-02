@@ -34,6 +34,12 @@
   .toolbar button.export { background: var(--usap-orange); color: var(--usap-navy); border-color: var(--usap-orange); }
   .toolbar button.export:hover { opacity: 0.9; }
   .stats { color: var(--usap-muted); font-size: 13px; margin-left: auto; align-self: center; }
+  .pill-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding: 10px 14px; background: white; border: 1px solid var(--usap-border); border-radius: 8px; margin-bottom: 12px; }
+  .pill-label { font-size: 12px; font-weight: 700; color: var(--usap-navy); margin-right: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill { padding: 6px 12px; border: 1px solid var(--usap-border); border-radius: 999px; background: white; color: var(--usap-navy); font-size: 12px; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.15s; }
+  .pill:hover { border-color: var(--usap-orange); }
+  .pill.active { background: var(--usap-orange); border-color: var(--usap-orange); color: var(--usap-navy); }
+  .pill-clear { color: var(--usap-muted); text-decoration: underline; background: transparent; border: none; font-size: 12px; cursor: pointer; padding: 6px 8px; }
   .table-wrap { background: white; border-radius: 8px; border: 1px solid var(--usap-border); overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead { background: var(--usap-navy); color: white; }
@@ -119,6 +125,18 @@
     <button class="export" id="btn-export">Export CSV</button>
     <button id="btn-print">Print</button>
     <div class="stats" id="stats">— players</div>
+  </div>
+
+  <div class="pill-row">
+    <span class="pill-label" id="pill-label">FR Rank at Commit</span>
+    <button class="pill" data-bucket="0-20">Top 20</button>
+    <button class="pill" data-bucket="21-50">21-50</button>
+    <button class="pill" data-bucket="51-100">51-100</button>
+    <button class="pill" data-bucket="101-150">101-150</button>
+    <button class="pill" data-bucket="151-300">151-300</button>
+    <button class="pill" data-bucket="301-600">301-600</button>
+    <button class="pill" data-bucket="601-9999">600+</button>
+    <button class="pill-clear" id="pill-clear">Clear</button>
   </div>
 
   <div class="table-wrap">
@@ -276,7 +294,8 @@ const I18N = {
     search: "Search player, university...",
     all_genders: "All genders", men: "Men", women: "Women",
     all_classes: "All classes", all_divisions: "All divisions",
-    export: "Export CSV", print: "Print", back: "← Map view",
+    export: "Export CSV", print: "Print", back: "← Map view", clear: "Clear",
+    pill_label: "FR Rank at Commit",
     players_count: (n) => `${n} players`,
     th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed in", at_commit:"French Ranking when committed", aug_prior:"French Ranking in August 1 year prior to school starting", aug_start:"French Ranking when started as a Freshman", sb_r:"Current Scoreboard Rank", sb_s:"Current Adjusted Score", current:"Current French Ranking (Jun 26)"},
     legal: "Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.",
@@ -289,7 +308,8 @@ const I18N = {
     search: "Recherche joueur, université...",
     all_genders: "Tous", men: "Garçons", women: "Filles",
     all_classes: "Toutes classes", all_divisions: "Toutes divisions",
-    export: "Export CSV", print: "Imprimer", back: "← Vue carte",
+    export: "Export CSV", print: "Imprimer", back: "← Vue carte", clear: "Effacer",
+    pill_label: "Ranking FR au commit",
     players_count: (n) => `${n} joueurs`,
     th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"Ranking français lors de l'engagement", aug_prior:"Ranking français en août 1 an avant le départ", aug_start:"Ranking français au début de la Freshman", sb_r:"Ranking Scoreboard actuel", sb_s:"Score ajusté actuel", current:"Ranking français actuel (Juin 26)"},
     legal: "Sources : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
@@ -300,7 +320,7 @@ const I18N = {
 
 let currentLang = 'en';
 let currentSort = {col: 'name', dir: 'asc'};
-let filters = {search: '', sex: '', class: '', division: ''};
+let filters = {search: '', sex: '', class: '', division: '', buckets: []};
 
 function applyLang(lang) {
   currentLang = lang;
@@ -312,6 +332,8 @@ function applyLang(lang) {
   document.getElementById('back-link').textContent = t.back;
   document.getElementById('btn-export').textContent = t.export;
   document.getElementById('btn-print').textContent = t.print;
+  document.getElementById('pill-label').textContent = t.pill_label;
+  document.getElementById('pill-clear').textContent = t.clear;
   document.getElementById('footer-legal').textContent = t.legal;
   document.getElementById('footer-rgpd').innerHTML = t.rgpd;
   document.getElementById('footer-link-map').textContent = t.map_link;
@@ -369,12 +391,23 @@ function scoreVal(v) {
   return isNaN(n) ? Infinity : n;
 }
 
+function inBucket(rank, bucket) {
+  if (rank == null) return false;
+  const n = parseInt(rank, 10);
+  if (isNaN(n)) return false;
+  const [lo, hi] = bucket.split('-').map(Number);
+  return n >= lo && n <= hi;
+}
 function render() {
   const q = filters.search.toLowerCase().trim();
   const rows = RANKINGS_DATA.filter(p => {
     if (filters.sex && p.sex !== filters.sex) return false;
     if (filters.class && p.class !== filters.class) return false;
     if (filters.division && p.division !== filters.division) return false;
+    if (filters.buckets.length > 0) {
+      const match = filters.buckets.some(b => inBucket(p.at_commit, b));
+      if (!match) return false;
+    }
     if (q && !(p.name.toLowerCase().includes(q) || p.university.toLowerCase().includes(q))) return false;
     return true;
   });
@@ -452,6 +485,23 @@ document.getElementById('search').addEventListener('input', e => { filters.searc
 document.getElementById('filter-sex').addEventListener('change', e => { filters.sex = e.target.value; render(); });
 document.getElementById('filter-class').addEventListener('change', e => { filters.class = e.target.value; render(); });
 document.getElementById('filter-div').addEventListener('change', e => { filters.division = e.target.value; render(); });
+document.querySelectorAll('.pill[data-bucket]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const b = btn.dataset.bucket;
+    btn.classList.toggle('active');
+    if (filters.buckets.includes(b)) {
+      filters.buckets = filters.buckets.filter(x => x !== b);
+    } else {
+      filters.buckets.push(b);
+    }
+    render();
+  });
+});
+document.getElementById('pill-clear').addEventListener('click', () => {
+  filters.buckets = [];
+  document.querySelectorAll('.pill[data-bucket]').forEach(b => b.classList.remove('active'));
+  render();
+});
 document.getElementById('btn-export').addEventListener('click', exportCSV);
 document.getElementById('btn-print').addEventListener('click', () => window.print());
 document.querySelectorAll('th[data-sort]').forEach(th => {
