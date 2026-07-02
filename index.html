@@ -610,6 +610,7 @@ body {
   </div>
   <div style="display:flex; align-items:center; gap:14px;">
     <div class="brand-sub" id="updated-label">Données mises à jour : <span id="updated-date"></span></div>
+    <a href="player_rankings.html" target="_blank" rel="noopener" style="background:var(--usap-orange); color:var(--usap-navy); text-decoration:none; padding:8px 14px; border-radius:6px; font-weight:700; font-size:13px; white-space:nowrap;" title="Tableau détaillé rankings — coaches view">📊 <span data-i18n="rankings_btn">Rankings</span></a>
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="fr">FR</button>
       <button class="lang-btn" data-lang="en">EN</button>
@@ -1556,8 +1557,8 @@ const CLASS_LABEL = {Freshman:'Fr.', Sophomore:'So.', Junior:'Jr.', Senior:'Sr.'
 // Victoires + Sous-par : auto-calculé depuis tournament_results (SCOUT)
 // Sélections FRA + Nationaux : maintenance manuelle (Nico met à jour)
 const USAP_STATS = {
-  gp_wins: 10,            // Victoires FFGOLF 2026 par engagés (GP + Championnat de France par équipes, position=1) — SCOUT auto
-  sub_par_rounds: 91,    // Cartes sous le par 2026 par engagés (rounds individuels < course_par) — SCOUT auto
+  gp_wins: 11,            // Victoires FFGOLF 2026 par engagés (GP + Championnat de France par équipes, position=1) — SCOUT auto
+  sub_par_rounds: 93,    // Cartes sous le par 2026 par engagés (rounds individuels < course_par) — SCOUT auto
   national_selections: 15 // Sélections équipes nationales 2026 (FR + Suisse + autres — maintenu manuellement par Nico, à re-vérifier)
 };
 

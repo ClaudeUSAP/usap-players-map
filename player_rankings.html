@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>USAP — Players Rankings Overview</title>
+<meta name="description" content="USAP France player rankings from commit to current. FR National Ranking tracking across Class 2024-2027.">
+<style>
+  :root {
+    --usap-navy: #012b57;
+    --usap-orange: #f59d1d;
+    --usap-muted: #6b7280;
+    --usap-border: #e5e7eb;
+    --usap-bg: #f7f8fa;
+    --usap-white: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: var(--usap-navy); background: var(--usap-bg); }
+  header { background: var(--usap-navy); color: white; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .logo-title { display: flex; align-items: center; gap: 14px; }
+  .logo { width: 40px; height: 40px; border-radius: 8px; background: var(--usap-orange); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; color: var(--usap-navy); }
+  h1 { margin: 0; font-size: 20px; font-weight: 700; }
+  .header-sub { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+  .lang-toggle { display: flex; gap: 4px; background: rgba(255,255,255,0.1); padding: 4px; border-radius: 6px; }
+  .lang-toggle button { background: transparent; border: none; color: rgba(255,255,255,0.7); padding: 6px 12px; font-weight: 600; cursor: pointer; border-radius: 4px; font-size: 13px; }
+  .lang-toggle button.active { background: var(--usap-orange); color: var(--usap-navy); }
+  .back-link { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 13px; padding: 8px 12px; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; }
+  .back-link:hover { background: rgba(255,255,255,0.1); }
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--usap-border); }
+  .search-input { flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid var(--usap-border); border-radius: 6px; font-size: 14px; }
+  select, .toolbar button { padding: 8px 12px; border: 1px solid var(--usap-border); border-radius: 6px; font-size: 14px; background: white; color: var(--usap-navy); cursor: pointer; }
+  .toolbar button { font-weight: 600; }
+  .toolbar button.export { background: var(--usap-orange); color: var(--usap-navy); border-color: var(--usap-orange); }
+  .toolbar button.export:hover { opacity: 0.9; }
+  .stats { color: var(--usap-muted); font-size: 13px; margin-left: auto; align-self: center; }
+  .table-wrap { background: white; border-radius: 8px; border: 1px solid var(--usap-border); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--usap-navy); color: white; }
+  th { padding: 12px 10px; text-align: left; font-weight: 600; cursor: pointer; user-select: none; white-space: nowrap; }
+  th:hover { background: rgba(255,255,255,0.05); }
+  th .sort-indicator { display: inline-block; margin-left: 4px; opacity: 0.4; }
+  th.sorted-asc .sort-indicator, th.sorted-desc .sort-indicator { opacity: 1; }
+  tbody tr { border-bottom: 1px solid var(--usap-border); }
+  tbody tr:hover { background: #f9fafb; }
+  td { padding: 10px; vertical-align: middle; }
+  td.center { text-align: center; }
+  td.rank { font-weight: 700; color: var(--usap-navy); font-family: 'SF Mono', Monaco, monospace; text-align: center; }
+  td.rank.current { color: var(--usap-orange); }
+  td.na { color: var(--usap-muted); text-align: center; }
+  .name-cell { font-weight: 600; }
+  .sex-badge { display: inline-block; width: 20px; height: 20px; border-radius: 50%; text-align: center; line-height: 20px; font-size: 10px; font-weight: 700; margin-right: 6px; }
+  .sex-badge.men { background: #dbeafe; color: #1e40af; }
+  .sex-badge.women { background: #fce7f3; color: #9d174d; }
+  .div-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #f3f4f6; color: var(--usap-navy); }
+  .div-badge.d1 { background: #dcfce7; color: #166534; }
+  .div-badge.d2 { background: #fef3c7; color: #92400e; }
+  .div-badge.naia { background: #e0e7ff; color: #3730a3; }
+  .div-badge.njcaa { background: #fce7f3; color: #831843; }
+  footer { padding: 24px; text-align: center; color: var(--usap-muted); font-size: 12px; background: white; border-top: 1px solid var(--usap-border); margin-top: 40px; }
+  footer a { color: var(--usap-navy); }
+  @media print {
+    header, .toolbar, footer { display: none; }
+    .table-wrap { border: none; box-shadow: none; }
+    body { background: white; }
+  }
+  @media (max-width: 768px) {
+    header { padding: 14px; }
+    main { padding: 12px; }
+    h1 { font-size: 16px; }
+    .stats { display: none; }
+    th, td { padding: 8px 6px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-title">
+    <div class="logo">U</div>
+    <div>
+      <h1 id="page-title">USAP — Players Rankings Overview</h1>
+      <div class="header-sub" id="page-sub">French National Ranking evolution from commit to current</div>
+    </div>
+  </div>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <div class="lang-toggle">
+      <button id="lang-en" class="active">EN</button>
+      <button id="lang-fr">FR</button>
+    </div>
+    <a class="back-link" href="/" id="back-link">← Map view</a>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <input type="text" class="search-input" id="search" placeholder="Search player, university...">
+    <select id="filter-sex">
+      <option value="">All genders</option>
+      <option value="Men">Men</option>
+      <option value="Women">Women</option>
+    </select>
+    <select id="filter-class">
+      <option value="">All classes</option>
+      <option value="Fall 2024">Fall 2024</option>
+      <option value="Fall 2025">Fall 2025</option>
+      <option value="Fall 2026">Fall 2026</option>
+      <option value="Fall 2027">Fall 2027</option>
+    </select>
+    <select id="filter-div">
+      <option value="">All divisions</option>
+      <option value="NCAA 1">NCAA D1</option>
+      <option value="NCAA 2">NCAA D2</option>
+      <option value="NAIA">NAIA</option>
+      <option value="NJCAA">NJCAA</option>
+    </select>
+    <button class="export" id="btn-export">Export CSV</button>
+    <button id="btn-print">Print</button>
+    <div class="stats" id="stats">— players</div>
+  </div>
+
+  <div class="table-wrap">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th data-sort="name" id="th-name">Player <span class="sort-indicator">▲</span></th>
+          <th data-sort="class" id="th-class">Class <span class="sort-indicator">▲</span></th>
+          <th data-sort="university" id="th-university">University <span class="sort-indicator">▲</span></th>
+          <th data-sort="division" id="th-division">Division <span class="sort-indicator">▲</span></th>
+          <th data-sort="commit_date" id="th-commit-date" class="center">Committed <span class="sort-indicator">▲</span></th>
+          <th data-sort="at_commit" id="th-at-commit" class="center">FR at Commit <span class="sort-indicator">▲</span></th>
+          <th data-sort="aug_prior" id="th-aug-prior" class="center">FR Aug Y-1 <span class="sort-indicator">▲</span></th>
+          <th data-sort="aug_start" id="th-aug-start" class="center">FR Aug Y <span class="sort-indicator">▲</span></th>
+          <th data-sort="current" id="th-current" class="center">FR Now (Jun 26) <span class="sort-indicator">▲</span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>
+  <p id="footer-legal">Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.</p>
+  <p id="footer-rgpd">© US Athletic Performance SA — Confidential coach-facing view — <a href="https://map.usathleticperformance.com/" id="footer-link-map">Map view</a></p>
+</footer>
+
+<script>
+// ========== DATA ==========
+// Sourced from SCOUT (Supabase EU project bfxhruvkzidvznsyyryp) — status IN (in_college, committed)
+// Class inferred from graduation_year; Fall 2024 = Class of high school 2024 → college entry Fall 2024
+const RANKINGS_DATA = [
+  // In College (Fall 2024 & Fall 2025 entries — already at university)
+  {name:"Hugo Almeida",sex:"Men",class:"Fall 2024",university:"Chestnut Hill College",division:"NCAA 2",commit_date:"10/2023",at_commit:"301",aug_prior:"333",aug_start:"294",current:"590"},
+  {name:"Faust Amat",sex:"Men",class:"Fall 2025",university:"Lewis University",division:"NCAA 2",commit_date:"01/2025",at_commit:"214",aug_prior:"456",aug_start:"156",current:"627"},
+  {name:"Elie Bennatan",sex:"Men",class:"Fall 2025",university:"Point Park University",division:"NCAA 2",commit_date:"01/2025",at_commit:"398",aug_prior:null,aug_start:"886",current:null},
+  {name:"Rafael Bobo-Lloret",sex:"Men",class:"Fall 2025",university:"Cal Poly",division:"NCAA 1",commit_date:"03/2025",at_commit:"34",aug_prior:"42",aug_start:"35",current:"54"},
+  {name:"Maxence Bonnet",sex:"Men",class:"Fall 2025",university:"Catawba College",division:"NCAA 2",commit_date:"09/2024",at_commit:"134",aug_prior:"125",aug_start:"136",current:"188"},
+  {name:"Loris Bonnetton Alban",sex:"Men",class:"Fall 2024",university:"Texas A&M University - San Antonio",division:"NAIA",commit_date:"12/2024",at_commit:"399",aug_prior:"363",aug_start:"378",current:null},
+  {name:"Fadi Burnet",sex:"Men",class:"Fall 2025",university:"Northwest Mississippi Community College",division:"NJCAA",commit_date:null,at_commit:null,aug_prior:"725",aug_start:"800",current:null},
+  {name:"Alois Casalonga",sex:"Men",class:"Fall 2024",university:"Cameron University",division:"NCAA 2",commit_date:"03/2024",at_commit:"234",aug_prior:"451",aug_start:"286",current:"138"},
+  {name:"Martin Chaney",sex:"Men",class:"Fall 2025",university:"University of Mobile",division:"NAIA",commit_date:"10/2024",at_commit:"822",aug_prior:"872",aug_start:"683",current:"710"},
+  {name:"Charles Cirier",sex:"Men",class:"Fall 2025",university:"Wingate University",division:"NCAA 2",commit_date:"08/2024",at_commit:"633",aug_prior:"633",aug_start:"1000",current:null},
+  {name:"Sacha Corlouer",sex:"Men",class:"Fall 2025",university:"Georgia Southwestern State University",division:"NCAA 2",commit_date:"09/2024",at_commit:"78",aug_prior:"80",aug_start:"58",current:"66"},
+  {name:"Jules De Brauwere",sex:"Men",class:"Fall 2025",university:"Kansas State University",division:"NCAA 1",commit_date:"12/2024",at_commit:"56",aug_prior:"78",aug_start:"48",current:"58"},
+  {name:"Gabriel Delaval",sex:"Men",class:"Fall 2025",university:"Lewis University",division:"NCAA 2",commit_date:"12/2024",at_commit:"349",aug_prior:"356",aug_start:"281",current:"359"},
+  {name:"Gabriel Dulon-Villoslada",sex:"Men",class:"Fall 2024",university:"University of Texas Rio Grande Valley",division:"NCAA 1",commit_date:"08/2023",at_commit:"162",aug_prior:"162",aug_start:"34",current:"47"},
+  {name:"Ali Elsayed",sex:"Men",class:"Fall 2024",university:"Lawrence Technological University",division:"NAIA",commit_date:"12/2023",at_commit:"415",aug_prior:"471",aug_start:"153",current:"571"},
+  {name:"Simon Germain",sex:"Men",class:"Fall 2024",university:"CSU Monterey Bay",division:"NCAA 2",commit_date:"06/2024",at_commit:"190",aug_prior:"243",aug_start:"191",current:"503"},
+  {name:"Samuel Guigui-Baruchel",sex:"Men",class:"Fall 2024",university:"Lander University",division:"NCAA 2",commit_date:"11/2023",at_commit:"71",aug_prior:"112",aug_start:"85",current:"344"},
+  {name:"Corentin Guilloux",sex:"Men",class:"Fall 2025",university:"Northern Illinois University",division:"NCAA 1",commit_date:"06/2024",at_commit:"204",aug_prior:"90",aug_start:"76",current:null},
+  {name:"Octavio Laurent",sex:"Men",class:"Fall 2025",university:"Kansas State University",division:"NCAA 1",commit_date:"04/2025",at_commit:"55",aug_prior:"55",aug_start:"37",current:"30"},
+  {name:"Gaspard Maréchal Dubourg",sex:"Men",class:"Fall 2025",university:"Southwestern Christian University",division:"NAIA",commit_date:"08/2024",at_commit:"239",aug_prior:"239",aug_start:"234",current:null},
+  {name:"Lucas Nicola",sex:"Men",class:"Fall 2025",university:"Faulkner University",division:"NAIA",commit_date:"01/2025",at_commit:"527",aug_prior:"1008",aug_start:"211",current:"235"},
+  {name:"Lucas Raoul",sex:"Men",class:"Fall 2025",university:"University of Northern Colorado",division:"NCAA 1",commit_date:"10/2024",at_commit:"96",aug_prior:"184",aug_start:"39",current:"184"},
+  {name:"Matis Sayah",sex:"Men",class:"Fall 2025",university:"Southern Wesleyan University",division:"NCAA 2",commit_date:"09/2024",at_commit:"258",aug_prior:"255",aug_start:"218",current:null},
+  {name:"Oihan Silva",sex:"Men",class:"Fall 2025",university:"Otero College",division:"NJCAA",commit_date:"02/2025",at_commit:"550",aug_prior:"811",aug_start:"392",current:null},
+  {name:"Florian Simon",sex:"Men",class:"Fall 2025",university:"University of Houston - Victoria",division:"NAIA",commit_date:"04/2025",at_commit:"288",aug_prior:"348",aug_start:"360",current:"588"},
+  {name:"Hugo Soubran",sex:"Men",class:"Fall 2025",university:"Hesston College",division:"NAIA",commit_date:"02/2025",at_commit:"916",aug_prior:"898",aug_start:"1060",current:null},
+  {name:"Léo Testas",sex:"Men",class:"Fall 2025",university:"Faulkner University",division:"NAIA",commit_date:"02/2025",at_commit:"269",aug_prior:"116",aug_start:"333",current:"158"},
+  // Women In College (Fall 2024 & 2025)
+  {name:"Amély Bochaton",sex:"Women",class:"Fall 2024",university:"Wingate University",division:"NCAA 2",commit_date:"01/2024",at_commit:"106",aug_prior:"119",aug_start:"39",current:"15"},
+  {name:"Sara Brentcheneff",sex:"Women",class:"Fall 2025",university:"University of Arkansas",division:"NCAA 1",commit_date:null,at_commit:null,aug_prior:"1",aug_start:null,current:"3"},
+  {name:"Fantine Cabry",sex:"Women",class:"Fall 2025",university:"Erskine College",division:"NCAA 2",commit_date:"09/2024",at_commit:"175",aug_prior:"190",aug_start:null,current:"72"},
+  {name:"Enora Castillon",sex:"Women",class:"Fall 2025",university:"Murray State College",division:"NJCAA",commit_date:"02/2025",at_commit:null,aug_prior:null,aug_start:null,current:null},
+  {name:"Maeva Constantinoff",sex:"Women",class:"Fall 2025",university:"University of Mobile",division:"NAIA",commit_date:"10/2024",at_commit:null,aug_prior:null,aug_start:null,current:null},
+  {name:"Juliette Daviau",sex:"Women",class:"Fall 2024",university:"University of Montevallo",division:"NCAA 2",commit_date:"02/2024",at_commit:"209",aug_prior:"224",aug_start:"199",current:"275"},
+  {name:"Faustine Errecade",sex:"Women",class:"Fall 2024",university:"University of Notre Dame",division:"NCAA 1",commit_date:"03/2023",at_commit:"53",aug_prior:"74",aug_start:"111",current:"258"},
+  {name:"Lou Fourdan",sex:"Women",class:"Fall 2025",university:"Rogers State University",division:"NCAA 2",commit_date:"08/2024",at_commit:"133",aug_prior:"133",aug_start:null,current:"108"},
+  {name:"Tina Genoulaz",sex:"Women",class:"Fall 2025",university:"Florida Atlantic University",division:"NCAA 1",commit_date:"05/2024",at_commit:"83",aug_prior:"72",aug_start:null,current:"38"},
+  {name:"Mahé Happiette",sex:"Women",class:"Fall 2025",university:"University of Charleston (WV)",division:"NCAA 2",commit_date:"01/2025",at_commit:"323",aug_prior:"319",aug_start:null,current:"256"},
+  {name:"Amélie Kumar",sex:"Women",class:"Fall 2024",university:"Southern Methodist University",division:"NCAA 1",commit_date:"11/2023",at_commit:"106",aug_prior:"98",aug_start:"93",current:null},
+  {name:"Clara Ledun",sex:"Women",class:"Fall 2025",university:"Rogers State University",division:"NCAA 2",commit_date:"08/2024",at_commit:"232",aug_prior:"232",aug_start:null,current:"279"},
+  {name:"Emma Leroy-Fabry",sex:"Women",class:"Fall 2024",university:"University of Central Arkansas",division:"NCAA 1",commit_date:"08/2023",at_commit:"45",aug_prior:"45",aug_start:"23",current:"70"},
+  {name:"Lehane Louis-Dumond",sex:"Women",class:"Fall 2024",university:"Lee University",division:"NCAA 2",commit_date:"01/2024",at_commit:"98",aug_prior:"90",aug_start:"135",current:"323"},
+  {name:"Inès Marty",sex:"Women",class:"Fall 2025",university:"Wingate University",division:"NCAA 2",commit_date:"05/2024",at_commit:"151",aug_prior:"159",aug_start:null,current:"134"},
+  {name:"Ambre Matlega",sex:"Women",class:"Fall 2024",university:"High Point University",division:"NCAA 1",commit_date:"11/2023",at_commit:"102",aug_prior:"152",aug_start:"130",current:"139"},
+  {name:"Camille Padieu",sex:"Women",class:"Fall 2025",university:"Eckerd College",division:"NCAA 2",commit_date:"12/2024",at_commit:"173",aug_prior:"233",aug_start:null,current:"273"},
+  {name:"Jeanne Pagnier",sex:"Women",class:"Fall 2025",university:"University of Tulsa",division:"NCAA 1",commit_date:"12/2024",at_commit:"35",aug_prior:"31",aug_start:null,current:"69"},
+  {name:"Julia Paviet",sex:"Women",class:"Fall 2024",university:"University of Delaware",division:"NCAA 1",commit_date:"09/2023",at_commit:"262",aug_prior:"263",aug_start:null,current:null},
+  {name:"Anna Pillard",sex:"Women",class:"Fall 2024",university:"University of Maryland",division:"NCAA 1",commit_date:"07/2023",at_commit:"42",aug_prior:"41",aug_start:"63",current:"31"},
+  {name:"Cloé Poizac",sex:"Women",class:"Fall 2024",university:"University of Arkansas Little Rock",division:"NCAA 1",commit_date:"11/2023",at_commit:"156",aug_prior:"228",aug_start:"136",current:"124"},
+  {name:"Romane Poissonnier",sex:"Women",class:"Fall 2025",university:"University of North Carolina - Chapel Hill",division:"NCAA 1",commit_date:"11/2023",at_commit:"84",aug_prior:"61",aug_start:null,current:"22"},
+  {name:"Camille Rosier",sex:"Women",class:"Fall 2024",university:"University of Illinois - Chicago",division:"NCAA 1",commit_date:"12/2023",at_commit:"133",aug_prior:"154",aug_start:"123",current:"117"},
+  {name:"Zoé Rubichon",sex:"Women",class:"Fall 2025",university:"Seattle University",division:"NCAA 1",commit_date:"07/2024",at_commit:"89",aug_prior:"79",aug_start:null,current:"68"},
+  {name:"Aubane Statiotis",sex:"Women",class:"Fall 2025",university:"Eckerd College",division:"NCAA 2",commit_date:"09/2024",at_commit:"169",aug_prior:"165",aug_start:null,current:"77"},
+  {name:"Manon Verret",sex:"Women",class:"Fall 2025",university:"St Mary's University (TX)",division:"NCAA 2",commit_date:"10/2024",at_commit:"77",aug_prior:"116",aug_start:null,current:"188"},
+  {name:"Clara Willem",sex:"Women",class:"Fall 2025",university:"Stetson University",division:"NCAA 1",commit_date:"08/2024",at_commit:"65",aug_prior:"65",aug_start:null,current:"130"},
+  // Committed (Fall 2026 entries)
+  {name:"Callixte Alzas",sex:"Men",class:"Fall 2026",university:"UC Berkeley",division:"NCAA 1",commit_date:"10/2024",at_commit:"12",aug_prior:"13",aug_start:null,current:null},
+  {name:"Théophile Archer",sex:"Men",class:"Fall 2026",university:"Virginia Commonwealth University",division:"NCAA 1",commit_date:"10/2025",at_commit:"45",aug_prior:"64",aug_start:null,current:"27"},
+  {name:"Alexis Barnetche",sex:"Men",class:"Fall 2026",university:"Florida Atlantic University",division:"NCAA 1",commit_date:"06/2025",at_commit:"49",aug_prior:"49",aug_start:null,current:null},
+  {name:"Evann Bourgerie",sex:"Men",class:"Fall 2026",university:"Truett McConnell University",division:"NAIA",commit_date:"01/2026",at_commit:null,aug_prior:null,aug_start:null,current:null},
+  {name:"Andreas Brun",sex:"Men",class:"Fall 2026",university:"Central Baptist College",division:"NAIA",commit_date:"04/2026",at_commit:null,aug_prior:null,aug_start:null,current:"100"},
+  {name:"Adam Carreyn",sex:"Men",class:"Fall 2026",university:"Faulkner University",division:"NAIA",commit_date:"10/2025",at_commit:"178",aug_prior:"318",aug_start:null,current:"173"},
+  {name:"Léo-Paul Cesari",sex:"Men",class:"Fall 2026",university:"UT Southern",division:"NAIA",commit_date:"02/2026",at_commit:"267",aug_prior:"287",aug_start:null,current:"206"},
+  {name:"Justin Charoy",sex:"Men",class:"Fall 2026",university:"University of South Carolina - Beaufort",division:"NCAA 2",commit_date:"02/2025",at_commit:"68",aug_prior:"56",aug_start:null,current:"105"},
+  {name:"Oscar Couilleau",sex:"Men",class:"Fall 2026",university:"Arizona State University",division:"NCAA 1",commit_date:"09/2024",at_commit:"12",aug_prior:"9",aug_start:null,current:null},
+  {name:"Paul Couston",sex:"Men",class:"Fall 2026",university:"Bethel University (IN)",division:"NAIA",commit_date:"02/2026",at_commit:"214",aug_prior:"240",aug_start:null,current:"541"},
+  {name:"Vadim Dejour",sex:"Men",class:"Fall 2026",university:"College of the Canyons",division:"NJCAA",commit_date:"12/2025",at_commit:"397",aug_prior:"422",aug_start:null,current:"566"},
+  {name:"Alexandre Guiserix",sex:"Men",class:"Fall 2026",university:"Mount Mercy University",division:"NAIA",commit_date:"01/2026",at_commit:null,aug_prior:null,aug_start:null,current:"448"},
+  {name:"Melvil Jacquelin",sex:"Men",class:"Fall 2026",university:"CSU Monterey Bay",division:"NCAA 2",commit_date:"10/2025",at_commit:"109",aug_prior:"99",aug_start:null,current:"124"},
+  {name:"Corentin Jorat",sex:"Men",class:"Fall 2026",university:"Defiance College",division:"NCAA 3",commit_date:"04/2026",at_commit:null,aug_prior:null,aug_start:null,current:"726"},
+  {name:"Théophile Lebrun",sex:"Men",class:"Fall 2026",university:"East Tennessee State University",division:"NCAA 1",commit_date:"06/2026",at_commit:"21",aug_prior:"105",aug_start:null,current:"64"},
+  {name:"Sacha Molino",sex:"Men",class:"Fall 2026",university:"Mid America Nazarene University",division:"NAIA",commit_date:"09/2025",at_commit:"175",aug_prior:"180",aug_start:null,current:"263"},
+  {name:"Maxime Olivo",sex:"Men",class:"Fall 2026",university:"Wayland Baptist University",division:"NAIA",commit_date:"01/2026",at_commit:"97",aug_prior:"97",aug_start:null,current:"746"},
+  {name:"Edouard Petit",sex:"Men",class:"Fall 2026",university:"Wayland Baptist University",division:"NAIA",commit_date:"01/2026",at_commit:"197",aug_prior:"175",aug_start:null,current:"328"},
+  {name:"Timothée Restout",sex:"Men",class:"Fall 2026",university:"Texas A&M International University",division:"NCAA 2",commit_date:"01/2026",at_commit:"149",aug_prior:"148",aug_start:null,current:"190"},
+  {name:"Matthieu Riffet",sex:"Men",class:"Fall 2026",university:"Murray State College",division:"NJCAA",commit_date:"11/2025",at_commit:"192",aug_prior:"221",aug_start:null,current:"187"},
+  {name:"Nicolas Robin",sex:"Men",class:"Fall 2026",university:"Mid America Nazarene University",division:"NAIA",commit_date:"02/2026",at_commit:"115",aug_prior:"119",aug_start:null,current:"133"},
+  {name:"Victor Siguier",sex:"Men",class:"Fall 2026",university:"Bethel University (IN)",division:"NAIA",commit_date:"02/2026",at_commit:"559",aug_prior:"595",aug_start:null,current:"425"},
+  {name:"Bastien Soula",sex:"Men",class:"Fall 2026",university:"Garden City Community College",division:"NJCAA",commit_date:"06/2026",at_commit:"286",aug_prior:"324",aug_start:null,current:"286"},
+  {name:"Raphaël Turcaud",sex:"Men",class:"Fall 2026",university:"Jacksonville State University",division:"NCAA 1",commit_date:"10/2025",at_commit:"48",aug_prior:"43",aug_start:null,current:"95"},
+  {name:"Tibo Van De Neste",sex:"Men",class:"Fall 2026",university:"King University",division:"NCAA 2",commit_date:"01/2026",at_commit:"343",aug_prior:"392",aug_start:null,current:"354"},
+  // Women Fall 2026 committed
+  {name:"Marie Bachelet",sex:"Women",class:"Fall 2026",university:"CSU East Bay",division:"NCAA 2",commit_date:"09/2025",at_commit:"87",aug_prior:"86",aug_start:null,current:"86"},
+  {name:"Diane Becassis",sex:"Women",class:"Fall 2026",university:"Eckerd College",division:"NCAA 2",commit_date:"01/2025",at_commit:"101",aug_prior:"122",aug_start:null,current:"237"},
+  {name:"Pauline Biglione",sex:"Women",class:"Fall 2026",university:"University of Mobile",division:"NAIA",commit_date:"01/2026",at_commit:null,aug_prior:null,aug_start:null,current:null},
+  {name:"Sarah Binaghi",sex:"Women",class:"Fall 2026",university:"Eckerd College",division:"NCAA 2",commit_date:"02/2026",at_commit:"266",aug_prior:"247",aug_start:null,current:"144"},
+  {name:"Charlotte Bouquet",sex:"Women",class:"Fall 2026",university:"University of Louisiana-Monroe",division:"NCAA 1",commit_date:"11/2024",at_commit:"79",aug_prior:"70",aug_start:null,current:"57"},
+  {name:"Ambre Boullot",sex:"Women",class:"Fall 2026",university:"Manhattan College",division:"NCAA 1",commit_date:"04/2026",at_commit:"171",aug_prior:"221",aug_start:null,current:"189"},
+  {name:"Éline Chau-Hu",sex:"Women",class:"Fall 2026",university:"University of Cincinnati",division:"NCAA 1",commit_date:"12/2025",at_commit:"80",aug_prior:"101",aug_start:null,current:"73"},
+  {name:"Clémence Chouvin",sex:"Women",class:"Fall 2026",university:"Elon University",division:"NCAA 1",commit_date:"11/2025",at_commit:"141",aug_prior:"122",aug_start:null,current:"141"},
+  {name:"Sarah Cuney",sex:"Women",class:"Fall 2026",university:"UMSL",division:"NCAA 2",commit_date:"02/2025",at_commit:"113",aug_prior:"64",aug_start:null,current:"59"},
+  {name:"Gabrielle Duhalde",sex:"Women",class:"Fall 2026",university:"Wingate University",division:"NCAA 2",commit_date:"05/2025",at_commit:"160",aug_prior:"191",aug_start:null,current:"204"},
+  {name:"Juliette Gastoud",sex:"Women",class:"Fall 2026",university:"Newberry College",division:"NCAA 2",commit_date:"12/2025",at_commit:"318",aug_prior:"376",aug_start:null,current:"320"},
+  {name:"Léa Giron",sex:"Women",class:"Fall 2026",university:"University of South Alabama",division:"NCAA 1",commit_date:"01/2026",at_commit:"73",aug_prior:"52",aug_start:null,current:"65"},
+  {name:"Louise Krawiec",sex:"Women",class:"Fall 2026",university:"East Carolina University",division:"NCAA 1",commit_date:"07/2025",at_commit:"72",aug_prior:"44",aug_start:null,current:"34"},
+  {name:"Margot Lamothe",sex:"Women",class:"Fall 2026",university:"Texas A&M International University",division:"NCAA 2",commit_date:"10/2025",at_commit:"189",aug_prior:"175",aug_start:null,current:"192"},
+  {name:"Bertille Lorin",sex:"Women",class:"Fall 2026",university:"Redlands CC",division:"NJCAA",commit_date:"10/2025",at_commit:"232",aug_prior:"226",aug_start:null,current:"223"},
+  {name:"Anne Charlotte Otto",sex:"Women",class:"Fall 2026",university:"Florida Southern College",division:"NCAA 2",commit_date:"09/2025",at_commit:"186",aug_prior:"185",aug_start:null,current:"260"},
+  {name:"Salomé Paumelle",sex:"Women",class:"Fall 2026",university:"Texas A&M - Texarkana",division:"NAIA",commit_date:"12/2025",at_commit:"281",aug_prior:"280",aug_start:null,current:"362"},
+  {name:"Manon Petitcolas",sex:"Women",class:"Fall 2026",university:"University of Alabama",division:"NCAA 1",commit_date:"11/2024",at_commit:"12",aug_prior:"9",aug_start:null,current:"10"},
+  {name:"Juliette Saillour",sex:"Women",class:"Fall 2026",university:"Texas Wesleyan University",division:"NAIA",commit_date:"03/2026",at_commit:"274",aug_prior:"146",aug_start:null,current:"209"},
+  {name:"Sarah Sayah",sex:"Women",class:"Fall 2026",university:"Weatherford College",division:"NJCAA",commit_date:"12/2025",at_commit:"436",aug_prior:"329",aug_start:null,current:"446"},
+  {name:"Melliyal Schmitt",sex:"Women",class:"Fall 2026",university:"University of Arkansas",division:"NCAA 1",commit_date:"10/2024",at_commit:"43",aug_prior:"42",aug_start:null,current:"24"},
+  {name:"Mila Tamisier",sex:"Women",class:"Fall 2026",university:"University of North Carolina - Chapel Hill",division:"NCAA 1",commit_date:"12/2025",at_commit:"41",aug_prior:"17",aug_start:null,current:"52"},
+  {name:"Giselle Zhao",sex:"Women",class:"Fall 2026",university:"UC Berkeley",division:"NCAA 1",commit_date:"01/2025",at_commit:"18",aug_prior:"7",aug_start:null,current:"6"},
+  // Fall 2027 women
+  {name:"Céleste Bobo-Lloret",sex:"Women",class:"Fall 2027",university:"University of Houston",division:"NCAA 1",commit_date:"01/2026",at_commit:"38",aug_prior:null,aug_start:null,current:"43"},
+  {name:"Céleste Darloy",sex:"Women",class:"Fall 2027",university:"Purdue University",division:"NCAA 1",commit_date:"12/2025",at_commit:"47",aug_prior:null,aug_start:null,current:"49"},
+  {name:"Axelle Guillemard",sex:"Women",class:"Fall 2027",university:"Oklahoma State University",division:"NCAA 1",commit_date:"11/2025",at_commit:"24",aug_prior:null,aug_start:null,current:"23"},
+  {name:"Salomé Lumbaca",sex:"Women",class:"Fall 2027",university:"University of South Carolina",division:"NCAA 1",commit_date:"11/2025",at_commit:"21",aug_prior:null,aug_start:null,current:"28"},
+  {name:"Iris Pollet",sex:"Women",class:"Fall 2027",university:"Arkansas State University",division:"NCAA 1",commit_date:"04/2026",at_commit:"108",aug_prior:null,aug_start:null,current:"112"},
+  {name:"Romane Tresnard",sex:"Women",class:"Fall 2027",university:"University of Louisiana-Monroe",division:"NCAA 1",commit_date:"04/2026",at_commit:"68",aug_prior:null,aug_start:null,current:"58"}
+];
+
+// ========== I18N ==========
+const I18N = {
+  en: {
+    title: "USAP — Players Rankings Overview",
+    sub: "French National Ranking evolution from commit to current",
+    search: "Search player, university...",
+    all_genders: "All genders", men: "Men", women: "Women",
+    all_classes: "All classes", all_divisions: "All divisions",
+    export: "Export CSV", print: "Print", back: "← Map view",
+    players_count: (n) => `${n} players`,
+    th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed", at_commit:"FR at Commit", aug_prior:"FR Aug Y-1", aug_start:"FR Aug Y", current:"FR Now (Jun 26)"},
+    legal: "Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.",
+    rgpd: '© US Athletic Performance SA — Confidential coach-facing view — <a href="https://map.usathleticperformance.com/">Map view</a>',
+    map_link: "Map view"
+  },
+  fr: {
+    title: "USAP — Bilan Rankings Joueurs",
+    sub: "Évolution du classement national français, du commit à aujourd'hui",
+    search: "Recherche joueur, université...",
+    all_genders: "Tous", men: "Garçons", women: "Filles",
+    all_classes: "Toutes classes", all_divisions: "Toutes divisions",
+    export: "Export CSV", print: "Imprimer", back: "← Vue carte",
+    players_count: (n) => `${n} joueurs`,
+    th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"FR au Commit", aug_prior:"FR Août Y-1", aug_start:"FR Août Y", current:"FR Actuel (Juin 26)"},
+    legal: "Sources : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
+    rgpd: '© US Athletic Performance SA — Vue confidentielle réservée coachs — <a href="https://map.usathleticperformance.com/">Vue carte</a>',
+    map_link: "Vue carte"
+  }
+};
+
+let currentLang = 'en';
+let currentSort = {col: 'current', dir: 'asc'};
+let filters = {search: '', sex: '', class: '', division: ''};
+
+function applyLang(lang) {
+  currentLang = lang;
+  const t = I18N[lang];
+  document.documentElement.lang = lang;
+  document.getElementById('page-title').textContent = t.title;
+  document.getElementById('page-sub').textContent = t.sub;
+  document.getElementById('search').placeholder = t.search;
+  document.getElementById('back-link').textContent = t.back;
+  document.getElementById('btn-export').textContent = t.export;
+  document.getElementById('btn-print').textContent = t.print;
+  document.getElementById('footer-legal').textContent = t.legal;
+  document.getElementById('footer-rgpd').innerHTML = t.rgpd;
+  document.getElementById('footer-link-map').textContent = t.map_link;
+  // Update select first options
+  document.querySelector('#filter-sex option[value=""]').textContent = t.all_genders;
+  document.querySelector('#filter-sex option[value="Men"]').textContent = t.men;
+  document.querySelector('#filter-sex option[value="Women"]').textContent = t.women;
+  document.querySelector('#filter-class option[value=""]').textContent = t.all_classes;
+  document.querySelector('#filter-div option[value=""]').textContent = t.all_divisions;
+  // Update table headers
+  ['name','class','university','division','commit_date','at_commit','aug_prior','aug_start','current'].forEach(col => {
+    const th = document.querySelector(`th[data-sort="${col}"]`);
+    if (th) {
+      const label = t.th[col];
+      const arrow = (currentSort.col === col) ? (currentSort.dir === 'asc' ? '▲' : '▼') : '▲';
+      th.innerHTML = `${label} <span class="sort-indicator">${arrow}</span>`;
+    }
+  });
+  render();
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+}
+
+function divBadge(div) {
+  const cls = div === 'NCAA 1' ? 'd1' : div === 'NCAA 2' ? 'd2' : div === 'NAIA' ? 'naia' : div === 'NJCAA' ? 'njcaa' : '';
+  const label = div === 'NCAA 1' ? 'NCAA D1' : div === 'NCAA 2' ? 'NCAA D2' : div || '—';
+  return `<span class="div-badge ${cls}">${label}</span>`;
+}
+
+function fmtRank(v) {
+  return v == null ? '<span class="na">—</span>' : `#${v}`;
+}
+
+function rankVal(v) {
+  if (v == null) return Infinity;
+  const n = parseInt(v, 10);
+  return isNaN(n) ? Infinity : n;
+}
+
+function commitVal(v) {
+  if (!v) return 0;
+  const [m, y] = v.split('/');
+  return parseInt(y) * 12 + parseInt(m);
+}
+
+function render() {
+  const q = filters.search.toLowerCase().trim();
+  const rows = RANKINGS_DATA.filter(p => {
+    if (filters.sex && p.sex !== filters.sex) return false;
+    if (filters.class && p.class !== filters.class) return false;
+    if (filters.division && p.division !== filters.division) return false;
+    if (q && !(p.name.toLowerCase().includes(q) || p.university.toLowerCase().includes(q))) return false;
+    return true;
+  });
+
+  const {col, dir} = currentSort;
+  const mult = dir === 'asc' ? 1 : -1;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (col === 'commit_date') { av = commitVal(a.commit_date); bv = commitVal(b.commit_date); }
+    else if (col === 'at_commit') { av = rankVal(a.at_commit); bv = rankVal(b.at_commit); }
+    else if (col === 'aug_prior') { av = rankVal(a.aug_prior); bv = rankVal(b.aug_prior); }
+    else if (col === 'aug_start') { av = rankVal(a.aug_start); bv = rankVal(b.aug_start); }
+    else if (col === 'current') { av = rankVal(a.current); bv = rankVal(b.current); }
+    else { av = (a[col] || '').toLowerCase(); bv = (b[col] || '').toLowerCase(); }
+    return av < bv ? -mult : av > bv ? mult : 0;
+  });
+
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = rows.map(p => `
+    <tr>
+      <td class="name-cell"><span class="sex-badge ${p.sex === 'Men' ? 'men' : 'women'}">${p.sex === 'Men' ? 'M' : 'W'}</span>${p.name}</td>
+      <td>${p.class}</td>
+      <td>${p.university}</td>
+      <td>${divBadge(p.division)}</td>
+      <td class="center">${p.commit_date || '<span class="na">—</span>'}</td>
+      <td class="rank">${fmtRank(p.at_commit)}</td>
+      <td class="rank">${fmtRank(p.aug_prior)}</td>
+      <td class="rank">${fmtRank(p.aug_start)}</td>
+      <td class="rank current">${fmtRank(p.current)}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('stats').textContent = I18N[currentLang].players_count(rows.length);
+
+  // Update header sort indicators
+  document.querySelectorAll('th[data-sort]').forEach(th => {
+    th.classList.toggle('sorted-asc', th.dataset.sort === col && dir === 'asc');
+    th.classList.toggle('sorted-desc', th.dataset.sort === col && dir === 'desc');
+  });
+}
+
+function exportCSV() {
+  const t = I18N[currentLang].th;
+  const headers = ['Player','Sex','Class','University','Division','Committed','FR at Commit','FR Aug Y-1','FR Aug Y','FR Current (Jun 26)'];
+  const rows = RANKINGS_DATA.filter(p => {
+    if (filters.sex && p.sex !== filters.sex) return false;
+    if (filters.class && p.class !== filters.class) return false;
+    if (filters.division && p.division !== filters.division) return false;
+    const q = filters.search.toLowerCase().trim();
+    if (q && !(p.name.toLowerCase().includes(q) || p.university.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  const csv = [headers.join(',')].concat(rows.map(p => [
+    `"${p.name}"`, p.sex, p.class, `"${p.university}"`, p.division,
+    p.commit_date || '', p.at_commit || '', p.aug_prior || '', p.aug_start || '', p.current || ''
+  ].join(','))).join('\n');
+  const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'usap_player_rankings.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// Event wiring
+document.getElementById('lang-en').addEventListener('click', () => applyLang('en'));
+document.getElementById('lang-fr').addEventListener('click', () => applyLang('fr'));
+document.getElementById('search').addEventListener('input', e => { filters.search = e.target.value; render(); });
+document.getElementById('filter-sex').addEventListener('change', e => { filters.sex = e.target.value; render(); });
+document.getElementById('filter-class').addEventListener('change', e => { filters.class = e.target.value; render(); });
+document.getElementById('filter-div').addEventListener('change', e => { filters.division = e.target.value; render(); });
+document.getElementById('btn-export').addEventListener('click', exportCSV);
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (currentSort.col === col) currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    else { currentSort.col = col; currentSort.dir = 'asc'; }
+    applyLang(currentLang);
+  });
+});
+
+applyLang('en');
+</script>
+</body>
+</html>
