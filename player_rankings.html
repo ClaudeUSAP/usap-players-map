@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USAP — Players Rankings Overview</title>
 <meta name="description" content="USAP France player rankings from commit to current. FR National Ranking tracking across Class 2024-2027.">
+<meta name="robots" content="noindex, nofollow">
 <style>
   :root {
     --usap-navy: #012b57;
@@ -319,7 +320,8 @@ const I18N = {
 };
 
 let currentLang = 'en';
-let currentSort = {col: 'name', dir: 'asc'};
+const DEFAULT_SORT = {col: 'name', dir: 'asc'};
+let currentSort = {...DEFAULT_SORT};
 let filters = {search: '', sex: '', class: '', division: '', buckets: []};
 
 function applyLang(lang) {
@@ -507,8 +509,13 @@ document.getElementById('btn-print').addEventListener('click', () => window.prin
 document.querySelectorAll('th[data-sort]').forEach(th => {
   th.addEventListener('click', () => {
     const col = th.dataset.sort;
-    if (currentSort.col === col) currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
-    else { currentSort.col = col; currentSort.dir = 'asc'; }
+    // 3-state cycle on same column: asc → desc → default (name asc). New column: start at asc.
+    if (currentSort.col === col) {
+      if (currentSort.dir === 'asc') { currentSort = {col, dir: 'desc'}; }
+      else { currentSort = {...DEFAULT_SORT}; }
+    } else {
+      currentSort = {col, dir: 'asc'};
+    }
     applyLang(currentLang);
   });
 });
