@@ -635,11 +635,11 @@ body {
     <div class="snap-bar">
       <span class="snap-label" data-i18n="period">📅 Période</span>
       <select id="snapshot-select">
-        <option value="current" data-i18n="snap_current">Current (Juin 2026)</option>
+        <option value="current" data-i18n="snap_current">Current (Juillet 2026)</option>
         <option value="may2025" data-i18n="snap_2425">Season 2024/2025</option>
         <option value="may2024" data-i18n="snap_2324">Season 2023/2024</option>
       </select>
-      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de juin 2026 (fin d'année académique 2025-26).</span>
+      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de juillet 2026 (fin d'année académique 2025-26).</span>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -842,7 +842,7 @@ const T = {
     tab_us: 'Joueurs aux US',
     tab_incoming: 'Engagés 2026 - 2027 - 2028',
     period: '📅 Période',
-    snap_current: 'Current (Juin 2026)',
+    snap_current: 'Current (Juillet 2026)',
     snap_2425: 'Season 2024/2025',
     snap_2324: 'Season 2023/2024',
     class: 'Année :',
@@ -1913,42 +1913,50 @@ const HISTORICAL_SCOREBOARD = {
   "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}}
 };
 
-// ================== CURRENT FFGOLF RANKINGS (Juin 2026) ==================
-// Source: https://pages.ffgolf.org/merite/amateurs/messieurs + .../dames (scrape via Chrome MCP)
-// "-" / null = en DB mais sans ranking actif. Players non-français (Kostylev, Luczak, Romani Italie, Hermansson, Wouters, Olesen Suisse) n'apparaissent pas.
+// ================== CURRENT FFGOLF RANKINGS (Juillet 2026) ==================
+// Source: SCOUT athletes.french_adult_ranking (auto-updated by ffgolf-ranking-update task V58).
 const CURRENT_FFGOLF = {
-  "Ylan Guerin-Pozzalo": 109, "Rodolphe Cicala": 24, "Arthur Karouby": 1142, "Thomas Peluchon": 674,
-  "Samuel Guigui-Baruchel": 344, "Gabriel Dulon-Villoslada": 47, "Bogdan Sandrini": 60, "Antoine Lianos": 790,
-  "Léo Molino": 176, "Hugo Almeida": 590, "Alois Casalonga": 138, "Enzo Rousse": 310,
-  "Joseph Linel": 454, "Simon Germain": 503, "Edouard Cereto": 180, "Maxime Lam": 182,
-  "Matis Sayah": 724, "Lucas Raoul": 184, "Rafael Bobo-Lloret": 54, "Octavio Laurent": 30,
-  "Ali Elsayed": 571, "Gaspard Maréchal Dubourg": 809, "Corentin Guilloux": 423, "Léo Testas": 158,
-  "Sacha Corlouer": 66, "Louis Delattre": 983, "Maxence Bonnet": 188, "Martin Chaney": 710,
-  "Oihan Silva": 902, "Gabriel Delaval": 359, "Lucas Nicola": 235, "Tom Clarens": 351,
-  "Florian Simon": 588, "Faust Amat": 627, "Fadi Burnet": 992, "Andrea Matlega": 779,
-  "Alexian Rouault": 440, "Kilian Juget": 564, "Alexis Barnetche": 32, "Oscar Couilleau": 2,
-  "Raphaël Turcaud": 95, "Justin Charoy": 105, "Théophile Lebrun": 21, "Callixte Alzas": 11,
-  "Melvil Jacquelin": 124, "Sacha Molino": 263, "Adam Carreyn": 173, "Théophile Archer": 27,
-  "Matthieu Riffet": 187, "Alexandre Guiserix": 448, "Jules Lauer": 23, "Edouard Petit": 328,
-  "Maxime Olivo": 746, "Tibo Van De Neste": 354, "Victor Siguier": 425, "Paul Couston": 541,
-  "Léo-Paul Cesari": 206, "Loïc Goethals": 960, "Timothée Restout": 190, "Axel Houdaille": 275,
-  "Vadim Dejour": 566, "Nicolas Robin": 133, "Jules De Brauwere": 58, "Corentin Jorat": 726,
-  "Paolo Fazzone": 320, "Jan Porchet": 872, "Maylis Lamoure": 18, "Taline Kyoumjian": 235,
-  "Faustine Errecade": 258, "Camille Rosier": 117, "Anna Pillard": 31, "Cloé Poizac": 124,
-  "Emma Leroy-Fabry": 70, "Juliette Daviau": 275, "Ambre Matlega": 139, "Lauren Thompstone": 106,
-  "Anaëlle Picot": 64, "Lehane Louis-Dumond": 323, "Amély Bochaton": 15, "Aubane Statiotis": 77,
-  "Inès Marty": 134, "Clara Willem": 130, "Zoé Rubichon": 68, "Lou Fourdan": 108,
-  "Camille Padieu": 273, "Clara Ledun": 279, "Tina Genoulaz": 38, "Fantine Cabry": 72,
-  "Manon Verret": 188, "Jeanne Pagnier": 69, "Mahé Happiette": 256, "Agathe Lacoste": 253,
-  "Romane Lacoste": 113, "Carla Bourdeaux": 39, "Giselle Zhao": 6, "Mila Tamisier": 52,
-  "Melliyal Schmitt": 24, "Charlotte Bouquet": 57, "Léa Giron": 65, "Gabrielle Duhalde": 204,
-  "Sarah Cuney": 59, "Manon Petitcolas": 10, "Louise Krawiec": 34, "Margot Lamothe": 192,
-  "Anne Charlotte Otto": 260, "Marie Bachelet": 86, "Bertille Lorin": 223, "Clémence Chouvin": 141,
-  "Juliette Gastoud": 320, "Salomé Paumelle": 362, "Eline Chau-Hu": 73, "Sarah Sayah": 446,
-  "Sarah Binaghi": 144, "Justine Bayle": 51, "Ambre Boullot": 189, "Juliette Saillour": 209,
-  "Axelle Guillemard": 23, "Céleste Darloy": 49, "Salomé Lumbaca": 28, "Celeste Bobo-Lloret": 43,
-  "Romane Tresnard": 58, "Iris Pollet": 112, "Romane Poissonnier": 22, "Céleste Mangeat": 176,
-  "Sara Brentcheneff": 3
+  "Samuel Aiach": 55, "Hugo Almeida": 590, "Faust Amat": 627, "Théophile Archer": 27,
+  "Rafael Bobo-Lloret": 54, "Elouen Boireau": 482, "Paul Bonnardet": 394, "Maxence Bonnet": 188,
+  "Benjamin Bouazizi": 131, "Anthony Bouhaniche": 398, "Giovanni Brulé": 85, "Andreas Brun": 100,
+  "Eloi Buard-Couvreur": 624, "Titouan Buisson": 117, "Adam Carreyn": 173, "Alois Casalonga": 138,
+  "Léo-Paul Cesari": 206, "Timothée Chaboud": 461, "Martin Chaney": 710, "Valentin Chaplin": 138,
+  "Justin Charoy": 105, "Rodolphe Cicala": 24, "Tom Clarens": 351, "Sacha Corlouer": 66,
+  "Jules Cornet": 236, "Paul Couston": 541, "Matteo Da Eira": 50, "Mathias Dalamel de Bournet": 281,
+  "Léo Dauvier": 744, "Jules De Brauwere": 58, "Vadim Dejour": 566, "Louis Delattre": 983,
+  "Gabriel Delaval": 359, "Edmond Donzel": 152, "Gabriel Dulon-Villoslada": 47, "Ali Elsayed": 571,
+  "Paolo Fazzone": 320, "Léo-Paul Finos": 87, "Timothée Fortin": 522, "Simon Germain": 503,
+  "Loïc Goethals": 960, "Samuel Guigui-Baruchel": 344, "Alexandre Guiserix": 448, "Stanislas Hatier": 557,
+  "Paul Horsey": 565, "Axel Houdaille": 275, "Raphaël Iralour": 614, "Melvil Jacquelin": 124,
+  "Corentin Jorat": 726, "Arthur Karouby": 1142, "Jules Lauer": 23, "Octavio Laurent": 30,
+  "Louis Le Sager": 118, "Théophile Lebrun": 64, "Loris Marcon": 1152, "Paul Martin": 44,
+  "Emiliano Mendoza-Malherbe": 539, "Sacha Molino": 263, "Léo Molino": 176, "Maxim Moreau": 112,
+  "Anthony Nadal": 107, "William Navidzadeh": 232, "Lucas Nicola": 235, "Maxime Olivo": 746,
+  "Thomas Peluchon": 674, "Edouard Petit": 328, "Valentin Pommier": 101, "Jan Porchet": 872,
+  "Hippolyte Poux": 174, "Matisse Rabiller": 331, "Lucas Raoul": 184, "Timothée Restout": 190,
+  "Matthieu Riffet": 187, "Martin Rizzon": 462, "Nicolas Robin": 133, "Bogdan Sandrini": 60,
+  "Victor Siguier": 425, "Florian Simon": 588, "Mathieu Slama": 293, "Bastien Soula": 286,
+  "Léo Testas": 158, "Titouan Thiebaut": 740, "Raphaël Turcaud": 95, "Tibo Van De Neste": 354,
+  "Alexandre Vapillon": 104, "Paul Vautier": 282, "Paul Velly": 121, "Nicolas Viroleau": 78,
+  "Marie Bachelet": 86, "Justine Bayle": 51, "Diane Becassis": 237, "Sarah Binaghi": 144,
+  "Céleste Bobo-Lloret": 43, "Amély Bochaton": 15, "Ambre Boullot": 189, "Charlotte Bouquet": 57,
+  "Sara Brentcheneff": 3, "Fantine Cabry": 72, "Éline Chau-Hu": 73, "Clémence Chouvin": 141,
+  "Jeanne Couvreur": 193, "Sarah Cuney": 59, "Céleste Darloy": 49, "Juliette Daviau": 275,
+  "Eva Delattre": 230, "Anouchka Djumic": 54, "Gabrielle Duhalde": 204, "Faustine Errecade": 258,
+  "Lou Fourdan": 108, "Juliette Gastoud": 320, "Tina Genoulaz": 38, "Léa Giron": 65,
+  "Alicia Grandjean": 116, "Axelle Guillemard": 23, "Mahé Happiette": 256, "Lyloo Hourantier": 134,
+  "Océane Jorat": 163, "Louise Krawiec": 34, "Taline Kyoumjian": 235, "Florence Laforgue": 48,
+  "Margot Lamothe": 192, "Maylis Lamoure": 18, "Zoé Lay": 240, "Clara Ledun": 279,
+  "Emma Leroy-Fabry": 70, "Carlotta Locatelli": 36, "Bertille Lorin": 223, "Lehane Louis-Dumond": 323,
+  "Salomé Lumbaca": 28, "Céleste Mangeat": 176, "Inès Marty": 134, "Ambre Matlega": 139,
+  "Teodora Nikolovski": 44, "Sasha Ochoantesana": 215, "Anne Charlotte Otto": 260, "Camille Padieu": 273,
+  "Jeanne Pagnier": 69, "Salomé Paumelle": 362, "Manon Petitcolas": 10, "Anaëlle Picot": 64,
+  "Anna Pillard": 31, "Rose Pitault": 281, "Romane Poissonnier": 22, "Cloé Poizac": 124,
+  "Iris Pollet": 112, "Camille Rosier": 117, "Zoé Rubichon": 68, "Clara Ryjacek": 127,
+  "Agathe Sagansan": 206, "Juliette Saillour": 209, "Sarah Sayah": 446, "Melliyal Schmitt": 24,
+  "Eleonore Sellami": 149, "Aubane Statiotis": 77, "Mila Tamisier": 52, "Lauren Thompstone": 106,
+  "Romane Tresnard": 58, "Morgane Trincadeiro": 98, "Manon Verret": 188, "Elisa Vicherat": 352,
+  "Clara Willem": 130, "Giselle Zhao": 6
 };
 
 // ================== CURRENT WAGR RANKINGS (Scout EU) ==================
@@ -2447,7 +2455,7 @@ const PLAYERS = [
 
 // ================== SNAPSHOTS ==================
 const SNAPSHOTS = {
-  current: { label: "Current (Juin 2026)", date: {y:2026, m:6}, help_fr: "Vue actuelle : situation au mois de juin 2026 (fin d'année académique 2025-26).", help_en: "Current view: situation as of June 2026 (end of 2025-26 academic year)." },
+  current: { label: "Current (Juillet 2026)", date: {y:2026, m:7}, help_fr: "Vue actuelle : situation au mois de juillet 2026 (fin d'année académique 2025-26).", help_en: "Current view: situation as of June 2026 (end of 2025-26 academic year)." },
   may2025: { label: "Season 2024/2025", date: {y:2025, m:5}, help_fr: "Vue rétroactive : fin de la saison 2024/2025. Class 2024 = Freshman, Class 2025 = Incoming.", help_en: "Retrospective view: end of 2024/2025 season. Class 2024 = Freshman, Class 2025 = Incoming." },
   may2024: { label: "Season 2023/2024", date: {y:2024, m:5}, help_fr: "Vue rétroactive : fin de la saison 2023/2024. Class 2023 = Freshman, Class 2024+ = Incoming.", help_en: "Retrospective view: end of 2023/2024 season. Class 2023 = Freshman, Class 2024+ = Incoming." }
 };
