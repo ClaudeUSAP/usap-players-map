@@ -97,8 +97,7 @@
       <button id="lang-en" class="active">EN</button>
       <button id="lang-fr">FR</button>
     </div>
-    <a class="back-link" href="/" id="back-link">← Map view</a>
-  </div>
+    </div>
 </header>
 
 <main>
@@ -164,7 +163,7 @@
 
 <footer>
   <p id="footer-legal">Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.</p>
-  <p id="footer-rgpd">© US Athletic Performance SA — Confidential coach-facing view — <a href="https://map.usathleticperformance.com/" id="footer-link-map">Map view</a></p>
+  <p id="footer-rgpd">© US Athletic Performance SA — Confidential coach-facing view</p>
 </footer>
 
 <script>
@@ -300,7 +299,7 @@ const I18N = {
     players_count: (n) => `${n} players`,
     th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed in", at_commit:"French Ranking when committed", aug_prior:"French Ranking in August 1 year prior to school starting", aug_start:"French Ranking when started as a Freshman", sb_r:"Current Scoreboard Rank", sb_s:"Current Adjusted Score", current:"Current French Ranking (Jun 26)"},
     legal: "Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.",
-    rgpd: '© US Athletic Performance SA — <a href="https://map.usathleticperformance.com/">Map view</a>',
+    rgpd: '© US Athletic Performance SA',
     map_link: "Map view"
   },
   fr: {
@@ -314,7 +313,7 @@ const I18N = {
     players_count: (n) => `${n} joueurs`,
     th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"Ranking français lors de l'engagement", aug_prior:"Ranking français en août 1 an avant le départ", aug_start:"Ranking français au début de la Freshman", sb_r:"Ranking Scoreboard actuel", sb_s:"Score ajusté actuel", current:"Ranking français actuel (Juin 26)"},
     legal: "Sources : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
-    rgpd: '© US Athletic Performance SA — <a href="https://map.usathleticperformance.com/">Vue carte</a>',
+    rgpd: '© US Athletic Performance SA',
     map_link: "Vue carte"
   }
 };
@@ -331,14 +330,12 @@ function applyLang(lang) {
   document.getElementById('page-title').textContent = t.title;
   document.getElementById('page-sub').textContent = t.sub;
   document.getElementById('search').placeholder = t.search;
-  document.getElementById('back-link').textContent = t.back;
   document.getElementById('btn-export').textContent = t.export;
   document.getElementById('btn-print').textContent = t.print;
   document.getElementById('pill-label').textContent = t.pill_label;
   document.getElementById('pill-clear').textContent = t.clear;
   document.getElementById('footer-legal').textContent = t.legal;
   document.getElementById('footer-rgpd').innerHTML = t.rgpd;
-  document.getElementById('footer-link-map').textContent = t.map_link;
   // Update select first options
   document.querySelector('#filter-sex option[value=""]').textContent = t.all_genders;
   document.querySelector('#filter-sex option[value="Men"]').textContent = t.men;
