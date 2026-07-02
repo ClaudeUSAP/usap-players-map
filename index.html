@@ -3624,6 +3624,35 @@ document.querySelectorAll('.tab').forEach(t => {
   t.addEventListener('click', () => switchTab(t.dataset.tab));
 });
 
+// V64 — URL params for iframe embed :
+//   ?lang=en      → force English initial view (for coach-facing previews)
+//   #committed    → switch to Engagés tab + scroll to it
+//   #us-players   → default Joueurs aux US tab + scroll to it
+(function initFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const paramLang = params.get('lang');
+  if (paramLang === 'en' || paramLang === 'fr') {
+    lang = paramLang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    applyLang();
+    document.getElementById('snap-help').textContent = SNAPSHOTS[currentSnap]['help_'+lang];
+    rerender();
+    rerenderIncoming();
+    if (typeof renderStatsBanner === 'function') renderStatsBanner();
+  }
+  const hash = window.location.hash.replace('#','').toLowerCase();
+  if (hash === 'committed' || hash === 'engages' || hash === 'incoming') {
+    switchTab('incoming');
+  }
+  // Auto-scroll to the tab section (skip header + banner for iframe embeds)
+  if (params.has('lang') || hash) {
+    setTimeout(() => {
+      const tabs = document.querySelector('.tabs');
+      if (tabs) tabs.scrollIntoView({behavior:'instant', block:'start'});
+    }, 100);
+  }
+})();
+
 // Incoming chip filters
 document.querySelectorAll('.chip[data-filter-in]').forEach(chip => {
   chip.addEventListener('click', () => {
