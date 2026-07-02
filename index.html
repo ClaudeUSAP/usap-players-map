@@ -1193,6 +1193,29 @@ function openPlayerModal(p, opts={}) {
     if (p.fr_rank_start != null && startYear) {
       body += `<div class="modal-history-row"><span class="yr">${lang==='en'?`French ranking at college start (Aug ${startYear})`:`Ranking français lors du départ (Août ${startYear})`}</span><span class="val">#${p.fr_rank_start}</span></div>`;
     }
+    // V50 : per-year college progression — Scoreboard rank at END of each completed year + school + division
+    // (from PLAYERS entries with fr_rank_sb/so_rank_sb/jr_rank_sb/sr_rank_sb, auto-handles transfers via getSchoolAtYear)
+    if (!isIncoming && collegeYear) {
+      const yearRows = [
+        {key:'fr_rank_sb', en:'Freshman', fr:'Freshman', offset:0},
+        {key:'so_rank_sb', en:'Sophomore', fr:'Sophomore', offset:1},
+        {key:'jr_rank_sb', en:'Junior', fr:'Junior', offset:2},
+        {key:'sr_rank_sb', en:'Senior', fr:'Senior', offset:3}
+      ];
+      for (const yr of yearRows) {
+        if (p[yr.key] != null) {
+          const endYear = collegeYear + yr.offset + 1;
+          const school = getSchoolAtYear(p.name, {y: endYear, m: 5});
+          const schoolName = school ? school.university : p.university;
+          const divInfo = SCHOOLS[schoolName] || {};
+          const divLabel = divFull(divInfo);
+          const label = lang === 'en'
+            ? `End of ${yr.en} — ${schoolName}${divLabel !== '—' ? ` (${divLabel})` : ''}`
+            : `Fin ${yr.fr} — ${schoolName}${divLabel !== '—' ? ` (${divLabel})` : ''}`;
+          body += `<div class="modal-history-row"><span class="yr">${escapeHtml(label)}</span><span class="val">${lang==='en'?'Scoreboard':'Scoreboard'} #${p[yr.key]}</span></div>`;
+        }
+      }
+    }
     if (CURRENT_FFGOLF[p.name] != null) {
       body += `<div class="modal-history-row" style="border-top:2px solid var(--usap-orange); margin-top:8px; padding-top:12px;"><span class="yr">${lang==='en'?'Current French ranking (June 2026)':"Ranking français actuel (Juin 2026)"}</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
     }
@@ -2469,6 +2492,18 @@ function getCollegeYear(p) {
   const s = p.signing || p.iclass || '';
   const m = s.match(/Fall (\d{4})/);
   return m ? parseInt(m[1], 10) : null;
+}
+// V50 : find school + division active for a given player at a snapDate (from PLAYERS transfer entries).
+function getSchoolAtYear(playerName, snapDate) {
+  const entries = (typeof PLAYERS !== 'undefined' ? PLAYERS : []).filter(e => e.name === playerName);
+  if (entries.length === 0) return null;
+  // Sort descending by signing date (newest first).
+  entries.sort((a, b) => monthsBetween(signingToDate(a.signing), signingToDate(b.signing)));
+  // Find first entry with signing <= snapDate.
+  for (const e of entries) {
+    if (monthsBetween(signingToDate(e.signing), snapDate) >= 0) return e;
+  }
+  return null;
 }
 
 function divFull(s) {
