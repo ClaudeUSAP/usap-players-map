@@ -97,7 +97,8 @@
       <button id="lang-en" class="active">EN</button>
       <button id="lang-fr">FR</button>
     </div>
-    </div>
+    <a class="back-link" href="https://map.usathleticperformance.com/" target="_blank" rel="noopener" id="back-link">Map view ↗</a>
+  </div>
 </header>
 
 <main>
@@ -153,7 +154,7 @@
           <th data-sort="aug_start" id="th-aug-start" class="center">French Ranking when started as a Freshman <span class="sort-indicator">▲</span></th>
           <th data-sort="sb_r" id="th-sb-r" class="center">Current Scoreboard Rank <span class="sort-indicator">▲</span></th>
           <th data-sort="sb_s" id="th-sb-s" class="center">Current Adjusted Score <span class="sort-indicator">▲</span></th>
-          <th data-sort="current" id="th-current" class="center">Current French Ranking (Jun 26) <span class="sort-indicator">▲</span></th>
+          <th data-sort="current" id="th-current" class="center">Current French Ranking (Jul 26) <span class="sort-indicator">▲</span></th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
@@ -297,7 +298,7 @@ const I18N = {
     export: "Export CSV", print: "Print", back: "← Map view", clear: "Clear",
     pill_label: "FR Rank at Commit",
     players_count: (n) => `${n} players`,
-    th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed in", at_commit:"French Ranking when committed", aug_prior:"French Ranking in August 1 year prior to school starting", aug_start:"French Ranking when started as a Freshman", sb_r:"Current Scoreboard Rank", sb_s:"Current Adjusted Score", current:"Current French Ranking (Jun 26)"},
+    th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed in", at_commit:"French Ranking when committed", aug_prior:"French Ranking in August 1 year prior to school starting", aug_start:"French Ranking when started as a Freshman", sb_r:"Current Scoreboard Rank", sb_s:"Current Adjusted Score", current:"Current French Ranking (Jul 26)"},
     legal: "Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.",
     rgpd: '© US Athletic Performance SA',
     map_link: "Map view"
@@ -311,7 +312,7 @@ const I18N = {
     export: "Export CSV", print: "Imprimer", back: "← Vue carte", clear: "Effacer",
     pill_label: "Ranking FR au commit",
     players_count: (n) => `${n} joueurs`,
-    th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"Ranking français lors de l'engagement", aug_prior:"Ranking français en août 1 an avant le départ", aug_start:"Ranking français au début de la Freshman", sb_r:"Ranking Scoreboard actuel", sb_s:"Score ajusté actuel", current:"Ranking français actuel (Juin 26)"},
+    th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"Ranking français lors de l'engagement", aug_prior:"Ranking français en août 1 an avant le départ", aug_start:"Ranking français au début de la Freshman", sb_r:"Ranking Scoreboard actuel", sb_s:"Score ajusté actuel", current:"Ranking français actuel (Juillet 26)"},
     legal: "Sources : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
     rgpd: '© US Athletic Performance SA',
     map_link: "Vue carte"
@@ -334,6 +335,8 @@ function applyLang(lang) {
   document.getElementById('btn-print').textContent = t.print;
   document.getElementById('pill-label').textContent = t.pill_label;
   document.getElementById('pill-clear').textContent = t.clear;
+  const bl = document.getElementById('back-link');
+  if (bl) bl.textContent = (lang === 'en' ? 'Map view ↗' : 'Vue carte ↗');
   document.getElementById('footer-legal').textContent = t.legal;
   document.getElementById('footer-rgpd').innerHTML = t.rgpd;
   // Update select first options
@@ -454,7 +457,7 @@ function render() {
 
 function exportCSV() {
   const t = I18N[currentLang].th;
-  const headers = ['Player','Sex','Class','University','Division','Committed in','French Ranking when committed','French Ranking August 1 year prior','French Ranking when started as Freshman','Current Scoreboard Rank','Current Adjusted Score','Current French Ranking (Jun 26)'];
+  const headers = ['Player','Sex','Class','University','Division','Committed in','French Ranking when committed','French Ranking August 1 year prior','French Ranking when started as Freshman','Current Scoreboard Rank','Current Adjusted Score','Current French Ranking (Jul 26)'];
   const rows = RANKINGS_DATA.filter(p => {
     if (filters.sex && p.sex !== filters.sex) return false;
     if (filters.class && p.class !== filters.class) return false;
@@ -516,6 +519,7 @@ document.querySelector('thead').addEventListener('click', (e) => {
   } else {
     currentSort = {col, dir: 'asc'};
   }
+  // Update headers arrows + labels (light — no applyLang overhead)
   const t = I18N[currentLang];
   document.querySelectorAll('th[data-sort]').forEach(headerTh => {
     const c = headerTh.dataset.sort;
@@ -526,13 +530,18 @@ document.querySelector('thead').addEventListener('click', (e) => {
   render();
 });
 
-applyLang('en');
-// Safety net : force render after DOM fully ready (fixes rare empty-on-load)
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', render);
-} else {
-  setTimeout(render, 0);
+// V65 : robust initial rendering (3 safety nets)
+function init() {
+  try {
+    applyLang('en');
+    render();
+  } catch(e) { console.error('init error:', e); }
 }
+init();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+}
+window.addEventListener('load', () => setTimeout(render, 100));
 </script>
 </body>
 </html>
