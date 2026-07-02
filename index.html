@@ -1171,19 +1171,31 @@ function openPlayerModal(p, opts={}) {
       body += '</div>';
     }
   }
-  // Engagement section (V47) — commit_date + fr_rank_commit (from COMMIT_DATA sheet) + current FFGOLF
-  // Applies to PLAYERS + INCOMING. Players without commit data fall back to current-only display.
-  if (p.commit_date && p.fr_rank_commit != null) {
+  // Engagement section (V49) — 5-row structure per Nico's spec.
+  // Data sourced from SCOUT via COMMIT_DATA dict (see top of file).
+  if (p.commit_date || p.fr_rank_prior != null || CURRENT_FFGOLF[p.name] != null) {
+    const collegeYear = getCollegeYear(p);
+    const priorYear = collegeYear ? (collegeYear - 1) : null;
+    const startYear = collegeYear;
+    const dateStr = p.commit_date ? fmtMonthYear(p.commit_date, lang) : null;
+
     body += '<div class="modal-section"><h3>' + (lang==='en'?'Commitment':'Engagement') + '</h3>';
-    body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Committed in':'Engagé en'} ${escapeHtml(p.commit_date)}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
-    if (CURRENT_FFGOLF[p.name] != null) {
-      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now (June 2026)':'Maintenant (Juin 2026)'}</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+
+    if (dateStr) {
+      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Verbally committed —':"S'est engagé verbalement —"} ${escapeHtml(dateStr)}</span></div>`;
     }
-    body += '</div>';
-  } else if (!isIncoming && CURRENT_FFGOLF[p.name] != null) {
-    // Fallback : no commit data in sheet → show current FFGOLF only
-    body += '<div class="modal-section"><h3>' + (lang==='en'?'French ranking':'Ranking FR') + '</h3>';
-    body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'Now':'Juin 2026'} (${lang==='en'?'current':'actuel'})</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+    if (p.fr_rank_commit != null) {
+      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?'French ranking at commit':"Ranking français lors de l'engagement"}</span><span class="val">#${p.fr_rank_commit}</span></div>`;
+    }
+    if (p.fr_rank_prior != null && priorYear) {
+      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?`French ranking 1 year before college (Aug ${priorYear})`:`Ranking français 1 an avant le départ (Août ${priorYear})`}</span><span class="val">#${p.fr_rank_prior}</span></div>`;
+    }
+    if (p.fr_rank_start != null && startYear) {
+      body += `<div class="modal-history-row"><span class="yr">${lang==='en'?`French ranking at college start (Aug ${startYear})`:`Ranking français lors du départ (Août ${startYear})`}</span><span class="val">#${p.fr_rank_start}</span></div>`;
+    }
+    if (CURRENT_FFGOLF[p.name] != null) {
+      body += `<div class="modal-history-row" style="border-top:2px solid var(--usap-orange); margin-top:8px; padding-top:12px;"><span class="yr">${lang==='en'?'Current French ranking (June 2026)':"Ranking français actuel (Juin 2026)"}</span><span class="val" style="color:var(--usap-orange)">#${CURRENT_FFGOLF[p.name]}</span></div>`;
+    }
     body += '</div>';
   }
   // Engagés data
@@ -1936,85 +1948,112 @@ const CURRENT_WAGR = {
 // Affiché dans le modal "Engagement". Joueurs absents du sheet (internationaux, anciens, ou commit data manquant)
 // sont silencieusement skipés — Nico maintient ce sheet manuellement.
 const COMMIT_DATA = {
-  // ===== Men — Class 2024 (Fall 2024) =====
-  "Maxime Lam":               {date:"Feb 24", rank:33},
-  "Joseph Linel":              {date:"Mar 24", rank:305},
-  "Bogdan Sandrini":           {date:"Dec 23", rank:97},
-  "Samuel Guigui-Baruchel":    {date:"Nov 23", rank:71},
-  "Gabriel Dulon-Villoslada":  {date:"Aug 23", rank:162},
-  "Simon Germain":             {date:"Jun 24", rank:190},
-  "Enzo Rousse":               {date:"Mar 24", rank:229},
-  "Hugo Almeida":              {date:"Oct 23", rank:301},
-  "Loris Bonnetton Alban":     {date:"Dec 24", rank:399},
-  "Léo Molino":                {date:"Dec 23", rank:511},
-  "Alois Casalonga":           {date:"Mar 24", rank:234},
-  "Antoine Lianos":            {date:"Jan 24", rank:null /* Unranked at commit */},
-
-  // ===== Men — Class 2025 (Fall 2025) =====
-  "Rafael Bobo-Lloret":        {date:"Mar 25", rank:34},
-  "Octavio Laurent":           {date:"Apr 25", rank:55},
-  "Jules De Brauwere":         {date:"Dec 24", rank:56},
-  "Sacha Corlouer":            {date:"Sep 24", rank:78},
-  "Corentin Guilloux":         {date:"Jun 24", rank:204},
-  "Léo Testas":                {date:"Feb 25", rank:269},
-  "Maxence Bonnet":            {date:"Sep 24", rank:134},
-  "Lucas Raoul":               {date:"Oct 24", rank:96},
-  "Gaspard Maréchal Dubourg":  {date:"Aug 24", rank:239},
-  "Matis Sayah":               {date:"Sep 24", rank:258},
-  "Florian Simon":             {date:"Apr 25", rank:288},
-  "Gabriel Delaval":           {date:"Dec 24", rank:349},
-  "Faust Amat":                {date:"Jan 25", rank:214},
-  "Ali Elsayed":               {date:"Dec 23", rank:415},
-  "Charles Cirier":            {date:"Aug 24", rank:633},
-  "Oihan Silva":               {date:"Feb 25", rank:550},
-  "Martin Chaney":             {date:"Oct 24", rank:822},
-  "Hugo Soubran":              {date:"Feb 25", rank:916},
-  "Lucas Nicola":              {date:"Jan 25", rank:527},
-
-  // ===== Men — Class 2026 (Fall 2026 INCOMING) =====
-  "Oscar Couilleau":           {date:"Sep 24", rank:12},
-  "Callixte Alzas":            {date:"Oct 24", rank:12},
-  "Alexis Barnetche":          {date:"Jun 25", rank:49},
-  "Raphaël Turcaud":           {date:"Oct 25", rank:48},
-  "Justin Charoy":             {date:"Feb 25", rank:68},
-  "Théophile Archer":          {date:"Oct 25", rank:45},
-  "Théophile Lebrun":          {date:"Jun 26", rank:21},
-  "Maxime Olivo":              {date:"Jan 26", rank:97},
-  "Nicolas Robin":             {date:"Feb 26", rank:115},
-  "Sacha Molino":              {date:"Sep 25", rank:175},
-  "Paul Couston":              {date:"Feb 26", rank:214},
-  "Adam Carreyn":              {date:"Oct 25", rank:178},
-  "Tibo Van De Neste":         {date:"Jan 26", rank:343},
-  "Vadim Dejour":              {date:"Dec 25", rank:397},
-  "Victor Siguier":            {date:"Feb 26", rank:559},
-  "Edouard Petit":             {date:"Jan 26", rank:197},
-
-  // ===== Women — Class 2024 (Fall 2024) =====
-  "Anna Pillard":              {date:"Jul 23", rank:42},
-  "Emma Leroy-Fabry":          {date:"Aug 23", rank:45},
-  "Faustine Errecade":         {date:"Mar 23", rank:53},
-  "Lehane Louis-Dumond":       {date:"Jan 24", rank:98},
-  "Amély Bochaton":            {date:"Jan 24", rank:106},
-  "Ambre Matlega":             {date:"Nov 23", rank:102},
-  "Camille Rosier":            {date:"Dec 23", rank:133},
-  "Juliette Daviau":           {date:"Feb 24", rank:209},
-  "Cloé Poizac":               {date:"Nov 23", rank:156},
-
-  // ===== Women — Class 2025 (Fall 2025) =====
-  "Jeanne Pagnier":            {date:"Dec 24", rank:35},
-  "Romane Poissonnier":        {date:"Nov 23", rank:84},
-  "Clara Willem":              {date:"Aug 24", rank:65},
-  "Tina Genoulaz":             {date:"May 24", rank:83},
-  "Zoé Rubichon":              {date:"Jul 24", rank:89},
-  "Manon Verret":              {date:"Oct 24", rank:77},
-  "Diane Becassis":            {date:"Jan 25", rank:101},
-  "Lou Fourdan":               {date:"Aug 24", rank:133},
-  "Inès Marty":                {date:"May 24", rank:151},
-  "Aubane Statiotis":          {date:"Sep 24", rank:169},
-  "Fantine Cabry":             {date:"Sep 24", rank:175},
-  "Clara Ledun":               {date:"Aug 24", rank:232},
-  "Camille Padieu":            {date:"Dec 24", rank:173},
-  "Mahé Happiette":            {date:"Jan 25", rank:323}
+  "Octavio Laurent": {date:"04/2025", rank:55, aug_prior:55, aug_start:37},
+  "Callixte Alzas": {date:"10/2024", rank:12, aug_prior:13, aug_start:null},
+  "Théophile Archer": {date:"10/2025", rank:45, aug_prior:64, aug_start:null},
+  "Alexis Barnetche": {date:"06/2025", rank:49, aug_prior:49, aug_start:null},
+  "Evann Bourgerie": {date:"01/2026", rank:null, aug_prior:null, aug_start:null},
+  "Andreas Brun": {date:"04/2026", rank:null, aug_prior:null, aug_start:null},
+  "Adam Carreyn": {date:"10/2025", rank:178, aug_prior:318, aug_start:null},
+  "Justin Charoy": {date:"02/2025", rank:68, aug_prior:56, aug_start:null},
+  "Sacha Corlouer": {date:"09/2024", rank:78, aug_prior:80, aug_start:58},
+  "Oscar Couilleau": {date:"09/2024", rank:12, aug_prior:9, aug_start:null},
+  "Paul Couston": {date:"02/2026", rank:214, aug_prior:240, aug_start:null},
+  "Jules De Brauwere": {date:"12/2024", rank:56, aug_prior:78, aug_start:48},
+  "Vadim Dejour": {date:"12/2025", rank:397, aug_prior:422, aug_start:null},
+  "Alexandre Guiserix": {date:"01/2026", rank:null, aug_prior:null, aug_start:null},
+  "Melvil Jacquelin": {date:"10/2025", rank:109, aug_prior:99, aug_start:null},
+  "Corentin Jorat": {date:"04/2026", rank:null, aug_prior:null, aug_start:null},
+  "Théophile Lebrun": {date:"06/2026", rank:21, aug_prior:105, aug_start:null},
+  "Sacha Molino": {date:"09/2025", rank:175, aug_prior:180, aug_start:null},
+  "Maxime Olivo": {date:"01/2026", rank:97, aug_prior:97, aug_start:null},
+  "Edouard Petit": {date:"01/2026", rank:197, aug_prior:175, aug_start:null},
+  "Timothée Restout": {date:"01/2026", rank:149, aug_prior:148, aug_start:null},
+  "Matthieu Riffet": {date:"11/2025", rank:192, aug_prior:221, aug_start:null},
+  "Victor Siguier": {date:"02/2026", rank:559, aug_prior:595, aug_start:null},
+  "Bastien Soula": {date:"06/2026", rank:286, aug_prior:324, aug_start:null},
+  "Raphaël Turcaud": {date:"10/2025", rank:48, aug_prior:43, aug_start:null},
+  "Tibo Van De Neste": {date:"01/2026", rank:343, aug_prior:392, aug_start:null},
+  "Léo-Paul Cesari": {date:"02/2026", rank:267, aug_prior:287, aug_start:null},
+  "Nicolas Robin": {date:"02/2026", rank:115, aug_prior:119, aug_start:null},
+  "Hugo Almeida": {date:"10/2023", rank:301, aug_prior:333, aug_start:294},
+  "Faust Amat": {date:"01/2025", rank:214, aug_prior:456, aug_start:156},
+  "Elie Bennatan": {date:"01/2025", rank:398, aug_prior:null, aug_start:886},
+  "Rafael Bobo-Lloret": {date:"03/2025", rank:34, aug_prior:42, aug_start:35},
+  "Maxence Bonnet": {date:"09/2024", rank:134, aug_prior:125, aug_start:136},
+  "Loris Bonnetton Alban": {date:"12/2024", rank:399, aug_prior:363, aug_start:378},
+  "Alois Casalonga": {date:"03/2024", rank:234, aug_prior:451, aug_start:286},
+  "Martin Chaney": {date:"10/2024", rank:822, aug_prior:872, aug_start:683},
+  "Charles Cirier": {date:"08/2024", rank:633, aug_prior:633, aug_start:1000},
+  "Gabriel Delaval": {date:"12/2024", rank:349, aug_prior:356, aug_start:281},
+  "Gabriel Dulon-Villoslada": {date:"08/2023", rank:162, aug_prior:162, aug_start:34},
+  "Ali Elsayed": {date:"12/2023", rank:415, aug_prior:471, aug_start:153},
+  "Simon Germain": {date:"06/2024", rank:190, aug_prior:243, aug_start:191},
+  "Samuel Guigui-Baruchel": {date:"11/2023", rank:71, aug_prior:112, aug_start:85},
+  "Corentin Guilloux": {date:"06/2024", rank:204, aug_prior:90, aug_start:76},
+  "Gaspard Maréchal Dubourg": {date:"08/2024", rank:239, aug_prior:239, aug_start:234},
+  "Lucas Nicola": {date:"01/2025", rank:527, aug_prior:1008, aug_start:211},
+  "Lucas Raoul": {date:"10/2024", rank:96, aug_prior:184, aug_start:39},
+  "Matis Sayah": {date:"09/2024", rank:258, aug_prior:255, aug_start:218},
+  "Oihan Silva": {date:"02/2025", rank:550, aug_prior:811, aug_start:392},
+  "Florian Simon": {date:"04/2025", rank:288, aug_prior:348, aug_start:360},
+  "Hugo Soubran": {date:"02/2025", rank:916, aug_prior:898, aug_start:1060},
+  "Léo Testas": {date:"02/2025", rank:269, aug_prior:116, aug_start:333},
+  "Ambre Boullot": {date:"04/2026", rank:171, aug_prior:221, aug_start:null},
+  "Marie Bachelet": {date:"09/2025", rank:87, aug_prior:86, aug_start:null},
+  "Diane Becassis": {date:"01/2025", rank:101, aug_prior:122, aug_start:null},
+  "Pauline Biglione": {date:"01/2026", rank:null, aug_prior:null, aug_start:null},
+  "Sarah Binaghi": {date:"02/2026", rank:266, aug_prior:247, aug_start:null},
+  "Charlotte Bouquet": {date:"11/2024", rank:79, aug_prior:70, aug_start:null},
+  "Éline Chau-Hu": {date:"12/2025", rank:80, aug_prior:101, aug_start:null},
+  "Clémence Chouvin": {date:"11/2025", rank:141, aug_prior:122, aug_start:null},
+  "Sarah Cuney": {date:"02/2025", rank:113, aug_prior:64, aug_start:null},
+  "Gabrielle Duhalde": {date:"05/2025", rank:160, aug_prior:191, aug_start:null},
+  "Juliette Gastoud": {date:"12/2025", rank:318, aug_prior:376, aug_start:null},
+  "Léa Giron": {date:"01/2026", rank:73, aug_prior:52, aug_start:null},
+  "Louise Krawiec": {date:"07/2025", rank:72, aug_prior:44, aug_start:null},
+  "Margot Lamothe": {date:"10/2025", rank:189, aug_prior:175, aug_start:null},
+  "Bertille Lorin": {date:"10/2025", rank:232, aug_prior:226, aug_start:null},
+  "Inès Marty": {date:"05/2024", rank:151, aug_prior:159, aug_start:null},
+  "Anne Charlotte Otto": {date:"09/2025", rank:186, aug_prior:185, aug_start:null},
+  "Salomé Paumelle": {date:"12/2025", rank:281, aug_prior:280, aug_start:null},
+  "Manon Petitcolas": {date:"11/2024", rank:12, aug_prior:9, aug_start:null},
+  "Romane Poissonnier": {date:"11/2023", rank:84, aug_prior:61, aug_start:null},
+  "Sarah Sayah": {date:"12/2025", rank:436, aug_prior:329, aug_start:null},
+  "Melliyal Schmitt": {date:"10/2024", rank:43, aug_prior:42, aug_start:null},
+  "Mila Tamisier": {date:"12/2025", rank:41, aug_prior:17, aug_start:null},
+  "Clara Willem": {date:"08/2024", rank:65, aug_prior:65, aug_start:null},
+  "Giselle Zhao": {date:"01/2025", rank:18, aug_prior:7, aug_start:null},
+  "Juliette Saillour": {date:"03/2026", rank:274, aug_prior:146, aug_start:null},
+  "Céleste Bobo-Lloret": {date:"01/2026", rank:38, aug_prior:null, aug_start:null},
+  "Céleste Darloy": {date:"12/2025", rank:47, aug_prior:null, aug_start:null},
+  "Axelle Guillemard": {date:"11/2025", rank:24, aug_prior:null, aug_start:null},
+  "Salomé Lumbaca": {date:"11/2025", rank:21, aug_prior:null, aug_start:null},
+  "Iris Pollet": {date:"04/2026", rank:108, aug_prior:null, aug_start:null},
+  "Romane Tresnard": {date:"04/2026", rank:68, aug_prior:null, aug_start:null},
+  "Amély Bochaton": {date:"01/2024", rank:106, aug_prior:119, aug_start:39},
+  "Fantine Cabry": {date:"09/2024", rank:175, aug_prior:190, aug_start:null},
+  "Enora Castillon": {date:"02/2025", rank:null, aug_prior:null, aug_start:null},
+  "Maeva Constantinoff": {date:"10/2024", rank:null, aug_prior:null, aug_start:null},
+  "Juliette Daviau": {date:"02/2024", rank:209, aug_prior:224, aug_start:199},
+  "Faustine Errecade": {date:"03/2023", rank:53, aug_prior:74, aug_start:111},
+  "Lou Fourdan": {date:"08/2024", rank:133, aug_prior:133, aug_start:null},
+  "Tina Genoulaz": {date:"05/2024", rank:83, aug_prior:72, aug_start:null},
+  "Mahé Happiette": {date:"01/2025", rank:323, aug_prior:319, aug_start:null},
+  "Amélie Kumar": {date:"11/2023", rank:106, aug_prior:98, aug_start:93},
+  "Clara Ledun": {date:"08/2024", rank:232, aug_prior:232, aug_start:null},
+  "Emma Leroy-Fabry": {date:"08/2023", rank:45, aug_prior:45, aug_start:23},
+  "Lehane Louis-Dumond": {date:"01/2024", rank:98, aug_prior:90, aug_start:135},
+  "Ambre Matlega": {date:"11/2023", rank:102, aug_prior:152, aug_start:130},
+  "Camille Padieu": {date:"12/2024", rank:173, aug_prior:233, aug_start:null},
+  "Jeanne Pagnier": {date:"12/2024", rank:35, aug_prior:31, aug_start:null},
+  "Julia Paviet": {date:"09/2023", rank:262, aug_prior:263, aug_start:null},
+  "Anna Pillard": {date:"07/2023", rank:42, aug_prior:41, aug_start:63},
+  "Cloé Poizac": {date:"11/2023", rank:156, aug_prior:228, aug_start:136},
+  "Camille Rosier": {date:"12/2023", rank:133, aug_prior:154, aug_start:123},
+  "Zoé Rubichon": {date:"07/2024", rank:89, aug_prior:79, aug_start:null},
+  "Aubane Statiotis": {date:"09/2024", rank:169, aug_prior:165, aug_start:null},
+  "Manon Verret": {date:"10/2024", rank:77, aug_prior:116, aug_start:null}
 };
 
 // ================== SCHOOLS DATA ==================
@@ -2417,6 +2456,21 @@ function monthsBetween(a, b) {
   return (b.y - a.y) * 12 + (b.m - a.m);
 }
 
+// V49 helpers — commit date + college year
+function fmtMonthYear(mmyyyy, lang) {
+  if (!mmyyyy) return '';
+  const [m, y] = mmyyyy.split('/');
+  const en = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
+  const fr = ['','janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  const idx = parseInt(m, 10);
+  return (lang === 'en' ? en[idx] : fr[idx]) + ' ' + y;
+}
+function getCollegeYear(p) {
+  const s = p.signing || p.iclass || '';
+  const m = s.match(/Fall (\d{4})/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
 function divFull(s) {
   if (!s || !s.gov) return "—";
   if (s.gov === "NCAA" && s.div === "D1") return "NCAA D1";
@@ -2529,7 +2583,9 @@ function buildSnapshot(snapKey) {
       division: school.div ?? "?",
       div_full: divFull(school),
       commit_date: commit?.date ?? null,
-      fr_rank_commit: commit?.rank ?? null
+      fr_rank_commit: commit?.rank ?? null,
+      fr_rank_prior: commit?.aug_prior ?? null,
+      fr_rank_start: commit?.aug_start ?? null
     };
   });
 }
@@ -2772,7 +2828,11 @@ function renderMap(rows) {
     if (clusterPlayers.length === 1) {
       return buildTooltip(clusterPlayers[0]);
     }
-    let out = `<strong>${clusterPlayers.length} joueurs ici</strong>`;
+    const allWomen = clusterPlayers.every(cp => cp.sex === 'Women');
+    const labelHere = lang === 'en'
+      ? `${clusterPlayers.length} ${allWomen ? 'players' : 'players'} here`
+      : `${clusterPlayers.length} ${allWomen ? 'joueuses' : 'joueurs'} ici`;
+    let out = `<strong>${labelHere}</strong>`;
     clusterPlayers.forEach((op, i) => {
       const opKey = `${op.name}|${op.signing}|${op.transfer?'1':'0'}|${op.university}`;
       out += `<div class="tt-player-row" data-key="${opKey}">`;
@@ -3263,7 +3323,9 @@ function enrichIncoming(p) {
     lat: s.lat ?? null,
     lng: s.lng ?? null,
     commit_date: commit?.date ?? null,
-    fr_rank_commit: commit?.rank ?? null
+    fr_rank_commit: commit?.rank ?? null,
+    fr_rank_prior: commit?.aug_prior ?? null,
+    fr_rank_start: commit?.aug_start ?? null
   };
 }
 const INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
@@ -3396,7 +3458,11 @@ function renderIncomingMap(rows) {
       if (p.fr_rank) out += `<div class="row"><span>${t('fr_ranking')}</span><span>${p.fr_rank}</span></div>`;
       return out;
     }
-    let out = `<strong>${clusterPlayers.length} joueurs ici</strong>`;
+    const allWomen = clusterPlayers.every(cp => cp.sex === 'Women');
+    const labelHere = lang === 'en'
+      ? `${clusterPlayers.length} ${allWomen ? 'players' : 'players'} here`
+      : `${clusterPlayers.length} ${allWomen ? 'joueuses' : 'joueurs'} ici`;
+    let out = `<strong>${labelHere}</strong>`;
     clusterPlayers.forEach(op => {
       const opKey = `${op.name}|${op.iclass}|${op.university}`;
       out += `<div class="tt-player-row" data-key="${opKey}">`;
