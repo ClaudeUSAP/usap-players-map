@@ -1490,100 +1490,78 @@ function getSchoolLogo(school) {
 }
 
 // ================== CURRENT SCOREBOARD STATS (Season 2025/2026) ==================
-// Source: scoreboard.clippd.com (scrape via Chrome MCP, Mai 2026)
+// Source : SCOUT athletes.scoreboard_* (auto-synced by scoreboard-stats-update V60, Juillet 2026)
 // Stats actuelles de la saison NCAA en cours, override les fr_score/so_score/jr_score historiques pour le current snap
 const CURRENT_SCOREBOARD = {
-  // Source : PDF "Clients - Pipe - Feuille 22" — fin saison 2025/26 (synced mai 2026)
-  // tr (total rounds) conservé de la précédente sync — peut être un peu en retard mais r/s à jour
-  // Class 2023 (Junior 2025/26)
-  "Michael Najburg":{r:null,s:77.7,tr:8,id:25133},
-  "Rodolphe Cicala":{r:669,s:72.6,tr:33,id:8254},
-  "Maylis Lamoure":{r:168,s:72.0,tr:29,id:19385},
-  "Taline Kyoumjian":{r:1030,s:78.2,tr:17,id:15009},
-  // Class 2024 (Sophomore)
-  "Samuel Guigui-Baruchel":{r:476,s:74.4,tr:12,id:32747},
-  "Bogdan Sandrini":{r:722,s:72.8,tr:33,id:37511},
-  "Antoine Lianos":{r:1163,s:81.9,tr:17,id:33109},
-  "Léo Molino":{r:362,s:75.5,tr:18,id:36398},
   "Hugo Almeida":{r:null,s:77.8,tr:9,id:33191},
-  "Alois Casalonga":{r:177,s:72.8,tr:25,id:31266},
-  "Joseph Linel":{r:53,s:73.0,tr:11,id:34000},
-  "Thomas Romani":{r:1411,s:75.0,tr:31,id:33544},
-  "Simon Germain":{r:228,s:73.2,tr:21,id:33468},
-  "Faustine Errecade":{r:null,s:79.0,tr:10,id:6687},
-  "Camille Rosier":{r:1066,s:77.7,tr:26,id:35182},
-  "Anna Pillard":{r:317,s:73.2,tr:32,id:34538},
-  "Emma Leroy-Fabry":{r:null,s:77.0,tr:14,id:31736},
-  "Amélie Kumar":{r:null,s:null,tr:null}, // stopped
-  "Ambre Matlega":{r:null,s:77.3,tr:11,id:32863},
-  "Lauren Thompstone":{r:525,s:74.5,tr:18,id:32733},
-  "Anaëlle Picot":{r:45,s:74.2,tr:26,id:36189},
-  "Lehane Louis-Dumond":{r:260,s:77.7,tr:25,id:34578},
-  "Melissa Gilloz":{r:1062,s:78.3,tr:23,id:33867},
-  "Amély Bochaton":{r:1,s:69.1,tr:33,id:32039},
-  // Transfers Fall 2025 (Sophomore at new school)
-  "Gabriel Dulon-Villoslada":{r:752,s:72.8,tr:27,id:8234},
-  "Maxime Lam":{r:890,s:73.3,tr:32,id:36033},
-  "Cloé Poizac":{r:928,s:76.8,tr:33,id:36029},
-  "Juliette Daviau":{r:391,s:78.5,tr:18,id:34543},
-  // Spring 2025 (Sophomore)
-  "Loris Bonnetton Alban":{r:747,s:77.8,tr:18,id:38447},
-  // Class 2025 (Freshman 2025/26)
-  "Hugo Soubran":{r:950,s:80.2,tr:23,id:5216},
-  "Matis Sayah":{r:null,s:85.3,tr:8,id:8733},
-  "Charles Cirier":{r:null,s:75.9,tr:3,id:5196},
-  "Lucas Raoul":{r:1826,s:77.5,tr:20,id:8323},
-  "Rafael Bobo-Lloret":{r:620,s:72.2,tr:33,id:6035},
-  "Octavio Laurent":{r:4,s:69.8,tr:29,id:7978},
-  "Ali Elsayed":{r:782,s:77.6,tr:15,id:39261},
-  "Gaspard Maréchal Dubourg":{r:196,s:74.0,tr:12,id:7372},
-  "Corentin Guilloux":{r:1302,s:74.5,tr:20,id:38979},
-  "Léo Testas":{r:58,s:72.5,tr:24,id:3708},
-  "Sacha Corlouer":{r:22,s:70.8,tr:17,id:3349},
-  "Louis Delattre":{r:1207,s:82.3,tr:15,id:3413},
-  "Elie Bennatan":{r:1268,s:82.5,tr:14,id:6109},
-  "Alphonse Hermansson":{r:408,s:74.1,tr:30,id:4966},
-  "Hugo Duquaine":{r:19,s:71.9,tr:26,id:8808},
-  "Maxence Bonnet":{r:261,s:73.3,tr:23,id:7084},
-  "Martin Chaney":{r:575,s:76.6,tr:24,id:3353},
-  "Amaury Wouters":{r:252,s:74.7,tr:20,id:4024},
-  "Gabriel Delaval":{r:581,s:75.7,tr:24,id:6802},
-  "Lucas Nicola":{r:464,s:77.3,tr:24,id:3710},
-  "Tom Clarens":{r:410,s:75.9,tr:15,id:5956}, // Senior starter
-  "Florian Simon":{r:253,s:74.3,tr:27,id:9398},
   "Faust Amat":{r:null,s:77.6,tr:9,id:6801},
-  "Andrea Matlega":{r:852,s:78.0,tr:24,id:7370}, // Senior starter
-  "Alexian Rouault":{r:270,s:75.4,tr:29,id:30045}, // Senior starter
-  "Gabriele Romani":{r:51,s:71.9,tr:30,id:15321}, // 5th year
-  "Alexandre Genet":{r:798,s:78.8,tr:21,id:3855}, // Senior starter (pas dans PDF — gardé valeur précédente)
-  "Edouard Cereto":{r:777,s:73.4,tr:20,id:25545}, // Senior (Junior start)
-  // Class 2025 transfers (Junior)
-  "Kilian Juget":{r:711,s:77.8,tr:28,id:5364}, // Junior à Ottawa
-  // Class 2025 (women Freshman)
-  "Anna Olesen":{r:1131,s:78.4,tr:21,id:38460},
-  "Aubane Statiotis":{r:30,s:73.8,tr:29,id:6258},
-  "Inès Marty":{r:null,s:76.1,tr:8,id:79869},
-  "Clara Willem":{r:801,s:76.0,tr:31,id:3282},
-  "Zoé Rubichon":{r:672,s:75.4,tr:30,id:6326},
-  "Lou Fourdan":{r:130,s:75.5,tr:26,id:8320},
-  "Camille Padieu":{r:294,s:77.6,tr:23,id:6259},
-  "Clara Ledun":{r:238,s:77.1,tr:16,id:8319},
-  "Tina Genoulaz":{r:573,s:74.8,tr:27,id:9445},
-  "Enora Castillon":{r:37,s:84.6,tr:15,id:5810}, // NJCAA D2
-  "Fantine Cabry":{r:92,s:74.8,tr:25,id:3626},
-  "Manon Verret":{r:139,s:75.5,tr:30,id:6047},
-  "Jeanne Pagnier":{r:622,s:75.2,tr:17,id:39245},
-  "Mahé Happiette":{r:667,s:82.3,tr:22,id:5576},
+  "Elie Bennatan":{r:1268,s:82.5,tr:14,id:6109},
+  "Rafael Bobo-Lloret":{r:620,s:72.2,tr:33,id:6035},
+  "Maxence Bonnet":{r:261,s:73.3,tr:26,id:7084},
+  "Loris Bonnetton Alban":{r:747,s:77.8,tr:18,id:38447},
+  "Fadi Burnet":{r:314,s:78.7,tr:11,id:79905},
+  "Alois Casalonga":{r:177,s:72.8,tr:28,id:31266},
+  "Martin Chaney":{r:575,s:76.6,tr:24,id:3353},
+  "Rodolphe Cicala":{r:669,s:72.6,tr:36,id:8254},
+  "Charles Cirier":{r:null,s:75.9,tr:3,id:5196},
+  "Tom Clarens":{r:410,s:75.9,tr:17,id:5956},
+  "Sacha Corlouer":{r:22,s:70.8,tr:24,id:3349},
+  "Jules De Brauwere":{r:7,s:70.9,tr:32,id:9307},
+  "Louis Delattre":{r:1207,s:82.3,tr:15,id:3413},
+  "Gabriel Delaval":{r:581,s:75.7,tr:24,id:6802},
+  "Gabriel Dulon-Villoslada":{r:752,s:72.8,tr:30,id:8234},
+  "Hugo Duquaine":{r:19,s:71.9,tr:30,id:8808},
+  "Ali Elsayed":{r:782,s:77.6,tr:15,id:39261},
+  "Simon Germain":{r:228,s:73.2,tr:21,id:33468},
+  "Samuel Guigui-Baruchel":{r:476,s:74.4,tr:12,id:32747},
+  "Corentin Guilloux":{r:1302,s:74.5,tr:20,id:38979},
+  "Alphonse Hermansson":{r:408,s:74.1,tr:30,id:4966},
+  "Jules Lauer":{r:356,s:71.3,tr:21,id:79908},
+  "Octavio Laurent":{r:4,s:69.8,tr:35,id:7978},
+  "Gaspard Maréchal Dubourg":{r:196,s:74.0,tr:12,id:7372},
+  "Michael Najburg":{r:null,s:77.7,tr:8,id:25133},
+  "Lucas Nicola":{r:464,s:77.3,tr:24,id:3710},
+  "Lucas Raoul":{r:1826,s:77.5,tr:20,id:8323},
+  "Thomas Romani":{r:1411,s:75.0,tr:31,id:33544},
+  "Matis Sayah":{r:null,s:85.3,tr:8,id:8733},
+  "Oihan Silva":{r:223,s:81.3,tr:12,id:79787},
+  "Florian Simon":{r:253,s:74.3,tr:27,id:9398},
+  "Hugo Soubran":{r:950,s:80.2,tr:23,id:5216},
+  "Léo Testas":{r:58,s:72.5,tr:24,id:3708},
+  "Amaury Wouters":{r:252,s:74.7,tr:20,id:4024},
+  "Justine Bayle":{r:12,s:72.9,tr:24,id:36875},
+  "Amély Bochaton":{r:1,s:69.1,tr:41,id:32039},
+  "Sara Brentcheneff":{r:69,s:71.0,tr:26,id:79864},
+  "Fantine Cabry":{r:92,s:74.8,tr:28,id:3626},
+  "Enora Castillon":{r:37,s:84.6,tr:19,id:5810},
   "Maeva Constantinoff":{r:528,s:89.7,tr:20,id:3602},
-  "Agathe Lacoste":{r:461,s:79.4,tr:19,id:6834}, // Junior starter
-  "Romane Lacoste":{r:127,s:75.4,tr:28,id:3544}, // Junior starter
-  "Carla Bourdeaux":{r:352,s:73.8,tr:31,id:26202}, // Junior starter
-  // NOUVELLE Mai 2026 : Sara Brentcheneff à Arkansas NCAA D1
-  "Sara Brentcheneff":{r:69,s:71.0,tr:null,id:null},
-  // Spring 2026 starters (pas dans PDF — gardés tels quels)
-  "Oihan Silva":{r:235,s:81.6,tr:12,id:79787},
-  "Jules Lauer":{r:371,s:71.4,tr:18,id:79908},
-  "Fadi Burnet":{r:293,s:78.3,tr:11,id:79905}
+  "Juliette Daviau":{r:391,s:78.5,tr:18,id:34543},
+  "Faustine Errecade":{r:null,s:79.0,tr:10,id:6687},
+  "Lou Fourdan":{r:130,s:75.5,tr:32,id:8320},
+  "Tina Genoulaz":{r:573,s:74.8,tr:27,id:9445},
+  "Melissa Gilloz":{r:1062,s:78.3,tr:23,id:33867},
+  "Mahé Happiette":{r:667,s:82.3,tr:22,id:5576},
+  "Taline Kyoumjian":{r:1030,s:78.2,tr:17,id:15009},
+  "Maylis Lamoure":{r:168,s:72.0,tr:32,id:19385},
+  "Clara Ledun":{r:238,s:77.1,tr:22,id:8319},
+  "Emma Leroy-Fabry":{r:null,s:77.0,tr:14,id:31736},
+  "Lehane Louis-Dumond":{r:260,s:77.7,tr:27,id:34578},
+  "Céleste Mangeat":{r:null,s:75.5,tr:6,id:3861},
+  "Inès Marty":{r:null,s:76.1,tr:8,id:79869},
+  "Ambre Matlega":{r:null,s:77.3,tr:11,id:32863},
+  "Anna Olesen":{r:1131,s:78.4,tr:21,id:38460},
+  "Camille Padieu":{r:294,s:77.6,tr:26,id:6259},
+  "Jeanne Pagnier":{r:622,s:75.2,tr:18,id:39245},
+  "Anaëlle Picot":{r:45,s:74.2,tr:29,id:36189},
+  "Anna Pillard":{r:317,s:73.2,tr:32,id:34538},
+  "Romane Poissonnier":{r:304,s:73.7,tr:30,id:5457},
+  "Cloé Poizac":{r:928,s:76.8,tr:36,id:36029},
+  "Camille Rosier":{r:1066,s:77.7,tr:26,id:35182},
+  "Zoé Rubichon":{r:672,s:75.4,tr:30,id:6326},
+  "Aubane Statiotis":{r:30,s:73.8,tr:32,id:6258},
+  "Lauren Thompstone":{r:525,s:74.5,tr:18,id:32733},
+  "Manon Verret":{r:139,s:75.5,tr:37,id:6047},
+  "Clara Willem":{r:801,s:76.0,tr:31,id:3282}
 };
 const CLASS_LABEL = {Freshman:'Fr.', Sophomore:'So.', Junior:'Jr.', Senior:'Sr.', '5th year':'5y.'};
 
