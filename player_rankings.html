@@ -9,7 +9,8 @@
 <style>
   :root {
     --usap-navy: #012b57;
-    --usap-orange: #f59d1d;
+    --usap-orange: #F6772A;      /* V67 : aligné sur le orange officiel de la map */
+    --usap-orange-soft: #FFF1E7; /* pour hover/backgrounds légers si besoin */
     --usap-muted: #6b7280;
     --usap-border: #e5e7eb;
     --usap-bg: #f7f8fa;
@@ -66,7 +67,12 @@
   .div-badge.d2 { background: #fef3c7; color: #92400e; }
   .div-badge.naia { background: #e0e7ff; color: #3730a3; }
   .div-badge.njcaa { background: #fce7f3; color: #831843; }
-  footer { padding: 24px; text-align: center; color: var(--usap-muted); font-size: 12px; background: white; border-top: 1px solid var(--usap-border); margin-top: 40px; }
+  footer { padding: 24px 32px; color: var(--usap-muted); font-size: 12px; background: white; border-top: 1px solid var(--usap-border); margin-top: 40px; line-height: 1.5; }
+  footer .legal-row { margin-bottom: 8px; }
+  footer .legal-row:last-child { margin-bottom: 0; }
+  footer strong { color: var(--usap-navy); font-weight: 700; }
+  footer a { color: var(--usap-orange); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
   footer a { color: var(--usap-navy); }
   @media print {
     header, .toolbar, footer { display: none; }
@@ -103,7 +109,7 @@
 
 <main>
   <div class="toolbar">
-    <input type="text" class="search-input" id="search" placeholder="Search player, university...">
+    <input type="text" class="search-input" id="search" placeholder="Search player name...">
     <select id="filter-sex">
       <option value="">All genders</option>
       <option value="Men">Men</option>
@@ -163,14 +169,31 @@
 </main>
 
 <footer>
-  <p id="footer-legal">Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.</p>
-  <p id="footer-rgpd">© US Athletic Performance SA — Confidential coach-facing view</p>
+  <div class="legal-row"><strong>© 2026 US Athletic Performance SA</strong> · Suisse · <a href="https://usathleticperformance.com" target="_blank" rel="noopener">usathleticperformance.com</a></div>
+  <div class="legal-row" id="footer-legal">Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.</div>
+  <div class="legal-row" id="footer-disclaimer">Data presented for informational purposes. Best effort — errors possible. To report an error or request correction/removal of your information: <a href="mailto:nicolas@usathleticperformance.com">nicolas@usathleticperformance.com</a>.</div>
+  <div class="legal-row" id="footer-rgpd">RGPD/GDPR: players and/or their legal representatives have consented to the display of this information. Under GDPR, you can at any time request modification or deletion of your data by email.</div>
+  <div class="legal-row" id="footer-hosting">Hosted on GitHub Pages (Microsoft Inc., USA — EU-US Data Privacy Framework certified). Static site, no cookies, no analytics.</div>
 </footer>
 
 <script>
 // ========== DATA ==========
 // Sourced from SCOUT (Supabase EU project bfxhruvkzidvznsyyryp) — status IN (in_college, committed)
 // Class inferred from graduation_year; Fall 2024 = Class of high school 2024 → college entry Fall 2024
+// V68 : transfers — player NAME → {from_school, from_division}
+// Source: parse map PLAYERS entries with transfer:true
+const TRANSFERS = {
+  "Ylan Guerin-Pozzalo": {from_school: "University of Louisiana Monroe", from_division: "NCAA 1"},
+  "Octavio Laurent": {from_school: "University of South Carolina - Beaufort", from_division: "NCAA 2"},
+  "Simon Germain": {from_school: "CSU Monterey Bay", from_division: "NCAA 2"},
+  "Rodolphe Cicala": {from_school: "Faulkner University", from_division: "NAIA"},
+  "Gabriel Dulon-Villoslada": {from_school: "Faulkner University", from_division: "NAIA"},
+  "Maxime Lam": {from_school: "Henderson State University", from_division: "NCAA 2"},
+  "Clara Willem": {from_school: "University of Cincinnati", from_division: "NCAA 1"},
+  "Cloé Poizac": {from_school: "Henderson State University", from_division: "NCAA 2"},
+  "Juliette Daviau": {from_school: "Lamar University", from_division: "NCAA 1"}
+};
+
 const RANKINGS_DATA = [
   // In College (Fall 2024 & Fall 2025 entries — already at university)
   {name:"Hugo Almeida",sex:"Men",class:"Fall 2024",university:"Chestnut Hill College",division:"NCAA 2",commit_date:"10/2023",at_commit:"301",aug_prior:"333",aug_start:"294",current:"590",sb_r:null,sb_s:"77.8"},
@@ -300,7 +323,9 @@ const I18N = {
     players_count: (n) => `${n} players`,
     th: {name:"Player", class:"Class", university:"University", division:"Division", commit_date:"Committed in", at_commit:"French Ranking when committed", aug_prior:"French Ranking in August 1 year prior to school starting", aug_start:"French Ranking when started as a Freshman", sb_r:"Current Scoreboard Rank", sb_s:"Current Adjusted Score", current:"Current French Ranking (Jul 26)"},
     legal: "Data sources: FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — USAP internal records. Updated monthly during NCAA season.",
-    rgpd: '© US Athletic Performance SA',
+    disclaimer: 'Data presented for informational purposes. Best effort — errors possible. To report an error or request correction/removal of your information: <a href="mailto:nicolas@usathleticperformance.com">nicolas@usathleticperformance.com</a>.',
+    rgpd: "GDPR: players and/or their legal representatives have consented to the display of this information. Under GDPR, you can at any time request modification or deletion of your data by email.",
+    hosting: "Hosted on GitHub Pages (Microsoft Inc., USA — EU-US Data Privacy Framework certified). Static site, no cookies, no analytics.",
     map_link: "Map view"
   },
   fr: {
@@ -313,8 +338,10 @@ const I18N = {
     pill_label: "Ranking FR au commit",
     players_count: (n) => `${n} joueurs`,
     th: {name:"Joueur", class:"Classe", university:"Université", division:"Division", commit_date:"Engagé en", at_commit:"Ranking français lors de l'engagement", aug_prior:"Ranking français en août 1 an avant le départ", aug_start:"Ranking français au début de la Freshman", sb_r:"Ranking Scoreboard actuel", sb_s:"Score ajusté actuel", current:"Ranking français actuel (Juillet 26)"},
-    legal: "Sources : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
-    rgpd: '© US Athletic Performance SA',
+    legal: "Sources des données : FFGOLF Mérite Amateur (Messieurs + Mesdames) — Scoreboard.clippd.com (CLIPPD Inc.) — Données internes USAP. Mise à jour mensuelle pendant la saison NCAA.",
+    disclaimer: 'Données présentées à titre informatif. Best effort — des erreurs sont possibles. Pour signaler une erreur ou demander la correction/retrait de tes informations : <a href="mailto:nicolas@usathleticperformance.com">nicolas@usathleticperformance.com</a>.',
+    rgpd: "RGPD : les joueurs et/ou leurs représentants légaux ont consenti à l'affichage de ces informations. Conformément au RGPD, tu peux à tout moment demander la modification ou la suppression de tes données par email.",
+    hosting: "Hébergé sur GitHub Pages (Microsoft Inc., USA — certifié EU-US Data Privacy Framework). Site statique, sans cookies ni analytics.",
     map_link: "Vue carte"
   }
 };
@@ -338,7 +365,9 @@ function applyLang(lang) {
   const bl = document.getElementById('back-link');
   if (bl) bl.textContent = (lang === 'en' ? 'Map view ↗' : 'Vue carte ↗');
   document.getElementById('footer-legal').textContent = t.legal;
-  document.getElementById('footer-rgpd').innerHTML = t.rgpd;
+  document.getElementById('footer-disclaimer').innerHTML = t.disclaimer;
+  document.getElementById('footer-rgpd').textContent = t.rgpd;
+  document.getElementById('footer-hosting').textContent = t.hosting;
   // Update select first options
   document.querySelector('#filter-sex option[value=""]').textContent = t.all_genders;
   document.querySelector('#filter-sex option[value="Men"]').textContent = t.men;
@@ -410,7 +439,11 @@ function render() {
       const match = filters.buckets.some(b => inBucket(p.at_commit, b));
       if (!match) return false;
     }
-    if (q && !(p.name.toLowerCase().includes(q) || p.university.toLowerCase().includes(q))) return false;
+    // V67 : search plus précis — match uniquement les débuts de mots du NOM du joueur
+    if (q) {
+      const nameParts = p.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').split(/[\s-]+/);
+      if (!nameParts.some(w => w.startsWith(q))) return false;
+    }
     return true;
   });
 
@@ -434,7 +467,7 @@ function render() {
     <tr>
       <td class="name-cell"><span class="sex-badge ${p.sex === 'Men' ? 'men' : 'women'}">${p.sex === 'Men' ? 'M' : 'W'}</span>${p.name}</td>
       <td>${p.class}</td>
-      <td>${p.university}</td>
+      <td>${p.university}${TRANSFERS[p.name] ? `<div style="font-size:11px;color:var(--usap-muted);font-style:italic;margin-top:2px;">${currentLang==='en'?'transferred from':'transféré depuis'} ${TRANSFERS[p.name].from_school} — ${TRANSFERS[p.name].from_division}</div>` : ''}</td>
       <td>${divBadge(p.division)}</td>
       <td class="center">${p.commit_date ? fmtMonthYear(p.commit_date, currentLang) : '<span class="na">—</span>'}</td>
       <td class="rank">${fmtRank(p.at_commit)}</td>
@@ -463,7 +496,11 @@ function exportCSV() {
     if (filters.class && p.class !== filters.class) return false;
     if (filters.division && p.division !== filters.division) return false;
     const q = filters.search.toLowerCase().trim();
-    if (q && !(p.name.toLowerCase().includes(q) || p.university.toLowerCase().includes(q))) return false;
+    // V67 : search plus précis — match uniquement les débuts de mots du NOM du joueur
+    if (q) {
+      const nameParts = p.name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').split(/[\s-]+/);
+      if (!nameParts.some(w => w.startsWith(q))) return false;
+    }
     return true;
   });
   const csv = [headers.join(',')].concat(rows.map(p => [
@@ -545,3 +582,4 @@ window.addEventListener('load', () => setTimeout(render, 100));
 </script>
 </body>
 </html>
+<!-- rebuild trigger 1783003449 -->
