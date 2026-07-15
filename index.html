@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -1571,8 +1570,8 @@ const CLASS_LABEL = {Freshman:'Fr.', Sophomore:'So.', Junior:'Jr.', Senior:'Sr.'
 // Victoires + Sous-par : auto-calculé depuis tournament_results (SCOUT)
 // Sélections FRA + Nationaux : maintenance manuelle (Nico met à jour)
 const USAP_STATS = {
-  gp_wins: 11,            // Victoires FFGOLF 2026 par engagés (GP + Championnat de France par équipes, position=1) — SCOUT auto
-  sub_par_rounds: 93,    // Cartes sous le par 2026 par engagés (rounds individuels < course_par) — SCOUT auto
+  gp_wins: 13,            // Victoires FFGOLF 2026 par engagés (GP + Championnat de France par équipes, position=1) — SCOUT auto
+  sub_par_rounds: 116,    // Cartes sous le par 2026 par engagés (rounds individuels < course_par) — SCOUT auto
   national_selections: 15 // Sélections équipes nationales 2026 (FR + Suisse + autres — maintenu manuellement par Nico, à re-vérifier)
 };
 
@@ -1891,51 +1890,51 @@ const HISTORICAL_SCOREBOARD = {
   "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}}
 };
 
-// ================== CURRENT FFGOLF RANKINGS (Juillet 2026) ==================
+// ================== CURRENT FFGOLF RANKINGS (Juillet 2026, maj 15/07) ==================
 // Source: SCOUT athletes.french_adult_ranking (auto-updated by ffgolf-ranking-update task V58).
 const CURRENT_FFGOLF = {
-  "Samuel Aiach": 53, "Hugo Almeida": 340, "Callixte Alzas": 14, "Faust Amat": 613,
-  "Théophile Archer": 26, "Alexis Barnetche": 31, "Rafael Bobo-Lloret": 54, "Elouen Boireau": 410,
-  "Paul Bonnardet": 359, "Maxence Bonnet": 308, "Benjamin Bouazizi": 164, "Anthony Bouhaniche": 423,
-  "Giovanni Brulé": 79, "Eloi Buard-Couvreur": 612, "Titouan Buisson": 119, "Adam Carreyn": 191,
-  "Alois Casalonga": 145, "Léo-Paul Cesari": 160, "Timothée Chaboud": 445, "Martin Chaney": 662,
-  "Valentin Chaplin": 149, "Justin Charoy": 104, "Rodolphe Cicala": 11, "Tom Clarens": 338,
+  "Samuel Aiach": 53, "Hugo Almeida": 340, "Callixte Alzas": 14, "Faust Amat": 614,
+  "Théophile Archer": 27, "Alexis Barnetche": 31, "Rafael Bobo-Lloret": 55, "Elouen Boireau": 411,
+  "Paul Bonnardet": 359, "Maxence Bonnet": 308, "Benjamin Bouazizi": 167, "Anthony Bouhaniche": 424,
+  "Giovanni Brulé": 79, "Eloi Buard-Couvreur": 613, "Titouan Buisson": 119, "Adam Carreyn": 192,
+  "Alois Casalonga": 147, "Léo-Paul Cesari": 163, "Timothée Chaboud": 446, "Martin Chaney": 662,
+  "Valentin Chaplin": 151, "Justin Charoy": 104, "Rodolphe Cicala": 11, "Tom Clarens": 338,
   "Sacha Corlouer": 66, "Jules Cornet": 226, "Oscar Couilleau": 2, "Paul Couston": 472,
-  "Matteo Da Eira": 50, "Mathias Dalamel de Bournet": 264, "Léo Dauvier": 734, "Jules De Brauwere": 59,
-  "Vadim Dejour": 581, "Louis Delattre": 1055, "Gabriel Delaval": 567, "Edmond Donzel": 217,
-  "Gabriel Dulon-Villoslada": 42, "Alexandre El Khomri": 99, "Ali Elsayed": 442, "Paolo Fazzone": 242,
-  "Léo-Paul Finos": 83, "Timothée Fortin": 518, "Simon Germain": 408, "Loïc Goethals": 909,
-  "Samuel Guigui-Baruchel": 381, "Alexandre Guiserix": 371, "Stanislas Hatier": 511, "Paul Horsey": 538,
-  "Axel Houdaille": 272, "Raphaël Iralour": 644, "Melvil Jacquelin": 123, "Corentin Jorat": 705,
-  "Arthur Karouby": 1064, "Jules Lauer": 23, "Octavio Laurent": 32, "Louis Le Sager": 122,
-  "Théophile Lebrun": 22, "Loris Marcon": 1082, "Paul Martin": 44, "Gaspard Maréchal Dubourg": 305,
-  "Emiliano Mendoza-Malherbe": 493, "Léo Molino": 192, "Sacha Molino": 285, "Maxim Moreau": 108,
+  "Matteo Da Eira": 51, "Mathias Dalamel de Bournet": 264, "Léo Dauvier": 734, "Jules De Brauwere": 59,
+  "Vadim Dejour": 581, "Louis Delattre": 1059, "Gabriel Delaval": 567, "Edmond Donzel": 218,
+  "Gabriel Dulon-Villoslada": 43, "Alexandre El Khomri": 99, "Ali Elsayed": 443, "Paolo Fazzone": 242,
+  "Léo-Paul Finos": 83, "Timothée Fortin": 519, "Simon Germain": 408, "Loïc Goethals": 911,
+  "Samuel Guigui-Baruchel": 381, "Alexandre Guiserix": 371, "Stanislas Hatier": 511, "Paul Horsey": 539,
+  "Axel Houdaille": 272, "Raphaël Iralour": 645, "Melvil Jacquelin": 124, "Corentin Jorat": 705,
+  "Arthur Karouby": 1068, "Jules Lauer": 23, "Octavio Laurent": 32, "Louis Le Sager": 123,
+  "Théophile Lebrun": 22, "Loris Marcon": 1086, "Paul Martin": 45, "Gaspard Maréchal Dubourg": 305,
+  "Emiliano Mendoza-Malherbe": 493, "Léo Molino": 193, "Sacha Molino": 285, "Maxim Moreau": 108,
   "Anthony Nadal": 110, "William Navidzadeh": 230, "Lucas Nicola": 367, "Maxime Olivo": 687,
-  "Charles Payan-Guillaume": 474, "Thomas Peluchon": 652, "Edouard Petit": 303, "Valentin Pommier": 98,
-  "Hippolyte Poux": 187, "Matisse Rabiller": 247, "Lucas Raoul": 130, "Timothée Restout": 471,
-  "Matthieu Riffet": 195, "Martin Rizzon": 506, "Nicolas Robin": 132, "Bogdan Sandrini": 75,
-  "Matis Sayah": 788, "Victor Siguier": 484, "Florian Simon": 417, "Mathieu Slama": 255,
-  "Hugo Soubran": 726, "Bastien Soula": 262, "Léo Testas": 154, "Titouan Thiebaut": 660,
-  "Raphaël Turcaud": 91, "Tibo Van De Neste": 356, "Alexandre Vapillon": 93, "Paul Vautier": 248,
-  "Paul Velly": 174, "Nicolas Viroleau": 71, "Marie Bachelet": 112, "Justine Bayle": 48,
-  "Diane Becassis": 199, "Sarah Binaghi": 161, "Céleste Bobo-Lloret": 50, "Amély Bochaton": 13,
-  "Ambre Boullot": 191, "Charlotte Bouquet": 69, "Sara Brentcheneff": 5, "Fantine Cabry": 71,
-  "Éline Chau-Hu": 76, "Clémence Chouvin": 144, "Jeanne Couvreur": 186, "Sarah Cuney": 68,
-  "Céleste Darloy": 61, "Juliette Daviau": 277, "Eva Delattre": 221, "Anouchka Djumic": 54,
-  "Gabrielle Duhalde": 229, "Faustine Errecade": 257, "Lou Fourdan": 101, "Juliette Gastoud": 387,
-  "Tina Genoulaz": 39, "Léa Giron": 62, "Alicia Grandjean": 126, "Axelle Guillemard": 25,
-  "Mahé Happiette": 269, "Lyloo Hourantier": 129, "Océane Jorat": 169, "Louise Krawiec": 40,
-  "Taline Kyoumjian": 232, "Florence Laforgue": 46, "Margot Lamothe": 195, "Maylis Lamoure": 27,
-  "Zoé Lay": 238, "Clara Ledun": 281, "Emma Leroy-Fabry": 88, "Carlotta Locatelli": 24,
-  "Bertille Lorin": 223, "Lehane Louis-Dumond": 263, "Salomé Lumbaca": 28, "Inès Marty": 134,
-  "Ambre Matlega": 167, "Teodora Nikolovski": 45, "Sasha Ochoantesana": 212, "Anne Charlotte Otto": 262,
-  "Camille Padieu": 240, "Jeanne Pagnier": 59, "Ludivine Passe": 74, "Salomé Paumelle": 388,
-  "Manon Petitcolas": 14, "Anaëlle Picot": 85, "Anna Pillard": 32, "Rose Pitault": 259,
-  "Romane Poissonnier": 20, "Cloé Poizac": 123, "Iris Pollet": 139, "Camille Rosier": 109,
-  "Zoé Rubichon": 78, "Clara Ryjacek": 127, "Agathe Sagansan": 208, "Juliette Saillour": 201,
-  "Melliyal Schmitt": 21, "Eleonore Sellami": 153, "Aubane Statiotis": 70, "Mila Tamisier": 82,
-  "Lauren Thompstone": 95, "Romane Tresnard": 57, "Morgane Trincadeiro": 110, "Manon Verret": 149,
-  "Elisa Vicherat": 355, "Clara Willem": 119, "Giselle Zhao": 6
+  "Charles Payan-Guillaume": 483, "Edouard Petit": 303, "Valentin Pommier": 98, "Hippolyte Poux": 188,
+  "Matisse Rabiller": 247, "Lucas Raoul": 133, "Timothée Restout": 410, "Matthieu Riffet": 196,
+  "Martin Rizzon": 506, "Nicolas Robin": 135, "Bogdan Sandrini": 78, "Matis Sayah": 789,
+  "Victor Siguier": 484, "Florian Simon": 418, "Mathieu Slama": 255, "Hugo Soubran": 726,
+  "Bastien Soula": 262, "Léo Testas": 157, "Titouan Thiebaut": 660, "Raphaël Turcaud": 91,
+  "Tibo Van De Neste": 356, "Alexandre Vapillon": 93, "Paul Vautier": 248, "Paul Velly": 177,
+  "Nicolas Viroleau": 71, "Marie Bachelet": 112, "Justine Bayle": 48, "Diane Becassis": 199,
+  "Sarah Binaghi": 161, "Céleste Bobo-Lloret": 50, "Amély Bochaton": 13, "Ambre Boullot": 191,
+  "Charlotte Bouquet": 69, "Sara Brentcheneff": 5, "Fantine Cabry": 71, "Éline Chau-Hu": 76,
+  "Clémence Chouvin": 144, "Jeanne Couvreur": 186, "Sarah Cuney": 68, "Céleste Darloy": 61,
+  "Juliette Daviau": 277, "Eva Delattre": 222, "Anouchka Djumic": 53, "Gabrielle Duhalde": 230,
+  "Faustine Errecade": 257, "Lou Fourdan": 102, "Juliette Gastoud": 389, "Tina Genoulaz": 39,
+  "Léa Giron": 62, "Alicia Grandjean": 126, "Axelle Guillemard": 25, "Mahé Happiette": 269,
+  "Lyloo Hourantier": 129, "Océane Jorat": 169, "Louise Krawiec": 40, "Taline Kyoumjian": 232,
+  "Florence Laforgue": 46, "Margot Lamothe": 195, "Maylis Lamoure": 27, "Zoé Lay": 239,
+  "Clara Ledun": 281, "Emma Leroy-Fabry": 88, "Carlotta Locatelli": 24, "Bertille Lorin": 224,
+  "Lehane Louis-Dumond": 263, "Salomé Lumbaca": 28, "Inès Marty": 134, "Ambre Matlega": 167,
+  "Teodora Nikolovski": 45, "Sasha Ochoantesana": 213, "Anne Charlotte Otto": 262, "Camille Padieu": 241,
+  "Jeanne Pagnier": 59, "Ludivine Passe": 74, "Salomé Paumelle": 390, "Manon Petitcolas": 14,
+  "Anaëlle Picot": 85, "Anna Pillard": 32, "Rose Pitault": 259, "Romane Poissonnier": 20,
+  "Cloé Poizac": 123, "Iris Pollet": 139, "Camille Rosier": 109, "Zoé Rubichon": 78,
+  "Clara Ryjacek": 127, "Agathe Sagansan": 209, "Juliette Saillour": 201, "Melliyal Schmitt": 21,
+  "Eleonore Sellami": 153, "Aubane Statiotis": 70, "Mila Tamisier": 82, "Lauren Thompstone": 95,
+  "Romane Tresnard": 57, "Morgane Trincadeiro": 110, "Manon Verret": 149, "Elisa Vicherat": 356,
+  "Clara Willem": 119, "Giselle Zhao": 6
 };
 
 // ================== CURRENT WAGR RANKINGS (Scout EU) ==================
