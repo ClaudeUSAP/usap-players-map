@@ -2524,11 +2524,14 @@ function getScoreAtSnap(p, snapDate, snapKey) {
   if (monthsSince < 0) return null;
   const yearsInCollege = Math.floor(monthsSince / 12) + startOffset;
   // Pour le current snap, prefer Scoreboard live data si dispo
-  if (snapKey === 'current' && CURRENT_SCOREBOARD[p.name]) {
-    const sb = CURRENT_SCOREBOARD[p.name];
-    if (sb.s != null) {
+  if (snapKey === 'current') {
+    const baked = CURRENT_SCOREBOARD[p.name] || null;
+    const live = LIVE_SB[normName(p.name)] || null;
+    const s = (live && live.s != null) ? live.s : (baked ? baked.s : null);
+    const rk = (live && live.r != null) ? live.r : (baked ? baked.r : null);
+    if (s != null) {
       const cclass = getClassAtSnap(p, snapDate);
-      return { score: sb.s, rank: sb.r, label: CLASS_LABEL[cclass] || '', rounds: sb.tr };
+      return { score: s, rank: rk, label: CLASS_LABEL[cclass] || '', rounds: baked ? baked.tr : null };
     }
   }
   // Pour les snaps historiques, prefer HISTORICAL_SCOREBOARD si dispo
@@ -2597,8 +2600,8 @@ function buildSnapshot(snapKey) {
       score: scoreData?.score ?? null,
       sb_rank: scoreData?.rank ?? null,
       score_label: scoreData?.label ?? "",
-      fr_rank: CURRENT_FFGOLF[p.name] ?? frRank,
-      wagr: CURRENT_WAGR[p.name] ?? p.wagr,
+      fr_rank: LIVE_FFGOLF[normName(p.name)] ?? CURRENT_FFGOLF[p.name] ?? frRank,
+      wagr: LIVE_WAGR[normName(p.name)] ?? CURRENT_WAGR[p.name] ?? p.wagr,
       state: school.state ?? "?",
       lat: school.lat ?? null,
       lng: school.lng ?? null,
@@ -2612,6 +2615,35 @@ function buildSnapshot(snapKey) {
   });
 }
 
+
+// ================== LIVE RANKINGS (SCOUT via RPC list_map_rankings) ==================
+function normName(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[\s\-'’.]/g,'');}
+let LIVE_WAGR={}, LIVE_FFGOLF={}, LIVE_SB={};
+async function loadLiveRankings(){
+  try{
+    const KEY="sb_publishable_MK8F6_0QgbnuNWPN-0enOw_qyhTQmXs";
+    const r=await fetch("https://bfxhruvkzidvznsyyryp.supabase.co/rest/v1/rpc/list_map_rankings",
+      {method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:"{}"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length) throw new Error("empty");
+    const w={},f={},sb={};
+    const okInt=v=>v!=null && /^[1-9][0-9]*$/.test(String(v).trim());
+    const okNum=v=>v!=null && String(v).trim()!=='' && !isNaN(parseFloat(v));
+    for(const x of rows){
+      const k=normName(x.first_name+' '+x.last_name);
+      if(okInt(x.wagr_ranking)) w[k]=parseInt(x.wagr_ranking,10);
+      if(okInt(x.french_adult_ranking)) f[k]=parseInt(x.french_adult_ranking,10);
+      const rr=okInt(x.scoreboard_current_rank)?parseInt(x.scoreboard_current_rank,10):null;
+      const ss=okNum(x.scoreboard_current_score)?parseFloat(x.scoreboard_current_score):null;
+      if(rr!=null||ss!=null) sb[k]={r:rr,s:ss};
+    }
+    LIVE_WAGR=w; LIVE_FFGOLF=f; LIVE_SB=sb;
+    INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
+    rerender(); rerenderIncoming();
+    console.info('[live] rankings loaded: '+Object.keys(w).length+' WAGR, '+Object.keys(f).length+' FFGOLF, '+Object.keys(sb).length+' scoreboard');
+  }catch(e){ console.warn('[live] fetch failed, fallback baked dicts:', e); }
+}
 // ================== STATE ==================
 let currentSnap = "current";
 let filters = { cclass:[], gender:[], division:[], search:"", club:[], academy:[], state:null };
@@ -3332,12 +3364,12 @@ let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[],
 function enrichIncoming(p) {
   const s = SCHOOLS[p.university] || {};
   // Override fr_rank with latest FFGOLF Juin 2026 if available
-  const currentFr = CURRENT_FFGOLF[p.name];
+  const currentFr = LIVE_FFGOLF[normName(p.name)] ?? CURRENT_FFGOLF[p.name];
   const commit = COMMIT_DATA[p.name];
   return {
     ...p,
     fr_rank: currentFr != null ? currentFr : p.fr_rank,
-    wagr: (CURRENT_WAGR[p.name] != null ? CURRENT_WAGR[p.name] : p.wagr),
+    wagr: (LIVE_WAGR[normName(p.name)] ?? CURRENT_WAGR[p.name] ?? p.wagr),
     state: s.state ?? "?",
     division: s.div ?? "?",
     div_full: divFull(s),
@@ -3349,7 +3381,7 @@ function enrichIncoming(p) {
     fr_rank_start: commit?.aug_start ?? null
   };
 }
-const INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
+let INCOMING_ENRICHED = INCOMING_PLAYERS.map(enrichIncoming);
 
 function applyIncomingFilters() {
   const q = incomingFilters.search.toLowerCase().trim();
@@ -3699,6 +3731,7 @@ rerender();
 rerenderIncoming();
 initComboboxes();
 renderStatsBanner();
+loadLiveRankings();
 </script>
 </body>
 </html>
