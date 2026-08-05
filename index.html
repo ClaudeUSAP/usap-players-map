@@ -2098,6 +2098,7 @@ const SCHOOLS = {
   "University of Delaware":           {state:"DE", div:"D1",   gov:"NCAA",  lat:39.68,  lng:-75.75},
   "University of Louisiana Monroe":   {state:"LA", div:"D1",   gov:"NCAA",  lat:32.53,  lng:-92.06},
   "Faulkner University":              {state:"AL", div:"NAIA", gov:"NAIA",  lat:32.34,  lng:-86.21},
+  "Texas A&M University-Victoria":    {state:"TX", div:"NAIA", gov:"NAIA",  lat:28.81,  lng:-97.00},
   "Ottawa University":                {state:"KS", div:"NAIA", gov:"NAIA",  lat:38.61,  lng:-95.27},
   "Ottawa University KS":             {state:"KS", div:"NAIA", gov:"NAIA",  lat:38.61,  lng:-95.27},
   "Roosevelt University":             {state:"IL", div:"D2",   gov:"NCAA",  lat:41.88,  lng:-87.63},
@@ -3389,7 +3390,12 @@ const INCOMING_PLAYERS = [
   {name:"Salomé Lumbaca", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of South Carolina", star:6, photo:`${SP}/ceb05c78-2cdc-47d9-974e-391fcb7c5625/profile-1763941371781.jpg`},
   {name:"Iris Pollet", sex:"Women", country:"France", iclass:"Fall 2027", university:"Arkansas State University", star:4, photo:`${SP}/2fbb4824-d3b4-47ba-b094-693b3e1183c3/profile-1764204642950.jpg`},
   {name:"Romane Tresnard", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of Louisiana Monroe", star:5, photo:`${SP}/53ec9326-76b6-43f0-b75a-3f7fd5132775/profile-1763941506673.jpg`},
-  {name:"Morgane Trincadeiro", sex:"Women", country:"France", iclass:"Fall 2027", university:"Barry University", star:4, photo:`${SP}/d052606a-e95e-432f-8409-9580c2b0f9a1/profile-1771337041461.jpg`}
+  {name:"Morgane Trincadeiro", sex:"Women", country:"France", iclass:"Fall 2027", university:"Barry University", star:4, photo:`${SP}/d052606a-e95e-432f-8409-9580c2b0f9a1/profile-1771337041461.jpg`},
+  // Transferts (absents de la sync SCOUT des engagés) — ajoutés manuellement 05/08/2026
+  {name:"Léo Molino", sex:"Men", country:"France", iclass:"Fall 2026", university:"Texas A&M University-Victoria", transfer:true},
+  {name:"Bogdan Sandrini", sex:"Men", country:"France", iclass:"Fall 2026", university:"University of Texas Rio Grande Valley", transfer:true},
+  {name:"Octavio Laurent", sex:"Men", country:"France", iclass:"Fall 2026", university:"Kansas State University", transfer:true},
+  {name:"Clara Willem", sex:"Women", country:"France", iclass:"Fall 2026", university:"Stetson University", transfer:true}
 ];
 
 let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[], academy:[] };
