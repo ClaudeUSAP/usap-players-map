@@ -2276,7 +2276,7 @@ const PLAYERS = [
   {name:"Bogdan Sandrini", country:"France", sex:"Men", signing:"Fall 2024", university:"University of Central Arkansas",
         fr_score:73.7, fr_rank_sb:976, so_score:72.8, so_rank_sb:849},
   {name:"Antoine Lianos", country:"France", sex:"Men", signing:"Fall 2024", university:"Sterling College",
-        fr_score:82.7, fr_rank_sb:1210, so_score:80, so_rank_sb:1032},
+        fr_score:82.7, fr_rank_sb:1210, so_score:80, so_rank_sb:1032, stopped:{y:2026, m:5}},
   {name:"Léo Molino", country:"France", sex:"Men", signing:"Fall 2024", university:"Oakland City University",
         fr_score:74.7, fr_rank_sb:268, so_score:72.2, so_rank_sb:117},
   {name:"Hugo Almeida", country:"France", sex:"Men", signing:"Fall 2024", university:"Chestnut Hill College",
@@ -2290,12 +2290,12 @@ const PLAYERS = [
   {name:"Ylan Guerin-Pozzalo", country:"France", sex:"Men", signing:"Fall 2024", university:"Florida Atlantic University", transfer:true,
     start_year:"Sophomore", stopped:{y:2025, m:5}},
   {name:"Joseph Linel", country:"France", sex:"Men", signing:"Fall 2024", university:"Odessa Junior College",
-        fr_score:74.3, fr_rank_sb:63, so_score:73.6, so_rank_sb:92},
+        fr_score:74.3, fr_rank_sb:63, so_score:73.6, so_rank_sb:92, stopped:{y:2026, m:5}},
   {name:"Thomas Romani", country:"Swiss/Italy", sex:"Men", signing:"Fall 2024", university:"University of West Georgia"},
   {name:"Simon Germain", country:"France", sex:"Men", signing:"Fall 2024", university:"CSU Monterey Bay",
         fr_score:75.7, so_score:73.7, so_rank_sb:335},
   // Edouard Cereto — Junior dès la rentrée Fall 2024, donc Senior en 2025-26
-  {name:"Edouard Cereto", country:"France", sex:"Men", signing:"Fall 2024", university:"Georgia Southern University", start_year:"Junior"},
+  {name:"Edouard Cereto", country:"France", sex:"Men", signing:"Fall 2024", university:"Georgia Southern University", start_year:"Junior", stopped:{y:2026, m:5}},
   // Maxime Lam original entry (Henderson State - début Fall 2024). Transfer to GW Fall 2025.
   {name:"Maxime Lam", country:"France", sex:"Men", signing:"Fall 2024", university:"Henderson State University",
         fr_score:71.5, fr_rank_sb:79, so_score:73.2, so_rank_sb:931},
@@ -2304,7 +2304,7 @@ const PLAYERS = [
   {name:"Loris Bonnetton Alban", country:"France", sex:"Men", signing:"Spring 2025", university:"Texas A&M University - San Antonio",
         fr_score:77.0, fr_rank_sb:511, so_score:76.6, so_rank_sb:646},
   // Oihan Silva — démarré Spring 2026 à Otero College (Freshman)
-  {name:"Oihan Silva", country:"France", sex:"Men", signing:"Spring 2026", university:"Otero College",
+  {name:"Oihan Silva", country:"France", sex:"Men", signing:"Spring 2026", university:"Otero College", start_year:"Sophomore",
     },
   // Jules Lauer — démarré Spring 2026 à College of Charleston (était dans Engagés Fall 2026, déplacé)
   {name:"Jules Lauer", country:"France", sex:"Men", signing:"Spring 2026", university:"College of Charleston", start_year:"Sophomore",
@@ -2332,7 +2332,7 @@ const PLAYERS = [
   {name:"Ali Elsayed", country:"France", sex:"Men", signing:"Fall 2025", university:"Lawrence Technological University",
         fr_score:75.2, fr_rank_sb:470},
   {name:"Gaspard Maréchal Dubourg", country:"France", sex:"Men", signing:"Fall 2025", university:"Southwestern Christian University",
-        fr_score:74.6, fr_rank_sb:389},
+        fr_score:74.6, fr_rank_sb:389, stopped:{y:2026, m:5}},
   {name:"Corentin Guilloux", country:"France", sex:"Men", signing:"Fall 2025", university:"Northern Illinois University",
         fr_score:73.9, fr_rank_sb:1265},
   {name:"Léo Testas", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
@@ -2354,7 +2354,7 @@ const PLAYERS = [
         fr_score:75.6, fr_rank_sb:572},
   {name:"Lucas Nicola", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
         fr_score:75, fr_rank_sb:298},
-  {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior"},
+  {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior", stopped:{y:2026, m:5}},
   {name:"Florian Simon", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Houston - Victoria",
         fr_score:74.9, fr_rank_sb:455},
   // Noah Vieilleville n'est jamais parti aux US — retiré de la liste
@@ -2362,11 +2362,11 @@ const PLAYERS = [
   {name:"Alexandre Genet", country:"France", sex:"Men", signing:"Fall 2025", university:"Wayland Baptist University", start_year:"Senior"},
   {name:"Faust Amat", country:"France", sex:"Men", signing:"Fall 2025", university:"Lewis University",
         fr_score:76.4, fr_rank_sb:926},
-  {name:"Fadi Burnet", country:"France", sex:"Men", signing:"Fall 2025", university:"Northwest Mississippi Community College",
+  {name:"Fadi Burnet", country:"France", sex:"Men", signing:"Fall 2025", university:"Northwest Mississippi Community College", stopped:{y:2026, m:5},
     },
   {name:"Andrea Matlega", country:"France", sex:"Men", signing:"Fall 2025", university:"Southwestern Christian University", transfer:true, start_year:"Senior"},
   {name:"Alexian Rouault", country:"France", sex:"Men", signing:"Fall 2025", university:"Mid America Nazarene University", transfer:true, start_year:"Senior"},
-  {name:"Gabriele Romani", country:"Italy/Switzerland", sex:"Men", signing:"Fall 2025", university:"Friends University", transfer:true, start_year:"5th year"},
+  {name:"Gabriele Romani", country:"Italy/Switzerland", sex:"Men", signing:"Fall 2025", university:"Friends University", transfer:true, start_year:"5th year", stopped:{y:2026, m:5}},
   // Cicala transfer UTRGV pour Junior year (Freshman+Sophomore à Faulkner)
   {name:"Rodolphe Cicala", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Texas Rio Grande Valley", transfer:true,
     start_year:"Junior"},
@@ -2405,7 +2405,7 @@ const PLAYERS = [
   {name:"Ambre Matlega", country:"France", sex:"Women", signing:"Fall 2024", university:"High Point University",
         fr_score:77.0, fr_rank_sb:961, so_score:75.8},
   {name:"Lauren Thompstone", country:"France", sex:"Women", signing:"Fall 2024", university:"Pennsylvania State University"},
-  {name:"Anaëlle Picot", country:"France", sex:"Women", signing:"Fall 2024", university:"Carson Newman University"},
+  {name:"Anaëlle Picot", country:"France", sex:"Women", signing:"Fall 2024", university:"Carson Newman University", stopped:{y:2026, m:5}},
   {name:"Lehane Louis-Dumond", country:"France", sex:"Women", signing:"Fall 2024", university:"Lee University",
         fr_score:74.7, fr_rank_sb:100, so_score:74.9, so_rank_sb:121},
   {name:"Melissa Gilloz", country:"Switzerland", sex:"Women", signing:"Fall 2024", university:"Seattle University"},
@@ -2485,7 +2485,7 @@ const PLAYERS = [
   {name:"Vadim Dejour", country:"France", sex:"Men", signing:"Fall 2026", university:"College of the Canyons"},
   {name:"Loïc Goethals", country:"Belgium", sex:"Men", signing:"Fall 2026", university:"Hesston College"},
   {name:"Alexandre Guiserix", country:"France", sex:"Men", signing:"Fall 2026", university:"Mount Mercy University"},
-  {name:"Axel Houdaille", country:"France", sex:"Men", signing:"Fall 2026", university:"Blue Mountain Christian University"},
+  {name:"Axel Houdaille", country:"France", sex:"Men", signing:"Fall 2026", university:"Blue Mountain Christian University", start_year:"Junior"},
   {name:"Melvil Jacquelin", country:"France", sex:"Men", signing:"Fall 2026", university:"California State U, Monterey Bay"},
   {name:"Corentin Jorat", country:"France", sex:"Men", signing:"Fall 2026", university:"Defiance College"},
   {name:"Leopold Kostylev", country:"Bulgaria", sex:"Men", signing:"Fall 2026", university:"Southwestern Community College - Iowa"},
@@ -2502,6 +2502,8 @@ const PLAYERS = [
   {name:"Tibo Van De Neste", country:"France", sex:"Men", signing:"Fall 2026", university:"King University"},
   {name:"Léo Molino", country:"France", sex:"Men", signing:"Fall 2026", university:"Texas A&M University-Victoria", transfer:true, start_year:"Junior"},
   {name:"Bogdan Sandrini", country:"France", sex:"Men", signing:"Fall 2026", university:"University of Texas Rio Grande Valley", transfer:true, start_year:"Junior"},
+
+  {name:"Jules De Brauwere", country:"France", sex:"Men", signing:"Fall 2026", university:"Kansas State University", transfer:true, start_year:"Sophomore"},
 
   // ==== WOMEN — Fall 2026 (Class of 2026, migrés depuis Engagés le 10/08/2026) ====
   {name:"Marie Bachelet", country:"France", sex:"Women", signing:"Fall 2026", university:"California State U, East Bay"},
