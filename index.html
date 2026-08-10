@@ -637,7 +637,7 @@ body {
 
     <div class="tabs">
       <button class="tab active" data-tab="us"><span data-i18n="tab_us">Joueurs aux US</span><span class="tab-count" id="tab-us-count">—</span></button>
-      <button class="tab" data-tab="incoming"><span data-i18n="tab_incoming">Engagés 2026 - 2027 - 2028</span><span class="tab-count" id="tab-incoming-count">—</span></button>
+      <button class="tab" data-tab="incoming"><span data-i18n="tab_incoming">Engagés 2027 - 2028</span><span class="tab-count" id="tab-incoming-count">—</span></button>
     </div>
 
     <div id="tab-us">
@@ -661,7 +661,6 @@ body {
       <span class="chip" data-filter="cclass" data-value="Junior">Junior</span>
       <span class="chip" data-filter="cclass" data-value="Sophomore">Sophomore</span>
       <span class="chip" data-filter="cclass" data-value="Freshman">Freshman</span>
-      <span class="chip" data-filter="cclass" data-value="Incoming">Incoming</span>
       <span class="chip" data-filter="cclass" data-value="Alumni">Alumni</span>
       <div class="divider"></div>
       <label data-i18n="gender">Genre :</label>
@@ -739,10 +738,8 @@ body {
 
     <div id="tab-incoming" style="display:none">
 
-      <div class="stats-banner" id="stats-banner"></div>
-
       <div class="note-box" id="incoming-note" data-i18n-html="incoming_note">
-        <strong>📋 Engagés Fall 2026 + Fall 2027 :</strong> joueurs qui ont signé avec une fac américaine et qui démarreront leur saison NCAA / NAIA / NJCAA en Fall 2026 ou Fall 2027. Source : Google Sheet "USAP Players - Committed".
+        <strong>📋 Engagés Fall 2027 + Fall 2028 :</strong> joueurs qui ont signé avec une fac américaine et qui démarreront leur saison NCAA / NAIA / NJCAA en Fall 2027 ou Fall 2028. Source : Google Sheet "USAP Players - Committed".
       </div>
 
       <div class="stats" id="stats-incoming"></div>
@@ -850,7 +847,7 @@ const T = {
     updated_label: 'Données mises à jour : ',
     rankings_btn: 'Tableau Ranking & Impact',
     tab_us: 'Joueurs aux US',
-    tab_incoming: 'Engagés 2026 - 2027 - 2028',
+    tab_incoming: 'Engagés 2027 - 2028',
     period: '📅 Période',
     snap_current: 'Current (Août 2026)',
     snap_2425: 'Season 2024/2025',
@@ -883,7 +880,7 @@ const T = {
     th_scoring: 'Scoring avg',
     th_sb_rank: 'Scoreboard Indiv. Ranking',
     th_fr_rank: 'Ranking FR',
-    incoming_note: '<strong>📋 Engagés Fall 2026 + Fall 2027 :</strong> joueurs qui ont signé avec une fac américaine et qui démarreront leur saison NCAA / NAIA / NJCAA en Fall 2026 ou Fall 2027. Source : Google Sheet "USAP Players - Committed".',
+    incoming_note: '<strong>📋 Engagés Fall 2027 + Fall 2028 :</strong> joueurs qui ont signé avec une fac américaine et qui démarreront leur saison NCAA / NAIA / NJCAA en Fall 2027 ou Fall 2028. Source : Google Sheet "USAP Players - Committed".',
     stat_players: 'Joueurs',
     stat_players_us: 'Joueurs aux US',
     stat_hf: 'Hommes / Femmes',
@@ -918,7 +915,7 @@ const T = {
     updated_label: 'Data updated: ',
     rankings_btn: 'Rankings & Impact Table',
     tab_us: 'Players in US',
-    tab_incoming: 'Committed 2026 - 2027 - 2028',
+    tab_incoming: 'Committed 2027 - 2028',
     period: '📅 Period',
     snap_current: 'Current (Août 2026)',
     snap_2425: 'Season 2024/2025',
@@ -951,7 +948,7 @@ const T = {
     th_scoring: 'Scoring avg',
     th_sb_rank: 'Scoreboard Indiv. Ranking',
     th_fr_rank: 'French Ranking',
-    incoming_note: '<strong>📋 Committed Fall 2026 + Fall 2027:</strong> players who have signed with a US college and will start their NCAA / NAIA / NJCAA season in Fall 2026 or Fall 2027. Source: Google Sheet "USAP Players - Committed".',
+    incoming_note: '<strong>📋 Committed Fall 2027 + Fall 2028:</strong> players who have signed with a US college and will start their NCAA / NAIA / NJCAA season in Fall 2027 or Fall 2028. Source: Google Sheet "USAP Players - Committed".',
     stat_players: 'Players',
     stat_players_us: 'Players in US',
     stat_hf: 'Men / Women',
@@ -3380,7 +3377,7 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
   });
 });
 
-// ================== INCOMING DATA (Engagés Fall 2026 + Fall 2027) ==================
+// ================== INCOMING DATA (Engagés Fall 2027 + Fall 2028) ==================
 
 // Helper photo URL
 const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images";
