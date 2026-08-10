@@ -2766,8 +2766,12 @@ function applyFilters(rows) {
   const acadSet = (filters.academy || []).map(normalizeMatch);
   const classSet = filters.cclass || [];
   return rows.filter(p => {
-    // Multi-select classe : si rien sélectionné = tous (alumni toujours affichés en gris sur map)
-    if (classSet.length > 0 && !classSet.includes(p.cclass)) return false;
+    // Multi-select classe : si rien sélectionné = tous SAUF alumni (alumni masqués par défaut, visibles seulement via le chip "Alumni")
+    if (classSet.length > 0) {
+      if (!classSet.includes(p.cclass)) return false;
+    } else if (p.cclass === 'Alumni') {
+      return false;
+    }
     if ((filters.gender || []).length > 0 && !filters.gender.includes(p.sex)) return false;
     if ((filters.division || []).length > 0 && !filters.division.includes(p.div_full)) return false;
     if (filters.state && p.state !== filters.state) return false;
