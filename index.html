@@ -1996,7 +1996,6 @@ const COMMIT_DATA = {
   "Paul Couston": {date:"02/2026", rank:214, aug_prior:240, aug_start:null},
   "Jules De Brauwere": {date:"12/2024", rank:56, aug_prior:78, aug_start:48},
   "Vadim Dejour": {date:"12/2025", rank:397, aug_prior:422, aug_start:null},
-  "Alexandre Guiserix": {date:"01/2026", rank:null, aug_prior:null, aug_start:null},
   "Melvil Jacquelin": {date:"10/2025", rank:109, aug_prior:99, aug_start:null},
   "Corentin Jorat": {date:"04/2026", rank:null, aug_prior:null, aug_start:null},
   "Théophile Lebrun": {date:"06/2026", rank:21, aug_prior:105, aug_start:null},
@@ -2337,7 +2336,7 @@ const PLAYERS = [
         fr_score:73.9, fr_rank_sb:1265},
   {name:"Léo Testas", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
         fr_score:74.5, fr_rank_sb:286},
-  {name:"Sacha Corlouer", country:"France", sex:"Men", signing:"Fall 2025", university:"Georgia Southwestern State University",
+  {name:"Sacha Corlouer", country:"France", sex:"Men", signing:"Spring 2026", university:"Georgia Southwestern State University",
     },
   {name:"Louis Delattre", country:"France", sex:"Men", signing:"Fall 2025", university:"Sterling College"},
   {name:"Elie Bennatan", country:"France", sex:"Men", signing:"Fall 2025", university:"Point Park University",
@@ -2411,6 +2410,8 @@ const PLAYERS = [
   {name:"Melissa Gilloz", country:"Switzerland", sex:"Women", signing:"Fall 2024", university:"Seattle University"},
   {name:"Amély Bochaton", country:"France", sex:"Women", signing:"Fall 2024", university:"Wingate University",
         fr_score:69.9, fr_rank_sb:1, so_score:69.9, so_rank_sb:1},
+  // Amély Bochaton — transfert University of Alabama pour Junior year (Fall 2026)
+  {name:"Amély Bochaton", country:"France", sex:"Women", signing:"Fall 2026", university:"University of Alabama", transfer:true, start_year:"Junior"},
   // Liza Bogard — partie des US Juin 2025 après 1 an (Freshman uniquement)
   {name:"Liza Bogard", country:"France", sex:"Women", signing:"Fall 2024", university:"Lawrence Tech University",
         fr_score:86.9, fr_rank_sb:454, stopped:{y:2025, m:6}},
@@ -2425,7 +2426,7 @@ const PLAYERS = [
   // Romane Poissonnier retirée — pas un placement USAP, sera réintégrée si elle apparaît dans le sheet "Players Committed"
   {name:"Aubane Statiotis", country:"France", sex:"Women", signing:"Fall 2025", university:"Eckerd College",
         fr_score:73.9, fr_rank_sb:59},
-  {name:"Inès Marty", country:"France", sex:"Women", signing:"Fall 2025", university:"Wingate University",
+  {name:"Inès Marty", country:"France", sex:"Women", signing:"Spring 2026", university:"Wingate University",
     },
   {name:"Clara Willem", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Cincinnati",
         fr_score:75.8, fr_rank_sb:864},
@@ -2468,7 +2469,7 @@ const PLAYERS = [
     start_year:"Sophomore",
         so_score:77.5},
   // NOUVELLE — Sara Brentcheneff, University of Arkansas NCAA D1 (Freshman 25/26, scoring 71.0 #69 SB)
-  {name:"Sara Brentcheneff", country:"France", sex:"Women", signing:"Fall 2025", university:"University of Arkansas",
+  {name:"Sara Brentcheneff", country:"France", sex:"Women", signing:"Spring 2026", university:"University of Arkansas",
     fr_score:71.0, fr_rank_sb:69},
 
   // ==== MEN — Fall 2026 (Class of 2026, migrés depuis Engagés le 10/08/2026) ====
@@ -2484,13 +2485,11 @@ const PLAYERS = [
   {name:"Paul Couston", country:"France", sex:"Men", signing:"Fall 2026", university:"Bethel University (IN)"},
   {name:"Vadim Dejour", country:"France", sex:"Men", signing:"Fall 2026", university:"College of the Canyons"},
   {name:"Loïc Goethals", country:"Belgium", sex:"Men", signing:"Fall 2026", university:"Hesston College"},
-  {name:"Alexandre Guiserix", country:"France", sex:"Men", signing:"Fall 2026", university:"Mount Mercy University"},
   {name:"Axel Houdaille", country:"France", sex:"Men", signing:"Fall 2026", university:"Blue Mountain Christian University", start_year:"Junior"},
   {name:"Melvil Jacquelin", country:"France", sex:"Men", signing:"Fall 2026", university:"California State U, Monterey Bay"},
   {name:"Corentin Jorat", country:"France", sex:"Men", signing:"Fall 2026", university:"Defiance College"},
   {name:"Leopold Kostylev", country:"Bulgaria", sex:"Men", signing:"Fall 2026", university:"Southwestern Community College - Iowa"},
   {name:"Théophile Lebrun", country:"France", sex:"Men", signing:"Fall 2026", university:"East Tennessee State University"},
-  {name:"Sacha Molino", country:"France", sex:"Men", signing:"Fall 2026", university:"MidAmerica Nazarene University"},
   {name:"Maxime Olivo", country:"France", sex:"Men", signing:"Fall 2026", university:"Wayland Baptist University"},
   {name:"Edouard Petit", country:"France", sex:"Men", signing:"Fall 2026", university:"Wayland Baptist University"},
   {name:"Jan Porchet", country:"France", sex:"Men", signing:"Fall 2026", university:"Park University", transfer:true, start_year:"Junior"},
@@ -2521,13 +2520,17 @@ const PLAYERS = [
   {name:"Louise Krawiec", country:"France", sex:"Women", signing:"Fall 2026", university:"East Carolina University"},
   {name:"Bertille Lorin", country:"France", sex:"Women", signing:"Fall 2026", university:"Redlands Community College"},
   {name:"Anne Charlotte Otto", country:"France", sex:"Women", signing:"Fall 2026", university:"Florida Southern College"},
-  {name:"Salomé Paumelle", country:"France", sex:"Women", signing:"Fall 2026", university:"Texas A&M University-Texarkana"},
   {name:"Manon Petitcolas", country:"France", sex:"Women", signing:"Fall 2026", university:"University of Alabama"},
   {name:"Juliette Saillour", country:"France", sex:"Women", signing:"Fall 2026", university:"Texas Wesleyan University"},
   {name:"Sarah Sayah", country:"France", sex:"Women", signing:"Fall 2026", university:"Weatherford College"},
   {name:"Melliyal Schmitt", country:"France", sex:"Women", signing:"Fall 2026", university:"University of Arkansas, Fayetteville"},
   {name:"Mila Tamisier", country:"France", sex:"Women", signing:"Fall 2026", university:"University of North Carolina"},
   {name:"Giselle Zhao", country:"France", sex:"Women", signing:"Fall 2026", university:"University of California, Berkeley"},
+
+  // Transferts ajoutés manuellement (absents de la sync SCOUT des engagés) — 10/08/2026
+  {name:"Justine Bayle", country:"France", sex:"Women", signing:"Fall 2026", university:"Rice University", transfer:true, start_year:"Junior"},
+  {name:"Céleste Mangeat", country:"France", sex:"Women", signing:"Fall 2026", university:"Coastal Carolina University", transfer:true, start_year:"Sophomore"},
+  {name:"Romane Poissonnier", country:"France", sex:"Women", signing:"Fall 2026", university:"University of North Carolina - Chapel Hill", transfer:true, start_year:"Sophomore"},
 ];
 
 // ================== SNAPSHOTS ==================
@@ -3389,6 +3392,10 @@ const INCOMING_PLAYERS = [
 
   // Margot Lamothe — démarre Janvier 2027 (Spring), recommitted 10/08/2026
   {name:"Margot Lamothe", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M International", star:3, photo:`${SP}/c02c4c29-20d5-4cfd-8a2f-f5756d1718f1/profile-1764028151017.jpg`},
+  // Salomé Paumelle — démarre Spring 2027, rebasculée committed le 10/08/2026
+  {name:"Salomé Paumelle", sex:"Women", country:"France", iclass:"Fall 2026", university:"Texas A&M University-Texarkana", star:1, photo:`${SP}/4825bfb7-b5a6-4aab-9817-1dea8024bf6a/profile-1763941319385.jpg`},
+  // Sacha Molino — démarre Spring 2027, rebasculé committed le 10/08/2026
+  {name:"Sacha Molino", sex:"Men", country:"France", iclass:"Fall 2026", university:"MidAmerica Nazarene University", star:3, photo:`${SP}/6bb889fd-20f8-44a6-885f-8448163c0c54/profile-1763941442366.jpg`},
 
   // ===== Fall 2027 =====
   {name:"Paolo Fazzone", sex:"Men", country:"Switzerland", iclass:"Fall 2027", university:"University of Texas Rio Grande Valley", star:6, photo:`${SP}/bae23f67-7e85-4499-a36c-2446cea178bc/profile-1763942128511.jpg`},
