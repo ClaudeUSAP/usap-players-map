@@ -325,6 +325,12 @@ body {
 .pin:hover { stroke-width: 2.2; }
 .pin-m { fill: var(--usap-navy); }
 .pin-w { fill: var(--usap-orange); }
+.pin-cluster { stroke: #fff; stroke-width: 2; cursor: pointer; transition: all .15s; }
+.pin-cluster:hover { stroke-width: 3; }
+.pin-cluster-m { fill: var(--usap-navy); }
+.pin-cluster-w { fill: var(--usap-orange); }
+.pin-cluster-alumni { fill: #9aa3b8; }
+.pin-cluster-label { font-size: 10px; font-weight: 800; fill: #fff; pointer-events: none; user-select: none; font-family: inherit; }
 
 .tooltip {
   position: absolute;
@@ -2967,15 +2973,29 @@ function renderMap(rows) {
   const playerToCluster = new Map();
   clusters.forEach((c, idx) => c.forEach(item => playerToCluster.set(item.player, idx)));
 
-  pinsData.forEach(({x, y, player}) => {
-    const isAlumni = player.cclass === 'Alumni';
-    const sexClass = player.sex === "Men" ? "pin-m" : "pin-w";
-    const cls = isAlumni ? `pin pin-alumni` : `pin ${sexClass}`;
-    const cidx = playerToCluster.get(player);
-    const dataKey = `${player.name}|${player.signing}|${player.transfer?'1':'0'}|${player.university}`;
-    // Hit-area transparent r=14 derrière chaque pin → touch target généreux (gain mobile)
-    html += `<circle class="pin-hit" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="14" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
-    html += `<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
+  // Pins isolés = petit cercle individuel. Pins groupés (≥2, même s'ils sont d'écoles différentes
+  // mais géographiquement proches) = un seul badge avec le nombre, pour rester lisible.
+  clusters.forEach((c, cidx) => {
+    const cx = c.reduce((s, q) => s + q.x, 0) / c.length;
+    const cy = c.reduce((s, q) => s + q.y, 0) / c.length;
+    if (c.length === 1) {
+      const player = c[0].player;
+      const isAlumni = player.cclass === 'Alumni';
+      const sexClass = player.sex === "Men" ? "pin-m" : "pin-w";
+      const cls = isAlumni ? `pin pin-alumni` : `pin ${sexClass}`;
+      const dataKey = `${player.name}|${player.signing}|${player.transfer?'1':'0'}|${player.university}`;
+      html += `<circle class="pin-hit" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="14" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
+      html += `<circle class="${cls}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
+    } else {
+      const players = c.map(q => q.player);
+      const allAlumni = players.every(pl => pl.cclass === 'Alumni');
+      const allWomen = players.every(pl => pl.sex === 'Women');
+      const badgeCls = allAlumni ? 'pin-cluster-alumni' : (allWomen ? 'pin-cluster-w' : 'pin-cluster-m');
+      const r = Math.min(8 + players.length * 0.9, 15);
+      html += `<circle class="pin-hit" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${(r + 4).toFixed(1)}" data-cluster="${cidx}"></circle>`;
+      html += `<circle class="pin pin-cluster ${badgeCls}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" data-cluster="${cidx}"></circle>`;
+      html += `<text class="pin-cluster-label" x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" text-anchor="middle" dominant-baseline="central">${players.length}</text>`;
+    }
   });
 
   svg.innerHTML = html;
@@ -3543,11 +3563,22 @@ function renderIncomingMap(rows) {
   const playerToCluster = new Map();
   clusters.forEach((c, idx) => c.forEach(item => playerToCluster.set(item.player, idx)));
 
-  pinsData.forEach(({x, y, player}) => {
-    const cls = player.sex === "Men" ? "pin-m" : "pin-w";
-    const cidx = playerToCluster.get(player);
-    const dataKey = `${player.name}|${player.iclass}|${player.university}`;
-    html += `<circle class="pin ${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
+  clusters.forEach((c, cidx) => {
+    const cx = c.reduce((s, q) => s + q.x, 0) / c.length;
+    const cy = c.reduce((s, q) => s + q.y, 0) / c.length;
+    if (c.length === 1) {
+      const player = c[0].player;
+      const cls = player.sex === "Men" ? "pin-m" : "pin-w";
+      const dataKey = `${player.name}|${player.iclass}|${player.university}`;
+      html += `<circle class="pin ${cls}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="5.5" data-key="${dataKey}" data-cluster="${cidx}"></circle>`;
+    } else {
+      const players = c.map(q => q.player);
+      const allWomen = players.every(pl => pl.sex === 'Women');
+      const badgeCls = allWomen ? 'pin-cluster-w' : 'pin-cluster-m';
+      const r = Math.min(8 + players.length * 0.9, 15);
+      html += `<circle class="pin pin-cluster ${badgeCls}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${r.toFixed(1)}" data-cluster="${cidx}"></circle>`;
+      html += `<text class="pin-cluster-label" x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" text-anchor="middle" dominant-baseline="central">${players.length}</text>`;
+    }
   });
 
   svg.innerHTML = html;
