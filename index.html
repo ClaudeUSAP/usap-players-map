@@ -1103,9 +1103,8 @@ function openPlayerModal(p, opts={}) {
     if (histScores['2024/2025'] && histScores['2024/2025'].s != null) {
       points.push({label:yearLbl(points.length+1), season:'2024-2025', score:histScores['2024/2025'].s, rank:histScores['2024/2025'].r});
     }
-    const cur = CURRENT_SCOREBOARD[p.name];
-    if (cur && cur.s != null) {
-      points.push({label:yearLbl(points.length+1), season:'2025-2026', score:cur.s, rank:cur.r});
+    if (histScores['2025/2026'] && histScores['2025/2026'].s != null) {
+      points.push({label:yearLbl(points.length+1), season:'2025-2026', score:histScores['2025/2026'].s, rank:histScores['2025/2026'].r});
     }
     if (points.length >= 2) {
       // Build SVG line chart
@@ -1145,8 +1144,7 @@ function openPlayerModal(p, opts={}) {
   // SB Ranking history (joueurs aux US — multi-saisons, mention transferts)
   if (!isIncoming) {
     const histScores = HISTORICAL_SCOREBOARD[p.name] || {};
-    const cur = CURRENT_SCOREBOARD[p.name];
-    const hasAny = (histScores['2023/2024']?.r != null) || (histScores['2024/2025']?.r != null) || (cur?.r != null);
+    const hasAny = (histScores['2023/2024']?.r != null) || (histScores['2024/2025']?.r != null) || (histScores['2025/2026']?.r != null);
     if (hasAny) {
       // Get all PLAYERS entries with same name to determine school per season (handles transfers)
       const allEntries = (typeof PLAYERS !== 'undefined' ? PLAYERS : []).filter(x => x.name === p.name);
@@ -1164,7 +1162,7 @@ function openPlayerModal(p, opts={}) {
       if (histScores['2024/2025']?.r != null) {
         seasons.push({key:'2024/2025', startY:2024, rank:histScores['2024/2025'].r, label:yearLbl(seasons.length+1)});
       }
-      if (cur?.r != null) seasons.push({key:'2025/2026', startY:2025, rank:cur.r, label:yearLbl(seasons.length+1), current:true});
+      if (histScores['2025/2026']?.r != null) seasons.push({key:'2025/2026', startY:2025, rank:histScores['2025/2026'].r, label:yearLbl(seasons.length+1), current:true});
 
       body += '<div class="modal-section"><h3>' + (lang==='en'?'US ranking history (Scoreboard)':'Historique ranking US (Scoreboard)') + '</h3>';
       let prevSchool = null;
@@ -1869,38 +1867,83 @@ function buildClubAcademyLists() {
 // Format: { name: { "season_label": {r, s, tr} } } — utilisé pour les snaps Mai 2025 et Mai 2024
 // Note: pour les TRANSFERS, le player_id Scoreboard change avec l'école → données historiques fragmentées (uniquement disponibles si le joueur n'a pas changé d'école)
 const HISTORICAL_SCOREBOARD = {
-  // Class 2023 actives (Junior 2025/26)
-  "Michael Najburg":{"2023/2024":{r:null,s:79.4,tr:6}},
-  "Maylis Lamoure":{"2023/2024":{r:134,s:71.4,tr:33},"2024/2025":{r:74,s:71.5,tr:41}},
-  "Taline Kyoumjian":{"2023/2024":{r:992,s:77.3,tr:24},"2024/2025":{r:null,s:77.0,tr:12}},
-  // Class 2024 actives (Sophomore 2025/26) — Freshman 2024/25 from Scoreboard
-  "Samuel Guigui-Baruchel":{"2024/2025":{r:368,s:74.0,tr:18}},
+  "Michael Najburg":{"2023/2024":{r:null,s:79.4,tr:6},"2025/2026":{r:null,s:77.7,tr:8}},
+  "Maylis Lamoure":{"2023/2024":{r:134,s:71.4,tr:33},"2024/2025":{r:74,s:71.5,tr:41},"2025/2026":{r:168,s:72,tr:32}},
+  "Taline Kyoumjian":{"2023/2024":{r:992,s:77.3,tr:24},"2024/2025":{r:null,s:77,tr:12},"2025/2026":{r:1030,s:78.2,tr:17}},
+  "Samuel Guigui-Baruchel":{"2024/2025":{r:368,s:74,tr:18},"2025/2026":{r:476,s:74.4,tr:12}},
   "Bogdan Sandrini":{"2024/2025":{r:958,s:73.8,tr:33}},
   "Antoine Lianos":{"2024/2025":{r:1149,s:82.6,tr:8}},
   "Léo Molino":{"2024/2025":{r:215,s:74.4,tr:23}},
-  "Hugo Almeida":{"2024/2025":{r:1119,s:80.0,tr:16}},
-  "Alois Casalonga":{"2024/2025":{r:347,s:73.7,tr:23}},
+  "Hugo Almeida":{"2024/2025":{r:1119,s:80,tr:16},"2025/2026":{r:null,s:77.8,tr:9}},
+  "Alois Casalonga":{"2024/2025":{r:347,s:73.7,tr:23},"2025/2026":{r:177,s:72.8,tr:28}},
   "Joseph Linel":{"2024/2025":{r:59,s:74.5,tr:33}},
-  "Thomas Romani":{"2024/2025":{r:1321,s:75.3,tr:20}},
-  "Simon Germain":{"2024/2025":{r:null,s:75.8,tr:3}},
-  "Edouard Cereto":{"2024/2025":{r:681,s:73.1,tr:26}}, // Junior year (start_year:Junior)
-  "Faustine Errecade":{"2024/2025":{r:null,s:null,tr:null}}, // No data scraped
-  "Camille Rosier":{"2024/2025":{r:1134,s:79.0,tr:26}},
-  "Anna Pillard":{"2024/2025":{r:297,s:73.6,tr:30}},
-  "Emma Leroy-Fabry":{"2024/2025":{r:724,s:75.7,tr:32}},
-  "Ambre Matlega":{"2024/2025":{r:920,s:77.1,tr:21}},
-  "Lauren Thompstone":{"2024/2025":{r:925,s:77.5,tr:23}},
-  "Anaëlle Picot":{"2024/2025":{r:259,s:77.4,tr:29}},
-  "Lehane Louis-Dumond":{"2024/2025":{r:90,s:74.7,tr:30}},
-  "Melissa Gilloz":{"2024/2025":{r:1422,s:80.5,tr:15}},
-  "Amély Bochaton":{"2024/2025":{r:1,s:70.3,tr:38}}, // #1 NCAA D2 women DEUX ANNÉES DE SUITE
-  // Spring 2025 (Sophomore 2025/26) — Freshman partial 2024/25
-  "Loris Bonnetton Alban":{"2024/2025":{r:540,s:77.3,tr:21}},
-  "Anna Olesen":{"2024/2025":{r:null,s:78.3,tr:14}},
-  // 5th year + alumni — scrapé Mai 2026
+  "Thomas Romani":{"2024/2025":{r:1321,s:75.3,tr:20},"2025/2026":{r:1411,s:75,tr:31}},
+  "Simon Germain":{"2024/2025":{r:null,s:75.8,tr:3},"2025/2026":{r:228,s:73.2,tr:21}},
+  "Edouard Cereto":{"2024/2025":{r:681,s:73.1,tr:26}},
+  "Faustine Errecade":{"2024/2025":{r:null,s:null,tr:null},"2025/2026":{r:null,s:79,tr:10}},
+  "Camille Rosier":{"2024/2025":{r:1134,s:79,tr:26},"2025/2026":{r:1066,s:77.7,tr:26}},
+  "Anna Pillard":{"2024/2025":{r:297,s:73.6,tr:30},"2025/2026":{r:317,s:73.2,tr:32}},
+  "Emma Leroy-Fabry":{"2024/2025":{r:724,s:75.7,tr:32},"2025/2026":{r:null,s:77,tr:14}},
+  "Ambre Matlega":{"2024/2025":{r:920,s:77.1,tr:21},"2025/2026":{r:null,s:77.3,tr:11}},
+  "Lauren Thompstone":{"2024/2025":{r:925,s:77.5,tr:23},"2025/2026":{r:525,s:74.5,tr:18}},
+  "Anaëlle Picot":{"2024/2025":{r:259,s:77.4,tr:29},"2025/2026":{r:45,s:74.2,tr:29}},
+  "Lehane Louis-Dumond":{"2024/2025":{r:90,s:74.7,tr:30},"2025/2026":{r:260,s:77.7,tr:27}},
+  "Melissa Gilloz":{"2024/2025":{r:1422,s:80.5,tr:15},"2025/2026":{r:1062,s:78.3,tr:23}},
+  "Amély Bochaton":{"2024/2025":{r:1,s:70.3,tr:38},"2025/2026":{r:1,s:69.1,tr:41}},
+  "Loris Bonnetton Alban":{"2024/2025":{r:540,s:77.3,tr:21},"2025/2026":{r:747,s:77.8,tr:18}},
+  "Anna Olesen":{"2024/2025":{r:null,s:78.3,tr:14},"2025/2026":{r:1131,s:78.4,tr:21}},
   "Gabriele Romani":{"2023/2024":{r:null,s:73.6,tr:6},"2024/2025":{r:null,s:75.7,tr:8}},
   "Jules Gentil":{"2023/2024":{r:1385,s:74.8,tr:17}},
-  "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}}
+  "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}},
+  "Faust Amat":{"2025/2026":{r:null,s:77.6,tr:9}},
+  "Elie Bennatan":{"2025/2026":{r:1268,s:82.5,tr:14}},
+  "Rafael Bobo-Lloret":{"2025/2026":{r:620,s:72.2,tr:33}},
+  "Maxence Bonnet":{"2025/2026":{r:261,s:73.3,tr:26}},
+  "Fadi Burnet":{"2025/2026":{r:314,s:78.7,tr:11}},
+  "Martin Chaney":{"2025/2026":{r:575,s:76.6,tr:24}},
+  "Rodolphe Cicala":{"2025/2026":{r:669,s:72.6,tr:36}},
+  "Charles Cirier":{"2025/2026":{r:null,s:75.9,tr:3}},
+  "Tom Clarens":{"2025/2026":{r:410,s:75.9,tr:17}},
+  "Sacha Corlouer":{"2025/2026":{r:22,s:70.8,tr:24}},
+  "Jules De Brauwere":{"2025/2026":{r:null,s:70.9,tr:32}},
+  "Louis Delattre":{"2025/2026":{r:1207,s:82.3,tr:15}},
+  "Gabriel Delaval":{"2025/2026":{r:581,s:75.7,tr:24}},
+  "Gabriel Dulon-Villoslada":{"2025/2026":{r:752,s:72.8,tr:30}},
+  "Hugo Duquaine":{"2025/2026":{r:19,s:71.9,tr:30}},
+  "Ali Elsayed":{"2025/2026":{r:782,s:77.6,tr:15}},
+  "Corentin Guilloux":{"2025/2026":{r:1302,s:74.5,tr:20}},
+  "Alphonse Hermansson":{"2025/2026":{r:408,s:74.1,tr:30}},
+  "Jules Lauer":{"2025/2026":{r:356,s:71.3,tr:21}},
+  "Octavio Laurent":{"2025/2026":{r:null,s:69.8,tr:35}},
+  "Gaspard Maréchal Dubourg":{"2025/2026":{r:196,s:74,tr:12}},
+  "Lucas Nicola":{"2025/2026":{r:464,s:77.3,tr:24}},
+  "Lucas Raoul":{"2025/2026":{r:1826,s:77.5,tr:20}},
+  "Matis Sayah":{"2025/2026":{r:null,s:85.3,tr:8}},
+  "Oihan Silva":{"2025/2026":{r:223,s:81.3,tr:12}},
+  "Florian Simon":{"2025/2026":{r:253,s:74.3,tr:27}},
+  "Hugo Soubran":{"2025/2026":{r:950,s:80.2,tr:23}},
+  "Léo Testas":{"2025/2026":{r:58,s:72.5,tr:24}},
+  "Amaury Wouters":{"2025/2026":{r:252,s:74.7,tr:20}},
+  "Justine Bayle":{"2025/2026":{r:null,s:72.9,tr:24}},
+  "Sara Brentcheneff":{"2025/2026":{r:69,s:71,tr:26}},
+  "Fantine Cabry":{"2025/2026":{r:92,s:74.8,tr:28}},
+  "Enora Castillon":{"2025/2026":{r:37,s:84.6,tr:19}},
+  "Maeva Constantinoff":{"2025/2026":{r:528,s:89.7,tr:20}},
+  "Juliette Daviau":{"2025/2026":{r:391,s:78.5,tr:18}},
+  "Lou Fourdan":{"2025/2026":{r:130,s:75.5,tr:32}},
+  "Tina Genoulaz":{"2025/2026":{r:573,s:74.8,tr:27}},
+  "Mahé Happiette":{"2025/2026":{r:667,s:82.3,tr:22}},
+  "Clara Ledun":{"2025/2026":{r:238,s:77.1,tr:22}},
+  "Céleste Mangeat":{"2025/2026":{r:null,s:75.5,tr:6}},
+  "Inès Marty":{"2025/2026":{r:null,s:76.1,tr:8}},
+  "Camille Padieu":{"2025/2026":{r:294,s:77.6,tr:26}},
+  "Jeanne Pagnier":{"2025/2026":{r:622,s:75.2,tr:18}},
+  "Romane Poissonnier":{"2025/2026":{r:null,s:73.7,tr:30}},
+  "Cloé Poizac":{"2025/2026":{r:928,s:76.8,tr:36}},
+  "Zoé Rubichon":{"2025/2026":{r:672,s:75.4,tr:30}},
+  "Aubane Statiotis":{"2025/2026":{r:30,s:73.8,tr:32}},
+  "Manon Verret":{"2025/2026":{r:139,s:75.5,tr:37}},
+  "Clara Willem":{"2025/2026":{r:null,s:76,tr:31}}
 };
 
 // ================== CURRENT FFGOLF RANKINGS (Août 2026) ==================
