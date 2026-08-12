@@ -683,17 +683,11 @@ body {
       <span class="chip" data-filter="division" data-value="NJCAA D2">NJCAA D2</span>
       <div class="divider"></div>
       <input type="text" class="search-input" id="search" data-i18n-placeholder="search_placeholder" placeholder="Rechercher un joueur ou une école…">
-      <div class="combobox" data-cb="club">
-        <input type="text" class="search-input filter-club cb-input" id="filter-club" data-i18n-placeholder="filter_club_ph" placeholder="Club français…" autocomplete="off">
-        <button type="button" class="cb-clear" data-cb-clear="club" tabindex="-1">×</button>
-        <div class="cb-options" id="cb-options-club"></div>
-      </div>
       <div class="combobox" data-cb="academy">
         <input type="text" class="search-input filter-club cb-input" id="filter-academy" data-i18n-placeholder="filter_academy_ph" placeholder="Académie / Centre…" autocomplete="off">
         <button type="button" class="cb-clear" data-cb-clear="academy" tabindex="-1">×</button>
         <div class="cb-options" id="cb-options-academy"></div>
       </div>
-      <span class="club-counter" id="club-counter" style="display:none"></span>
     </div>
 
     <section class="map-section">
@@ -771,17 +765,11 @@ body {
         <span class="chip" data-filter-in="idivision" data-value="NJCAA D2">NJCAA D2</span>
         <div class="divider"></div>
         <input type="text" class="search-input" id="search-incoming" data-i18n-placeholder="search_placeholder" placeholder="Rechercher un joueur ou une école…">
-        <div class="combobox" data-cb="club-incoming">
-          <input type="text" class="search-input filter-club cb-input" id="filter-club-incoming" data-i18n-placeholder="filter_club_ph" placeholder="Club français…" autocomplete="off">
-          <button type="button" class="cb-clear" data-cb-clear="club-incoming" tabindex="-1">×</button>
-          <div class="cb-options" id="cb-options-club-incoming"></div>
-        </div>
         <div class="combobox" data-cb="academy-incoming">
           <input type="text" class="search-input filter-club cb-input" id="filter-academy-incoming" data-i18n-placeholder="filter_academy_ph" placeholder="Académie / Centre…" autocomplete="off">
           <button type="button" class="cb-clear" data-cb-clear="academy-incoming" tabindex="-1">×</button>
           <div class="cb-options" id="cb-options-academy-incoming"></div>
         </div>
-        <span class="club-counter" id="club-counter-incoming" style="display:none"></span>
       </div>
 
       <section class="map-section">
@@ -3312,9 +3300,7 @@ function initComboboxes() {
   const inCounts = buildCounts(inNames);
 
   const configs = [
-    {key:'club',            inputId:'filter-club',           optsId:'cb-options-club',           values:lists.clubs,     counts:usCounts.clubC, target:filters,         rerender:'rerender'},
     {key:'academy',         inputId:'filter-academy',        optsId:'cb-options-academy',        values:lists.academies, counts:usCounts.acadC, target:filters,         rerender:'rerender'},
-    {key:'club-incoming',   inputId:'filter-club-incoming',  optsId:'cb-options-club-incoming',  values:lists.clubs,     counts:inCounts.clubC, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'club'},
     {key:'academy-incoming',inputId:'filter-academy-incoming',optsId:'cb-options-academy-incoming',values:lists.academies,counts:inCounts.acadC, target:incomingFilters, rerender:'rerenderIncoming', stateKey:'academy'},
   ];
 
