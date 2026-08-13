@@ -2758,7 +2758,7 @@ function normName(s){return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,
 let LIVE_WAGR={}, LIVE_FFGOLF={}, LIVE_SB={};
 async function loadLiveRankings(){
   try{
-    const KEY="sb_publishable_MK8F6_0QgbnuNWPN-0enOw_qyhTQmXs";
+    const KEY="sb_publishable_oN61cjjLcWj8YOKSFeZ5Zg__lnLvE-E";
     const r=await fetch("https://bfxhruvkzidvznsyyryp.supabase.co/rest/v1/rpc/list_map_rankings",
       {method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:"{}"});
     if(!r.ok) throw new Error("HTTP "+r.status);
