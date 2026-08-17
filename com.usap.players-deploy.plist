@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.usap.players-deploy</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/nicolas/Documents/Claude/Artifacts/usap-players-ncaa/deploy.sh</string>
+    <string>Auto-deploy on file change</string>
+  </array>
+
+  <key>WatchPaths</key>
+  <array>
+    <string>/Users/nicolas/Documents/Claude/Artifacts/usap-players-ncaa/index.html</string>
+  </array>
+
+  <key>StandardOutPath</key>
+  <string>/Users/nicolas/Documents/Claude/Artifacts/usap-players-ncaa/deploy.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/nicolas/Documents/Claude/Artifacts/usap-players-ncaa/deploy.err.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <key>HOME</key>
+    <string>/Users/nicolas</string>
+    <key>SSH_AUTH_SOCK</key>
+    <string>/private/tmp/com.apple.launchd.SSH/Listeners</string>
+  </dict>
+
+  <key>ThrottleInterval</key>
+  <integer>10</integer>
+
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>
