@@ -1762,10 +1762,12 @@ const TEAM_RANKS = {
   "Giselle Zhao":{tr:48,tn:285,tp:2,tt:5,d:"D1"}
 };
 let LIVE_TEAM = {}; // rempli par loadLiveRankings() si le RPC SCOUT expose les colonnes team
+let LIVE_TEAM_ACTIVE = false; // true dès que SCOUT fournit les colonnes team → SCOUT fait foi (vide = vide)
 let _TEAM_IDX = null;
 function getTeamRank(name) {
   const k = normName(name);
   if (LIVE_TEAM[k]) return LIVE_TEAM[k];
+  if (LIVE_TEAM_ACTIVE) return null;
   if (!_TEAM_IDX) { _TEAM_IDX = {}; for (const n in TEAM_RANKS) _TEAM_IDX[normName(n)] = TEAM_RANKS[n]; }
   return _TEAM_IDX[k] || null;
 }
@@ -2612,7 +2614,7 @@ const PLAYERS = [
         fr_score:75.6, fr_rank_sb:572},
   {name:"Lucas Nicola", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
         fr_score:75, fr_rank_sb:298},
-  {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior", stopped:{y:2026, m:5}},
+  {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior"},
   {name:"Florian Simon", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Houston - Victoria",
         fr_score:74.9, fr_rank_sb:455},
   // Noah Vieilleville n'est jamais parti aux US — retiré de la liste
@@ -2887,11 +2889,12 @@ function getScoreAtSnap(p, snapDate, snapKey) {
   if (snapKey === 'current') {
     const baked = CURRENT_SCOREBOARD[p.name] || null;
     const live = LIVE_SB[normName(p.name)] || null;
-    const s = (live && live.s != null) ? live.s : (baked ? baked.s : null);
-    const rk = (live && live.r != null) ? live.r : (baked ? baked.r : null);
-    if (s != null) {
+    const src = live || baked;
+    if (src) {
+      // Saison en cours : SCOUT/Scoreboard fait foi. Pas encore classé cette saison → vide (pas de repli sur l'an dernier)
+      if (src.s == null && src.r == null) return null;
       const cclass = getClassAtSnap(p, snapDate);
-      return { score: s, rank: rk, label: CLASS_LABEL[cclass] || '', rounds: baked ? baked.tr : null };
+      return { score: src.s ?? null, rank: src.r ?? null, label: CLASS_LABEL[cclass] || '', rounds: src.tr ?? null };
     }
   }
   // Pour les snaps historiques, prefer HISTORICAL_SCOREBOARD si dispo
@@ -2998,9 +3001,12 @@ async function loadLiveRankings(){
       if(okInt(x.french_adult_ranking)) f[k]=parseInt(x.french_adult_ranking,10);
       const rr=okInt(x.scoreboard_current_rank)?parseInt(x.scoreboard_current_rank,10):null;
       const ss=okNum(x.scoreboard_current_score)?parseFloat(x.scoreboard_current_score):null;
-      if(rr!=null||ss!=null) sb[k]={r:rr,s:ss};
+      const tr=okInt(x.scoreboard_current_rounds)?parseInt(x.scoreboard_current_rounds,10):null;
+      // in_college : la valeur SCOUT fait foi, même vide (pas encore classé cette saison = blanc)
+      if(x.status==='in_college' || rr!=null || ss!=null) sb[k]={r:rr,s:ss,tr:tr};
     }
     const lt={};
+    if(rows.some(x=>'scoreboard_team_rank' in x)) LIVE_TEAM_ACTIVE=true;
     for(const x of rows){
       if(okInt(x.scoreboard_team_rank)){
         lt[normName(x.first_name+' '+x.last_name)]={tr:parseInt(x.scoreboard_team_rank,10), tn:okInt(x.scoreboard_team_rank_of)?parseInt(x.scoreboard_team_rank_of,10):null,
@@ -3012,6 +3018,39 @@ async function loadLiveRankings(){
     rerender(); rerenderIncoming();
     console.info('[live] rankings loaded: '+Object.keys(w).length+' WAGR, '+Object.keys(f).length+' FFGOLF, '+Object.keys(sb).length+' scoreboard');
   }catch(e){ console.warn('[live] fetch failed, fallback baked dicts:', e); }
+}
+// ================== LIVE COMMITTED (SCOUT via RPC list_map_committed) ==================
+// L'onglet Engagés suit le statut SCOUT : un joueur passé "committed" apparaît, un joueur passé "in_college"/"archived" disparaît.
+async function loadLiveCommitted(){
+  try{
+    const KEY="sb_publishable__XZlKzZKzk1uN6UQEqPVgQ_co22MxtA";
+    const r=await fetch("https://bfxhruvkzidvznsyyryp.supabase.co/rest/v1/rpc/list_map_committed",
+      {method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+KEY,"Content-Type":"application/json"},body:"{}"});
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length) throw new Error("empty");
+    const DIVMAP={D1:'D1',D2:'D2',D3:'D3',NAIA:'NAIA',JUCO:'JUCO',NJCAA:'JUCO'};
+    const list=[];
+    for(const x of rows){
+      const name=(x.first_name+' '+x.last_name).trim();
+      if(!x.university) continue;
+      if(!SCHOOLS[x.university] && x.uni_lat!=null){
+        const dv=DIVMAP[x.uni_division]||x.uni_division||'?';
+        SCHOOLS[x.university]={state:x.uni_state||'?', div:dv, gov: dv==='NAIA'?'NAIA':dv==='JUCO'?'NJCAA':'NCAA', lat:x.uni_lat, lng:x.uni_lng};
+      }
+      let season=x.signing_season||'';
+      const sp=/^Spring (\d{4})$/.exec(season); if(sp) season='Fall '+(parseInt(sp[1],10)-1); // démarrage en janvier : groupé avec la rentrée précédente
+      if(!COMMIT_DATA[name] && x.commit_date) COMMIT_DATA[name]={date:x.commit_date, rank: /^\d+$/.test(x.fr_rank_at_commit||'')?parseInt(x.fr_rank_at_commit,10):null, aug_prior:null, aug_start:null};
+      const prev=INCOMING_PLAYERS.find(p=>normName(p.name)===normName(name))||{};
+      list.push({...prev, name: prev.name||name, sex:x.sex, country:x.country||prev.country||'France', iclass:season||prev.iclass, university:x.university,
+                 star: x.star_rating ?? prev.star ?? null, photo: x.photo || prev.photo || null});
+    }
+    INCOMING_PLAYERS=list.filter(p=>SCHOOLS[p.university]);
+    INCOMING_ENRICHED=INCOMING_PLAYERS.map(enrichIncoming);
+    const c=document.getElementById('tab-incoming-count'); if(c) c.textContent=INCOMING_PLAYERS.length;
+    rerenderIncoming();
+    console.info('[live] committed loaded: '+INCOMING_PLAYERS.length+' (SCOUT: '+rows.length+')');
+  }catch(e){ console.warn('[live] committed fetch failed, fallback baked list:', e); }
 }
 // ================== STATE ==================
 let currentSnap = "current";
@@ -3680,7 +3719,7 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 
 // Helper photo URL
 const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images";
-const INCOMING_PLAYERS = [
+let INCOMING_PLAYERS = [
 
 
   // Margot Lamothe — démarre Janvier 2027 (Spring), recommitted 10/08/2026
@@ -4093,6 +4132,7 @@ rerenderIncoming();
 initComboboxes();
 renderStatsBanner();
 loadLiveRankings();
+loadLiveCommitted();
 </script>
 </body>
 </html>
