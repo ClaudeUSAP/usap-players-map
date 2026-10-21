@@ -2485,7 +2485,13 @@ const SCHOOLS = {
   "University of California, Berkeley": {state:"CA", div:"D1",  gov:"NCAA",  lat:37.87,  lng:-122.26},
   "University of Missouri - St. Louis": {state:"MO", div:"D2",  gov:"NCAA",  lat:38.71,  lng:-90.31},
   "University of North Carolina":      {state:"NC", div:"D1",   gov:"NCAA",  lat:35.91,  lng:-79.05},
-  "University of South Carolina Beaufort": {state:"SC", div:"D2", gov:"NCAA", lat:32.36, lng:-80.94}
+  "University of South Carolina Beaufort": {state:"SC", div:"D2", gov:"NCAA", lat:32.36, lng:-80.94},
+  // +5 écoles des engagés d'octobre 2026 — coordonnées reprises de SCOUT universities (V73)
+  "St. Mary's University Texas":      {state:"TX", div:"D2",   gov:"NCAA",  lat:29.46,  lng:-98.55},
+  "University of South Florida":      {state:"FL", div:"D1",   gov:"NCAA",  lat:28.06,  lng:-82.41},
+  "Troy University":                  {state:"AL", div:"D1",   gov:"NCAA",  lat:31.80,  lng:-85.96},
+  "Augusta University":               {state:"GA", div:"D1",   gov:"NCAA",  lat:33.47,  lng:-82.02},
+  "Dodge City Community College":     {state:"KS", div:"JUCO", gov:"NJCAA", lat:37.77,  lng:-100.02},
 };
 
 const STATE_CENTERS = {
@@ -3746,6 +3752,16 @@ let INCOMING_PLAYERS = [
   {name:"Emiliano Mendoza-Malherbe", sex:"Men", country:"France", iclass:"Fall 2027", university:"Eckerd College", star:4, photo:`${SP}/fe91beab-c1ef-4a98-aa93-90b2f2356181/profile-1771620357275.jpg`},
   {name:"Laetitia Vandeplas", sex:"Women", country:"Belgium", iclass:"Fall 2027", university:"Coastal Carolina University", star:6, photo:`${SP}/dfe37490-5c2b-40ad-9ef8-f39b90473289/profile-1764204729529.jpg`},
   // Transferts (absents de la sync SCOUT des engagés) — ajoutés manuellement 05/08/2026
+  // +9 engagés — sync hebdo du 21/10/2026, valeurs recoupées une à une contre SCOUT (V73)
+  {name:"Juan Miró Asorey", sex:"Men", country:"Spain", iclass:"Fall 2027", university:"George Washington University", star:6, photo:`${SP}/4ca466e4-3d86-4eec-b7af-62b747bc1920/profile-1764029269550.jpg`},
+  {name:"Samuel Aiach", sex:"Men", country:"France", iclass:"Fall 2027", university:"St. Mary's University Texas", star:5, photo:`${SP}/d9baf304-e160-42d3-8ce5-e53280037aee/profile-1777576169926.jpg`},
+  {name:"Martin Rizzon", sex:"Men", country:"France", iclass:"Fall 2027", university:"University of Mobile", star:2, photo:`${SP}/55a38d0b-aa5d-48fa-8c54-e0e2aabbf5fa/profile-1781979108428.jpg`},
+  {name:"Titouan Thiebaut", sex:"Men", country:"France", iclass:"Fall 2027", university:"St. Mary's University Texas", star:1, photo:`${SP}/eab0173e-03ab-4669-b832-1a6af1dcca75/profile-1786720380000.jpg`},
+  {name:"Teodora Nikolovski", sex:"Women", country:"France", iclass:"Fall 2027", university:"University of South Florida", star:5, photo:`${SP}/d76a6c78-9f82-4248-ad6d-9b33817ca488/profile-1776286670727.jpg`},
+  {name:"Sasha Ochoantesana", sex:"Women", country:"France", iclass:"Fall 2027", university:"Murray State College", star:2, photo:`${SP}/125b3e4e-eb7e-4d4a-ac2e-16e172540963/profile-1781984108933.jpg`},
+  {name:"Clara Ryjacek", sex:"Women", country:"France", iclass:"Fall 2027", university:"Troy University", star:4, photo:`${SP}/bb65bc0a-e64e-450d-b67a-2c75b1082beb/profile-1788355778744.jpg`},
+  {name:"Noha Ghadi", sex:"Women", country:"Morocco", iclass:"Fall 2027", university:"Augusta University", star:4, photo:`${SP}/02792c80-1247-49b8-8fe6-f49d0743632d/profile-1777390434606.jpg`},
+  {name:"Leen Aubron", sex:"Women", country:"France", iclass:"Fall 2027", university:"Dodge City Community College", star:1, photo:`${SP}/8c77f082-aef2-492a-ade6-b2eddca02688/profile-1788801417040.jpg`},
 ];
 
 let incomingFilters = { iclass:[], igender:[], idivision:[], search:"", club:[], academy:[] };
