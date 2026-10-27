@@ -1034,7 +1034,7 @@ function openPlayerModal(p, opts={}) {
   header.querySelectorAll('.school-logo-modal, .player-photo-modal').forEach(el => el.remove());
   // Player photo : priorité LOCAL_PHOTOS, sinon Scoreboard pour US, sinon p.photo (engagés depuis SCOUT)
   let photoUrl = getPlayerPhoto(p.name);
-  if (!photoUrl && isIncoming && p.photo) photoUrl = p.photo;
+  if (!photoUrl && isIncoming && p.photo) photoUrl = viaFonctionPhoto(p.photo);
   if (photoUrl) {
     const photo = document.createElement('img');
     photo.className = 'player-photo-modal';
@@ -3700,7 +3700,20 @@ document.querySelectorAll('th[data-sort]').forEach(th => {
 // ================== INCOMING DATA (Engagés Fall 2027 + Fall 2028) ==================
 
 // Helper photo URL
-const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/storage/v1/object/public/athlete-images";
+// M3 (27/10/2026) : le bucket `athlete-images` est passé en privé. Les photos des
+// joueurs engagés restent publiques, mais via l'Edge Function `athlete-photo`, qui
+// vérifie le statut en base puis redirige (302) vers une URL signée — les octets
+// continuent donc de sortir du CDN Storage.
+// La fonction accepte le chemin directement dans l'URL : les `${SP}/<uuid>/<fichier>`
+// ci-dessous n'ont pas bougé d'un caractère.
+const SP = "https://bfxhruvkzidvznsyyryp.supabase.co/functions/v1/athlete-photo";
+// Les photos venues de la RPC `list_map_committed` sont des URL publiques historiques
+// (la colonne n'a pas été réécrite) : on en extrait le chemin et on passe par SP.
+const viaFonctionPhoto = (u) => {
+  if (!u) return u;
+  const i = u.indexOf("/athlete-images/");
+  return i === -1 ? u : `${SP}/${u.slice(i + "/athlete-images/".length).split("?")[0]}`;
+};
 let INCOMING_PLAYERS = [
 
 
