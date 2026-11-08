@@ -651,11 +651,11 @@ body {
     <div class="snap-bar">
       <span class="snap-label" data-i18n="period">📅 Période</span>
       <select id="snapshot-select">
-        <option value="current" data-i18n="snap_current">Current (Septembre 2026)</option>
+        <option value="current" data-i18n="snap_current">Current (Novembre 2026)</option>
         <option value="may2025" data-i18n="snap_2425">Season 2024/2025</option>
         <option value="may2024" data-i18n="snap_2324">Season 2023/2024</option>
       </select>
-      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de septembre 2026 (rentrée de la saison 2026-27).</span>
+      <span class="snap-help" id="snap-help">Vue actuelle : situation au mois de novembre 2026 (rentrée de la saison 2026-27).</span>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -846,7 +846,7 @@ const T = {
     tab_us: 'Joueurs aux US',
     tab_incoming: 'Engagés 2027 - 2028',
     period: '📅 Période',
-    snap_current: 'Current (Septembre 2026)',
+    snap_current: 'Current (Novembre 2026)',
     snap_2425: 'Season 2024/2025',
     snap_2324: 'Season 2023/2024',
     class: 'Année :',
@@ -916,7 +916,7 @@ const T = {
     tab_us: 'Players in US',
     tab_incoming: 'Committed 2027 - 2028',
     period: '📅 Period',
-    snap_current: 'Current (Septembre 2026)',
+    snap_current: 'Current (Novembre 2026)',
     snap_2425: 'Season 2024/2025',
     snap_2324: 'Season 2023/2024',
     class: 'Class:',
@@ -2143,40 +2143,56 @@ const HISTORICAL_SCOREBOARD = {
   "Clara Willem":{"2025/2026":{r:null,s:76,tr:31}}
 };
 
-// ================== CURRENT FFGOLF RANKINGS (Septembre 2026) ==================
+// ================== CURRENT FFGOLF RANKINGS (Novembre 2026) ==================
 // Source: SCOUT athletes.french_adult_ranking (auto-updated by ffgolf-ranking-update task).
 const CURRENT_FFGOLF = {
-  "Samuel Aiach": 51, "Hugo Almeida": 357, "Callixte Alzas": 43, "Théophile Archer": 32,
-  "Alexis Barnetche": 35, "Rafael Bobo-Lloret": 59, "Maxence Bonnet": 463, "Loris Bonnetton Alban": 786,
-  "Adam Carreyn": 163, "Alois Casalonga": 196, "Léo-Paul Cesari": 188, "Martin Chaney": 625,
-  "Justin Charoy": 190, "Rodolphe Cicala": 10, "Tom Clarens": 410, "Sacha Corlouer": 75,
-  "Jules Cornet": 234, "Oscar Couilleau": 4, "Paul Couston": 539, "Jules De Brauwere": 65,
-  "Vadim Dejour": 975, "Louis Delattre": 1010, "Gabriel Delaval": 487, "Edmond Donzel": 133,
-  "Gabriel Dulon-Villoslada": 17, "Hugo Duquaine": 360, "Ali Elsayed": 520, "Simon Germain": 402,
-  "Samuel Guigui-Baruchel": 454, "Axel Houdaille": 270, "Melvil Jacquelin": 101, "Corentin Jorat": 702,
-  "Kilian Juget": 614, "Maxime Lam": 165, "Jules Lauer": 22, "Octavio Laurent": 33,
-  "Louis Le Sager": 178, "Théophile Lebrun": 25, "Gaspard Maréchal Dubourg": 327, "Andrea Matlega": 851,
-  "Emiliano Mendoza-Malherbe": 480, "Sacha Molino": 350, "Léo Molino": 152, "Michael Najburg": 895,
-  "Lucas Nicola": 416, "Maxime Olivo": 683, "Edouard Petit": 372, "Lucas Raoul": 153,
-  "Matthieu Riffet": 181, "Martin Rizzon": 575, "Nicolas Robin": 144, "Alexian Rouault": 618,
-  "Bogdan Sandrini": 68, "Victor Siguier": 437, "Florian Simon": 280, "Hugo Soubran": 723,
-  "Bastien Soula": 230, "Léo Testas": 127, "Raphaël Turcaud": 102, "Tibo Van De Neste": 347,
-  "Alexandre Vapillon": 77, "Leen Aubron": 427, "Marie Bachelet": 136, "Justine Bayle": 46,
-  "Diane Becassis": 133, "Sarah Binaghi": 138, "Céleste Bobo-Lloret": 55, "Amély Bochaton": 9,
-  "Ambre Boullot": 162, "Charlotte Bouquet": 78, "Carla Bourdeaux": 50, "Sara Brentcheneff": 6,
-  "Fantine Cabry": 74, "Éline Chau-Hu": 66, "Clémence Chouvin": 130, "Sarah Cuney": 86,
-  "Céleste Darloy": 63, "Juliette Daviau": 279, "Gabrielle Duhalde": 272, "Faustine Errecade": 305,
-  "Lou Fourdan": 93, "Juliette Gastoud": 394, "Tina Genoulaz": 32, "Léa Giron": 54,
-  "Axelle Guillemard": 25, "Mahé Happiette": 218, "Louise Krawiec": 94, "Taline Kyoumjian": 226,
-  "Romane Lacoste": 104, "Agathe Lacoste": 234, "Maylis Lamoure": 23,
-  "Clara Ledun": 269, "Emma Leroy-Fabry": 76, "Bertille Lorin": 221, "Lehane Louis-Dumond": 260,
-  "Salomé Lumbaca": 24, "Inès Marty": 116, "Ambre Matlega": 226, "Teodora Nikolovski": 57,
-  "Sasha Ochoantesana": 268, "Anne Charlotte Otto": 280, "Camille Padieu": 220, "Jeanne Pagnier": 80,
-  "Manon Petitcolas": 11, "Anna Pillard": 30, "Romane Poissonnier": 26, "Cloé Poizac": 127,
-  "Iris Pollet": 166, "Camille Rosier": 131, "Zoé Rubichon": 64, "Clara Ryjacek": 109,
-  "Juliette Saillour": 183, "Melliyal Schmitt": 15, "Eleonore Sellami": 156, "Aubane Statiotis": 72,
-  "Mila Tamisier": 102, "Lauren Thompstone": 99, "Romane Tresnard": 42, "Morgane Trincadeiro": 134,
-  "Manon Verret": 101, "Clara Willem": 115, "Giselle Zhao": 7
+  "Samuel Aiach": 52, "Hugo Almeida": 305, "Callixte Alzas": 23, "Théophile Archer": 32,
+  "Allan Arnold": 218, "Paul Artis": 558, "Marius Auffret": 173, "Alexis Barnetche": 50,
+  "Manahere Billaudet": 242, "Louka Blanchard": 647, "Rafael Bobo-Lloret": 62, "Elouen Boireau": 388,
+  "Paul Bonnardet": 316, "Maxence Bonnet": 512, "Benjamin Bouazizi": 139, "Arnaud Bouhaniche": 614,
+  "Anthony Bouhaniche": 656, "Giovanni Brulé": 133, "Eloi Buard-Couvreur": 673, "Titouan Buisson": 81,
+  "Adam Carreyn": 275, "Alois Casalonga": 212, "Léo-Paul Cesari": 195, "Timothée Chaboud": 475,
+  "Martin Chaney": 649, "Valentin Chaplin": 78, "Justin Charoy": 334, "Batiste Chesneau": 116,
+  "Rodolphe Cicala": 9, "Tom Clarens": 372, "Clément Colombero": 197, "Sacha Corlouer": 77,
+  "Oscar Couilleau": 4, "Matteo Da Eira": 38, "Mathias Dalamel de Bournet": 250, "Léo Dauvier": 773,
+  "Jules De Brauwere": 141, "Louis Delattre": 824, "Gabriel Delaval": 600, "Edmond Donzel": 82,
+  "Davon Duboc": 65, "Gaetan Dubois": 257, "Gabriel Dulon-Villoslada": 15, "Hugo Duquaine": 364,
+  "Alexandre El Khomri": 90, "Ali Elsayed": 514, "Anatole Fabre": 72, "Léo-Paul Finos": 42,
+  "Timothée Fortin": 503, "Simon Germain": 427, "Samuel Guigui-Baruchel": 426, "Alexandre Guiserix": 358,
+  "Stanislas Hatier": 577, "Paul Horsey": 342, "Axel Houdaille": 266, "Tom Jenkins": 799,
+  "Corentin Jorat": 984, "Kilian Juget": 513, "Andreas Labadie": 166, "Guillaume Lam": 555,
+  "Maxime Lam": 167, "Jules Lauer": 11, "Octavio Laurent": 35, "Louis Le Sager": 121,
+  "Théophile Lebrun": 48, "Ewenn Legoff": 149, "Simon Lignereux": 53, "Loris Marcon": 791,
+  "Paul Martin": 37, "Andrea Matlega": 670, "Victorien Mayeux": 306, "Emiliano Mendoza-Malherbe": 180,
+  "Léo Molino": 193, "Sacha Molino": 355, "Maxim Moreau": 118, "Anthony Nadal": 123,
+  "William Navidzadeh": 276, "Lucas Nicola": 522, "Maxime Olivo": 938, "Charles Payan-Guillaume": 668,
+  "Edouard Petit": 489, "Valentin Pommier": 114, "Hippolyte Poux": 233, "Matisse Rabiller": 239,
+  "Lucas Raoul": 174, "Timothée Restout": 208, "Matthieu Riffet": 315, "Joao Rivière": 318,
+  "Martin Rizzon": 561, "Nicolas Robin": 270, "Alexian Rouault": 681, "Bogdan Sandrini": 88,
+  "Victor Siguier": 398, "Florian Simon": 198, "Mathieu Slama": 273, "Hugo Soubran": 768,
+  "Bastien Soula": 269, "Léo Testas": 69, "Titouan Thiebaut": 737, "Raphaël Turcaud": 104,
+  "Tibo Van De Neste": 321, "Alexandre Vapillon": 120, "Paul Vautier": 303, "Paul Velly": 153,
+  "Nicolas Viroleau": 80, "Inès Archer": 68, "Abigaël Arosio": 259, "Leen Aubron": 414,
+  "Marie Bachelet": 138, "Justine Bayle": 51, "Diane Becassis": 123, "Léonie Bernard": 80,
+  "Sarah Binaghi": 126, "Celeste Bobo-Lloret": 78, "Amély Bochaton": 10, "Ambre Boullot": 167,
+  "Charlotte Bouquet": 92, "Carla Bourdeaux": 89, "Sara Brentcheneff": 2, "Fantine Cabry": 77,
+  "Éline Chau-Hu": 72, "Clémence Chouvin": 145, "Jeanne Couvreur": 289, "Sarah Cuney": 94,
+  "Céleste Darloy": 76, "Juliette Daviau": 294, "Eva Delattre": 261, "Juliette Deloffre": 170,
+  "Anouchka Djumic": 62, "Gabrielle Duhalde": 244, "Emma Ear": 146, "Faustine Errecade": 143,
+  "Lou Fourdan": 103, "Tina Genoulaz": 44, "Léa Giron": 66, "Alicia Grandjean": 178,
+  "Axelle Guillemard": 22, "Mahé Happiette": 328, "Lyloo Hourantier": 155, "Océane Jorat": 180,
+  "Louise Krawiec": 100, "Taline Kyoumjian": 191, "Agathe Lacoste": 224, "Romane Lacoste": 93,
+  "Florence Laforgue": 34, "Margot Lamothe": 257, "Maylis Lamoure": 33, "Alice Landon-Rouly": 341,
+  "Zoé Lay": 208, "Clara Ledun": 262, "Emma Leroy-Fabry": 64, "Carlotta Locatelli": 23,
+  "Bertille Lorin": 286, "Lehane Louis-Dumond": 279, "Salomé Lumbaca": 29, "Céleste Mangeat": 185,
+  "Inès Marty": 85, "Ambre Matlega": 228, "Teodora Nikolovski": 54, "Sasha Ochoantesana": 252,
+  "Anne Charlotte Otto": 374, "Camille Padieu": 218, "Jeanne Pagnier": 63, "Ludivine Passe": 46,
+  "Manon Petitcolas": 12, "Anna Pillard": 40, "Rose Pitault": 223, "Romane Poissonnier": 45,
+  "Margaux Poissonnier": 96, "Cloé Poizac": 105, "Iris Pollet": 119, "Camille Rosier": 213,
+  "Zoé Rubichon": 55, "Clara Ryjacek": 121, "Agathe Sagansan": 140, "Juliette Saillour": 197,
+  "Melliyal Schmitt": 11, "Eleonore Sellami": 196, "Aubane Statiotis": 57, "Mila Tamisier": 101,
+  "Lauren Thompstone": 115, "Romane Tresnard": 49, "Morgane Trincadeiro": 128, "Manon Verret": 95,
+  "Elisa Vicherat": 306, "Clara Willem": 118, "Giselle Zhao": 8
 };
 
 // ================== CURRENT WAGR RANKINGS (Scout EU) ==================
@@ -2779,7 +2795,7 @@ const PLAYERS = [
 
 // ================== SNAPSHOTS ==================
 const SNAPSHOTS = {
-  current: { label: "Current (Septembre 2026)", date: {y:2026, m:9}, help_fr: "Vue actuelle : rentrée de la saison 2026-27 (Fall 2026 démarré).", help_en: "Current view: start of the 2026-27 season (Fall 2026 underway)." },
+  current: { label: "Current (Novembre 2026)", date: {y:2026, m:11}, help_fr: "Vue actuelle : rentrée de la saison 2026-27 (Fall 2026 démarré).", help_en: "Current view: start of the 2026-27 season (Fall 2026 underway)." },
   may2025: { label: "Season 2024/2025", date: {y:2025, m:5}, help_fr: "Vue rétroactive : fin de la saison 2024/2025. Class 2024 = Freshman, Class 2025 = Incoming.", help_en: "Retrospective view: end of 2024/2025 season. Class 2024 = Freshman, Class 2025 = Incoming." },
   may2024: { label: "Season 2023/2024", date: {y:2024, m:5}, help_fr: "Vue rétroactive : fin de la saison 2023/2024. Class 2023 = Freshman, Class 2024+ = Incoming.", help_en: "Retrospective view: end of 2023/2024 season. Class 2023 = Freshman, Class 2024+ = Incoming." }
 };
