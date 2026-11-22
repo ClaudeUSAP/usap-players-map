@@ -3816,8 +3816,8 @@ function applyIncomingFilters() {
     }
     return true;
   }).sort((a,b) => {
-    if (a.iclass !== b.iclass) return a.iclass.localeCompare(b.iclass);
-    return a.name.localeCompare(b.name, 'fr');
+    if (a.iclass !== b.iclass) return (a.iclass||'').localeCompare(b.iclass||'');
+    return (a.name||'').localeCompare(b.name||'', 'fr');
   });
 }
 
