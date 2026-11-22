@@ -1463,7 +1463,7 @@ const SCHOOL_DOMAINS = {
   "Catawba College":"catawba.edu","Bethel University (IN)":"bethelcollege.edu",
   "Bethel University":"bethelcollege.edu","Otero College":"ojc.edu",
   "Lewis University":"lewisu.edu","Columbia College - Missouri":"ccis.edu",
-  "University of Houston - Victoria":"uhv.edu","Murray State College":"mscok.edu",
+  "Texas A&M University-Victoria":"tamuv.edu","Murray State College":"mscok.edu",
   "Northwest Mississippi Community College":"northwestms.edu",
   "Mid America Nazarene University":"mnu.edu","Friends University":"friends.edu",
   "University of Texas Rio Grande Valley":"utrgv.edu","George Washington University":"gwu.edu",
@@ -2091,7 +2091,6 @@ const HISTORICAL_SCOREBOARD = {
   "Anna Olesen":{"2024/2025":{r:null,s:78.3,tr:14},"2025/2026":{r:1131,s:78.4,tr:21}},
   "Gabriele Romani":{"2023/2024":{r:null,s:73.6,tr:6},"2024/2025":{r:null,s:75.7,tr:8}},
   "Jules Gentil":{"2023/2024":{r:1385,s:74.8,tr:17}},
-  "Arthur Karouby":{"2023/2024":{r:230,s:75.3,tr:22}},
   "Faust Amat":{"2025/2026":{r:null,s:77.6,tr:9}},
   "Elie Bennatan":{"2025/2026":{r:1268,s:82.5,tr:14}},
   "Rafael Bobo-Lloret":{"2025/2026":{r:620,s:72.2,tr:33}},
@@ -2386,7 +2385,6 @@ const SCHOOLS = {
   "Otero College":                    {state:"CO", div:"JUCO", gov:"NJCAA", lat:38.03,  lng:-103.55, divnum:"D2"},
   "Lewis University":                 {state:"IL", div:"D2",   gov:"NCAA",  lat:41.59,  lng:-88.10},
   "Columbia College - Missouri":      {state:"MO", div:"NAIA", gov:"NAIA",  lat:38.96,  lng:-92.32},
-  "University of Houston - Victoria": {state:"TX", div:"NAIA", gov:"NAIA",  lat:28.79,  lng:-97.00},
   "Murray State College":             {state:"OK", div:"JUCO", gov:"NJCAA", lat:34.31,  lng:-96.98, divnum:"D2"},
   "Northwest Mississippi Community College": {state:"MS", div:"JUCO", gov:"NJCAA", lat:34.46, lng:-90.05, divnum:"D1"},
   "Mid America Nazarene University":  {state:"KS", div:"NAIA", gov:"NAIA",  lat:38.96,  lng:-94.92},
@@ -2520,8 +2518,6 @@ const PLAYERS = [
   {name:"Ylan Guerin-Pozzalo", country:"France", sex:"Men", signing:"Fall 2023", university:"University of Louisiana Monroe",
     fr_score:72.24 /* All-SBC 2nd Team, Sun Belt T-12 */},
   {name:"Rodolphe Cicala", country:"France", sex:"Men", signing:"Fall 2023", university:"Faulkner University"},
-  // Arthur Karouby — démarré directement Senior (transfert depuis Montpellier Management)
-  {name:"Arthur Karouby", country:"France", sex:"Men", signing:"Fall 2023", university:"Ottawa University", start_year:"Senior"},
   // Thomas Peluchon — Freshman 23-24 à Roosevelt (NAIA PING All-Region, 2 wins, All-CCAC 2nd Team), Sophomore 24-25, arrêté Mai 2025
   {name:"Thomas Peluchon", country:"France", sex:"Men", signing:"Fall 2023", university:"Roosevelt University", stopped:{y:2025, m:5}},
 
@@ -2614,7 +2610,7 @@ const PLAYERS = [
   {name:"Lucas Nicola", country:"France", sex:"Men", signing:"Fall 2025", university:"Faulkner University",
         fr_score:75, fr_rank_sb:298},
   {name:"Tom Clarens", country:"France", sex:"Men", signing:"Fall 2025", university:"Columbia College - Missouri", start_year:"Senior"},
-  {name:"Florian Simon", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Houston - Victoria",
+  {name:"Florian Simon", country:"France", sex:"Men", signing:"Fall 2025", university:"Texas A&M University-Victoria",
         fr_score:74.9, fr_rank_sb:455},
   // Noah Vieilleville n'est jamais parti aux US — retiré de la liste
   // Alexandre Genet (Fall 2025) — Senior dès la rentrée
@@ -2628,7 +2624,7 @@ const PLAYERS = [
   {name:"Gabriele Romani", country:"Italy/Switzerland", sex:"Men", signing:"Fall 2025", university:"Friends University", transfer:true, start_year:"5th year", stopped:{y:2026, m:5}},
   // Cicala transfer UTRGV pour Junior year (Freshman+Sophomore à Faulkner)
   {name:"Rodolphe Cicala", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Texas Rio Grande Valley", transfer:true,
-    start_year:"Junior"},
+    start_year:"Junior", stopped:{y:2026, m:11}},
   // Dulon-Villoslada transfer UTRGV pour Sophomore year (Freshman à Faulkner)
   {name:"Gabriel Dulon-Villoslada", country:"France", sex:"Men", signing:"Fall 2025", university:"University of Texas Rio Grande Valley", transfer:true,
     start_year:"Sophomore",
